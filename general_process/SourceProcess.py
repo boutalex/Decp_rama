@@ -133,8 +133,9 @@ class SourceProcess:
         """Fonction vérifiant si la date de dernière modification des fichiers ressources DANS les metadatas est strictement
            antérieure à la date de dernière modification """
         for i in range(len(new_ressources)):
-            if new_ressources[i]["last_modified"]>old_ressources[i]["last_modified"]:
-                url = url + [d["url"] for d in new_ressources if (d["url"].endswith("xml") or d["url"].endswith("json"))]
+            if new_ressources[i]["last_modified"]>old_ressources[i]["last_modified"] and (new_ressources[i]["url"].endswith("xml") or new_ressources[i]["url"].endswith("json")) :
+                print(new_ressources[i])
+                url = url + [new_ressources[i]["url"]] 
         return url
 
     def get(self):
@@ -558,20 +559,49 @@ class SourceProcess:
         #return conform
 
     def convert_boolean(self,col_name):
-        if self.df.loc[:,col_name].dtype=='O':
-            true_marcheInnovant = self.df.loc[:,col_name].astype(str).str.match(r'^(1)$',case=False,na=False)
-            self.df.loc[true_marcheInnovant, col_name] = "oui"
-            true_marcheInnovant = self.df.loc[:,col_name].astype(str).str.match(r'^(true)$',case=False,na=False)
-            self.df.loc[true_marcheInnovant, col_name] = "oui"
-        true_marcheInnovant = self.df.loc[:,col_name]==True
-        self.df.loc[true_marcheInnovant, col_name] = "oui"
-        if self.df.loc[:,col_name].dtype=='O':
-            false_marcheInnovant = self.df.loc[:, col_name].astype(str).str.match(r'^(0)$',case=False,na=False) 
+        #Conversion du type de la colonne en type str
+        print("avant conversion", self.df.loc[:,col_name].dtype)
+        self.df.loc[:,col_name].astype(str)
+        print("apres conversion: ", self.df.loc[:,col_name].dtype)
+        #self.df.loc[:,col_name].replace({True: 'True', False: 'False'})
+
+        true_possibilites = [ 
+        self.df[col_name].str.match(r'^(1)$', case=False, na=False),
+        self.df[col_name].str.match(r'^(true)$', case=False, na=False)]
+
+        false_possiblites = [
+        self.df[col_name].str.match(r'^(0)$', case=False, na=False),
+        self.df[col_name].str.match(r'^(false)$', case=False, na=False)
+        ]
+
+        for i in (true_possibilites):
+            true_marcheInnovant = self.df.loc[:,col_name]==True    #récuperer les lignes valant "True"
+            self.df.loc[true_marcheInnovant, col_name] = "oui"     #remplacement des "True" par "oui"
+            
+        for j in (false_possiblites):
+            false_marcheInnovant = self.df.loc[:,col_name]==True  #récuperer les lignes valant "False"
             self.df.loc[false_marcheInnovant, col_name] = "non"
-            false_marcheInnovant = self.df.loc[:, col_name].astype(str).str.match(r'^(false)$',case=False,na=False) 
-            self.df.loc[false_marcheInnovant, col_name] = "non"
-        false_marcheInnovant = self.df.loc[:,col_name]==False
-        self.df.loc[false_marcheInnovant, col_name] = "non"
+
+
+
+    # def convert_boolean(self,col_name):
+    # #Vérification du type de la colonne "col_name". Le type doit être un string
+    #     if self.df.loc[:,col_name].dtype=='O':
+    #         true_marcheInnovant = self.df.loc[:,col_name].astype(str).str.match(r'^(1)$',case=False,na=False)
+    #         self.df.loc[true_marcheInnovant, col_name] = "oui"
+    #         true_marcheInnovant = self.df.loc[:,col_name].astype(str).str.match(r'^(true)$',case=False,na=False)
+    #         self.df.loc[true_marcheInnovant, col_name] = "oui"
+
+    #     true_marcheInnovant = self.df.loc[:,col_name].astype(str)==True
+    #     self.df.loc[true_marcheInnovant, col_name] = "oui"
+
+    #     if self.df.loc[:,col_name].dtype=='O':
+    #         false_marcheInnovant = self.df.loc[:, col_name].astype(str).str.match(r'^(0)$',case=False,na=False) 
+    #         self.df.loc[false_marcheInnovant, col_name] = "non"
+    #         false_marcheInnovant = self.df.loc[:, col_name].astype(str).str.match(r'^(false)$',case=False,na=False) 
+    #         self.df.loc[false_marcheInnovant, col_name] = "non"
+    #     false_marcheInnovant = self.df.loc[:,col_name].astype(str)==False
+    #     self.df.loc[false_marcheInnovant, col_name] = "non"
 
     def fix(self):
         """Étape fix qui crée la colonne source dans le DataFrame et qui supprime les doublons
@@ -598,10 +628,13 @@ class SourceProcess:
             if "offresRecues" in self.df.columns:
                 self.df['offresRecues'] = self.df['offresRecues'].fillna(0).astype(int)
             if "marcheInnovant" in self.df.columns:
+                print("TYPE COLONNE MARCHE INNOVANT:", self.df['marcheInnovant'].dtype)
                 self.convert_boolean('marcheInnovant')
             if "attributionAvance" in self.df.columns:
+                print("TYPE COLONNE ATTRIBUTION AVANCEE:", self.df['attributionAvance'].dtype)
                 self.convert_boolean('attributionAvance')
             if "sousTraitanceDeclaree" in self.df.columns:
+                print("TYPE COLONNE sous traitance:", self.df['sousTraitanceDeclaree'].dtype)
                 self.convert_boolean('sousTraitanceDeclaree')
         else:
             if "acheteur" in self.df.columns:
