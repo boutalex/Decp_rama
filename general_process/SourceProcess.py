@@ -143,10 +143,10 @@ class SourceProcess:
         l'ensemble des fichiers présents sur chaque url."""
         logging.info("  ÉTAPE GET")
         # Lavage des dossiers dans "sources"   
-        logging.info(f"Début du nettoyage de sources/{self.source}")
-        if os.path.exists(f"sources/{self.source}"):
-            shutil.rmtree(f"sources/{self.source}")
-        logging.info(f"Nettoyage sources/{self.source} OK")
+        # logging.info(f"Début du nettoyage de sources/{self.source}")
+        # if os.path.exists(f"sources/{self.source}"):
+        #     shutil.rmtree(f"sources/{self.source}")
+        # logging.info(f"Nettoyage sources/{self.source} OK")
         # Étape get des url
         logging.info(f"Début du téléchargement : {len(self.url)} fichier(s)")
         self.file_name = [f"{self.metadata[self.key]['code']}_{i}" for i in range(len(self.url))]
@@ -228,34 +228,55 @@ class SourceProcess:
                     return True
         return False
     
+
     def date_after_2024(self, record, col_date, col_date_publication):
-        first = datetime.strptime("2024-01-01", "%Y-%m-%d")
-        pattern = r'20[0-9]{2}-[0-1]{1}[0-9]{1}-[0-9]{2}'
-        col_list = [col_date,col_date_publication]
-        for col in col_list:
-            if col in record and record[col] and re.match(pattern,record[col]):
-                try:
-                    date = datetime.strptime(record[col], "%Y-%m-%d")
-                    if date>=first:
-                        if col == col_date_publication:
-                            record[col_date] = record[col_date_publication]
-                        return True
-                except:
-                    None
-        pattern = r'20[0-9]{2}/[0-1]{1}[0-9]{1}/[0-9]{2}'
-        for col in col_list:
-            if col in record and record[col] and re.match(pattern,record[col]):
-                try:
-                    tmp = record[col]
-                    date =  datetime.strptime(tmp, '%Y/%m/%d').date()
-                    if date>=first:
-                        record[col] = tmp
-                        if col == col_date_publication:
-                            record[col_date] = record[col_date_publication] 
-                        return True
-                except:
-                    None
-        return False
+            """ La fonction prend en entrée  et renvoie un booléeen. Les dates postérieures à 2024 doivent être de la forme Y-M-J pour les colonnes date et date_de_publication. """
+            print
+            first = datetime.strptime("2024-01-01", "%Y-%m-%d")
+            pattern1 = r'20[0-9]{2}-[0-1]{1}[0-9]{1}-[0-9]{2}'
+            pattern2 = r'20[0-9]{2}/[0-1]{1}[0-9]{1}/[0-9]{2}'
+            col_list = [col_date,col_date_publication]
+            for col in col_list:
+                if col in record and record[col] and (re.match(pattern1,record[col]) or re.match(pattern2,record[col])):
+                    try:
+                        date = datetime.strptime(record[col], "%Y-%m-%d")
+                        if date>=first:
+                            if col == col_date_publication:
+                                record[col_date] = record[col_date_publication]
+                            return True
+                    except:
+                        None
+            return False
+        
+    # def date_after_2024(self, record, col_date, col_date_publication):
+
+    #     first = datetime.strptime("2024-01-01", "%Y-%m-%d")
+    #     pattern = r'20[0-9]{2}-[0-1]{1}[0-9]{1}-[0-9]{2}'
+    #     col_list = [col_date,col_date_publication]
+    #     for col in col_list:
+    #         if col in record and record[col] and re.match(pattern,record[col]):
+    #             try:
+    #                 date = datetime.strptime(record[col], "%Y-%m-%d")
+    #                 if date>=first:
+    #                     if col == col_date_publication:
+    #                         record[col_date] = record[col_date_publication]
+    #                     return True
+    #             except:
+    #                 None
+    #     pattern = r'20[0-9]{2}/[0-1]{1}[0-9]{1}/[0-9]{2}'
+    #     for col in col_list:
+    #         if col in record and record[col] and re.match(pattern,record[col]):
+    #             try:
+    #                 tmp = record[col]
+    #                 date =  datetime.strptime(record[col], '%Y/%m/%d').date()
+    #                 if date>=first:
+    #                     record[col] = tmp
+    #                     if col == col_date_publication:
+    #                         record[col_date] = record[col_date_publication] 
+    #                     return True
+    #             except:
+    #                 None
+    #     return False
 
     def _retain_with_format(self, dico:dict, file_name:str):
         #logging.info(f"Content check for {file_name}")
