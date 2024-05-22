@@ -51,7 +51,8 @@ class ProcessFactory:
                 p = process(self.data_format)
                 p.get()
                 loaded = 1
-                p.convert()
+                if (p.title!=[]):
+                    p.convert()
                 loaded = 2
                 p.fix()
                 loaded = 3
@@ -71,6 +72,7 @@ class ProcessFactory:
         logging.info(f"------------------------------{self.process.__name__}------------------------------")
         p = self.process()
         p.get()
-        p.convert()
+        if (p.title!=[]):
+            p.convert()
         p.fix()
         self.dataframes.append(p.df)

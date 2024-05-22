@@ -46,7 +46,7 @@ class SourceProcess:
     récupération des URLs (_url_init), get, convert et fix."""
     def __init__(self, key,data_format):
         """L'étape __init__ crée les variables associées à la classe SourceProcess : key, source,
-        format, df, file_name, url, cle_api et metadata."""
+        format, df, title, url, cle_api et metadata."""
         logging.info("  ÉTAPE INIT")
         self.key = key
         self.data_format = data_format
@@ -64,7 +64,8 @@ class SourceProcess:
         # Récupération des urls
         self._url_init()
 
-        self.file_name = [f"{self.metadata[self.key]['code']}_{i}" for i in range(len(self.url))]
+        #self.file_name = [f"{self.metadata[self.key]['code']}_{i}" for i in range(len(self.url))]
+        #self.file_name = self.title
 
     def _clean_metadata_folder(self):
         """La fonction _clean_metadata_folder permet le nettoyage de /metadata/{self.source}"""
@@ -83,6 +84,7 @@ class SourceProcess:
         os.makedirs(f"old_metadata/{self.source}", exist_ok=True)
         self.cle_api = self.metadata[self.key]["cle_api"]
         url = []
+        title = []
         if self.cle_api==[]:
             url = url + [self.url_source]
     
@@ -105,9 +107,17 @@ class SourceProcess:
                 old_ressources = []
             
             #Comparaison et modificiation de la variable url
+            # if old_ressources==[]:
+            #     url = url + [d["url"] for d in ressources if
+            #              (d["url"].endswith("xml") or d["url"].endswith("json"))]
+            # else: 
+            #     url = self.check_date_file(url,ressources, old_ressources)
+            #     print("Les urls dont le contenu a été modifié sont: ", url)
+
             if old_ressources==[]:
                 url = url + [d["url"] for d in ressources if
                          (d["url"].endswith("xml") or d["url"].endswith("json"))]
+                title = title + [d["title"] for d in ressources]
             else: 
                 url = self.check_date_file(url,ressources, old_ressources)
                 print("Les urls dont le contenu a été modifié sont: ", url)
@@ -127,14 +137,18 @@ class SourceProcess:
 
         self.metadata[self.key]["url"] = url
         self.url = self.metadata[self.key]["url"]
+        self.title=title
         logging.info("Récupération des url OK")
 
     def check_date_file(self,url, new_ressources,old_ressources):
         """Fonction vérifiant si la date de dernière modification des fichiers ressources DANS les metadatas est strictement
            antérieure à la date de dernière modification """
         for i in range(len(new_ressources)):
-            if new_ressources[i]["last_modified"]>old_ressources[i]["last_modified"] and (new_ressources[i]["url"].endswith("xml") or new_ressources[i]["url"].endswith("json")) :
-                print(new_ressources[i])
+            #condition1 : test si les nouvelles métadonnées sont plus récentes que les anciennes 
+            condition1=new_ressources[i]["last_modified"]>old_ressources[i]["last_modified"]
+            #condition2 : vérification de l'extension
+            condition2=(new_ressources[i]["url"].endswith("xml") or new_ressources[i]["url"].endswith("json"))
+            if condition1 and condition2 :
                 url = url + [new_ressources[i]["url"]] 
         return url
 
@@ -142,19 +156,23 @@ class SourceProcess:
         """Étape get qui permet le lavage du dossier sources/{self.source} et la récupération de
         l'ensemble des fichiers présents sur chaque url."""
         logging.info("  ÉTAPE GET")
-        # Lavage des dossiers dans "sources"   
+        #  Lavage des dossiers dans "sources"   
         # logging.info(f"Début du nettoyage de sources/{self.source}")
         # if os.path.exists(f"sources/{self.source}"):
         #     shutil.rmtree(f"sources/{self.source}")
         # logging.info(f"Nettoyage sources/{self.source} OK")
         # Étape get des url
         logging.info(f"Début du téléchargement : {len(self.url)} fichier(s)")
-        self.file_name = [f"{self.metadata[self.key]['code']}_{i}" for i in range(len(self.url))]
+
         os.makedirs(f"sources/{self.source}", exist_ok=True)
         print("SELF.URL:" ,self.url)
+        #Verification de l'existence d'un eventuel doublon + nettoyage + téléchargement du nouveau fichier
         for i in range(len(self.url)):
             try:
-                wget.download(self.url[i], f"sources/{self.source}/{self.file_name[i]}.{self.format}")
+                if os.path.exists(f"sources/{self.source}/{self.title[i]}"):
+                    os.remove(f"sources/{self.source}/{self.title[i]}")
+                    logging.info(f"Fichier : {self.title[i]} existe déjà, nettoyage du doublon ")
+                wget.download(self.url[i], f"sources/{self.source}/{self.title[i]}")
             except:
                 logging.error("Problème de téléchargement du fichier ", self.url[i])
         logging.info(f"Téléchargement : {len(self.url)} fichier(s) OK")
@@ -230,7 +248,8 @@ class SourceProcess:
     
 
     def date_after_2024(self, record, col_date, col_date_publication):
-            """ La fonction prend en entrée  et renvoie un booléeen. Les dates postérieures à 2024 doivent être de la forme Y-M-J pour les colonnes date et date_de_publication. """
+            """ La fonction prend en entrée  et renvoie un booléeen.
+            Les dates postérieures à 2024 doivent être de la forme Y-M-J pour les colonnes date et date_de_publication. """
             print
             first = datetime.strptime("2024-01-01", "%Y-%m-%d")
             pattern1 = r'20[0-9]{2}-[0-1]{1}[0-9]{1}-[0-9]{2}'
@@ -400,16 +419,16 @@ class SourceProcess:
         for path in os.listdir(repertoire_source):
             if os.path.isfile(os.path.join(repertoire_source, path)):
                 count += 1
-        for i in range(count):
-           
-            file_path = f"sources/{self.source}/{self.file_name[i]}.{self.format}"
+        print(count)
+        for i in range(count):  
+            file_path = f"sources/{self.source}/{self.title[i]}"
             #if file_path=='sources/ternum-bfc/ternum-bfc_20.xml':
             #    print('ERROR')
             #if file_path=='sources/data.gouv.fr_aife/data.gouv.fr_aife_575.xml':
             #    print('ERROR')
             file_exist = os.path.exists(file_path)
             if not file_exist:
-                logging.warning(f"Le fichier {file_path} n existe pas.")
+                logging.warning(f"Le fichier {file_path} n'existe pas.")
 
         if count != len(self.url):
             logging.warning("Nombre de fichiers en local inégal au nombre d'url trouvé")
@@ -420,17 +439,16 @@ class SourceProcess:
                 #if i==575:
                 #    print('ERROR')
                 if self.data_format=='2022':
-                    if not self.check(None,f"sources/{self.source}/{self.file_name[i]}.{self.format}"):
-                        print (self.file_name[i])
-                        logging.warning(f"sources/{self.source}/{self.file_name[i]}.{self.format} not a valide xml")
+                    if not self.check(None,f"sources/{self.source}/{self.title[i]}"):
+                        logging.warning(f"sources/{self.source}/{self.title[i]} not a valide xml")
                         continue
                         #raise Exception(f"sources/{self.source}/{self.file_name[i]}.{self.format} not a valide xml")
                 try:
-                    with open(f"sources/{self.source}/{self.file_name[i]}.{self.format}", encoding='utf-8') as xml_file:
+                    with open(f"sources/{self.source}/{self.title[i]}", encoding='utf-8') as xml_file:
                         dico = xmltodict.parse(xml_file.read(), dict_constructor=dict)
  
                     if dico['marches'] is not None:
-                        self._retain_with_format(dico,f"sources/{self.source}/{self.file_name[i]}_{self.data_format}_ignored.{self.format}")
+                        self._retain_with_format(dico,f"sources/{self.source}/{self.title[i]}_ignored.{self.format}")
                         
                         if 'marches' in dico:
                             # Add marchés
@@ -448,9 +466,9 @@ class SourceProcess:
                                 ##del df
                         ##del dico
                     else:  # cas presque null
-                        logging.warning(f"Le fichier {self.file_name[i]} est vide, il est ignoré")
+                        logging.warning(f"Le fichier {self.title[i]} est vide, il est ignoré")
                 except Exception as err:
-                    logging.error(f"Exception lors du chargement du fichier xml {self.file_name[i]} - {err}")
+                    logging.error(f"Exception lors du chargement du fichier xml {self.title[i]} - {err}")
 
             if len(li) != 0:
                 df = pd.concat(li)
@@ -465,16 +483,16 @@ class SourceProcess:
             for i in range(count):
                 try:
                     with open(
-                            f"sources/{self.source}/{self.file_name[i]}.{self.format}", encoding="utf-8") as json_file:
+                            f"sources/{self.source}/{self.title[i]}", encoding="utf-8") as json_file:
                         
                         #check for format compliance (only for data_format 2022)
                         if self.data_format=='2022':
                             if not self.check(json_file,None):
-                                logging.warning(f"sources/{self.source}/{self.file_name[i]}.{self.format} not a valid json")
+                                logging.warning(f"sources/{self.source}/{self.title[i]} not a valid json")
                                 raise Exception("Json format not valid")
                         
                             dico = json.load(json_file)
-                            self._retain_with_format(dico,f"sources/{self.source}/{self.file_name[i]}_{self.data_format}_ignored.{self.format}")
+                            self._retain_with_format(dico,f"sources/{self.source}/{self.title[i]}_ignored.{self.format}")
 
                             
                             if 'marches' in dico:
@@ -493,14 +511,14 @@ class SourceProcess:
                                     ##del df
                         else:
                             dico = json.load(json_file)
-                            self._retain_with_format(dico,f"sources/{self.source}/{self.file_name[i]}_{self.data_format}_ignored.{self.format}")
+                            self._retain_with_format(dico,f"sources/{self.source}/{self.title[i]}_ignored.{self.format}")
                             df = pd.DataFrame.from_dict(dico['marches'])
                             self._add_column_type(df)
                             li.append(df)
                             ##del df
                         ##del dico
                 except Exception as err:
-                    logging.error(f"Exception lors du chargement du fichier json {self.file_name[i]} - {err}")
+                    logging.error(f"Exception lors du chargement du fichier json {self.title[i]} - {err}")
             df = pd.concat(li)
             ##del li
             df = df.reset_index(drop=True)
