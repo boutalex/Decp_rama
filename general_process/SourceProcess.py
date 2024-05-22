@@ -83,7 +83,9 @@ class SourceProcess:
         os.makedirs(f"metadata/{self.source}", exist_ok=True)
         os.makedirs(f"old_metadata/{self.source}", exist_ok=True)
         self.cle_api = self.metadata[self.key]["cle_api"]
+        #Liste contenant les url à partir desquels on télécharge les fichiers
         url = []
+        #Liste contenant les titres des fichiers
         title = []
         if self.cle_api==[]:
             url = url + [self.url_source]
@@ -105,15 +107,6 @@ class SourceProcess:
                 print("affectation faite")
             else:
                 old_ressources = []
-            
-            #Comparaison et modificiation de la variable url
-            # if old_ressources==[]:
-            #     url = url + [d["url"] for d in ressources if
-            #              (d["url"].endswith("xml") or d["url"].endswith("json"))]
-            # else: 
-            #     url = self.check_date_file(url,ressources, old_ressources)
-            #     print("Les urls dont le contenu a été modifié sont: ", url)
-
             if old_ressources==[]:
                 url = url + [d["url"] for d in ressources if
                          (d["url"].endswith("xml") or d["url"].endswith("json"))]
@@ -156,12 +149,6 @@ class SourceProcess:
         """Étape get qui permet le lavage du dossier sources/{self.source} et la récupération de
         l'ensemble des fichiers présents sur chaque url."""
         logging.info("  ÉTAPE GET")
-        #  Lavage des dossiers dans "sources"   
-        # logging.info(f"Début du nettoyage de sources/{self.source}")
-        # if os.path.exists(f"sources/{self.source}"):
-        #     shutil.rmtree(f"sources/{self.source}")
-        # logging.info(f"Nettoyage sources/{self.source} OK")
-        # Étape get des url
         logging.info(f"Début du téléchargement : {len(self.url)} fichier(s)")
 
         os.makedirs(f"sources/{self.source}", exist_ok=True)
@@ -184,76 +171,76 @@ class SourceProcess:
             else:
                 df['_type'] = df["nature"].apply(lambda x: "Marché" if x=="Marché" else "Concession")
 
-    def _has_all_field_and_date_2024(self, record, record_type:str = None):
-        if record_type:
-            if record_type == 'marche':
-                for column in self.columns_marche_2022:
-                    if not column in record:
-                        return False
-                if not self.date_after_2024(record,'dateNotification','datePublicationDonnees'):
-                    return False 
-            else:
-                for column in self.columns_concession_2022:
-                    if not column in record:
-                        return False
-                if not self.date_after_2024(record,'dateDebutExecution','datePublicationDonnees'):
-                    return False 
+    def _has_all_field_and_date_2024(self, record:dict, record_type:str)->bool :
+        """
+        Fonction vérifiant qu'un marché/concession possède bel et bien toutes les colonnes requise par notre schéma. 
+        Il vérifie également que les dates contenues dans le marché/concession soit postérieur à 2024
+        @record : marché/concession que l'on souhaite traiter
+        @record_type : type du marché (marché/concession)
+        """
+        if record_type == 'marche':
+            for column in self.columns_marche_2022:
+                if not column in record:
+                    logging.info(f"Colonne manquante : {column}")
+                    return False
+            if not self.date_after_2024(record):
+                logging.info(f"Erreur : date précédant 2024")
+                return False 
         else:
-            if 'nature' in record:
-                if 'concession' in record['nature'].lower():
-                    for column in self.columns_concession_2022:
-                        if not column in record:
-                            return False
-                    if not self.date_after_2024(record,'dateDebutExecution','datePublicationDonnees'):
-                        return False 
-                else:
-                    if record['id']=="24992505":
-                        print ('debug')
-                    for column in self.columns_marche_2022:
-                        if not column in record:
-                            return False
-                    if not self.date_after_2024(record,'dateNotification','datePublicationDonnees'):
-                        return False 
-            else:
-                return False
+            for column in self.columns_concession_2022:
+                if not column in record:
+                    logging.info(f"Colonne manquante : {column}")
+                    return False
+            if not self.date_after_2024(record):
+                logging.info(f"Erreur : date précédant 2024")
+                return False 
         return True
     
     def date_norm(self,datestr:str):
         return datestr.replace('+','-') if datestr else datestr
 
-    def date_before_2024(self, record):
-        if 'nature' in record:
-            if not record['nature'] is None  and 'concession' in record['nature'].lower():
-                if 'dateDebutExecution' in record:
-                    if record['dateDebutExecution'] and self.date_norm(record['dateDebutExecution'])<'2024-01-01':
-                        return True
-                if 'datedebutexecution' in record:
-                    if record['datedebutexecution'] and self.date_norm(record['datedebutexecution'])<'2024-01-01':
-                        return True
-            else:
-                if 'dateNotification' in record:
-                    if record['dateNotification'] and self.date_norm(record['dateNotification'])<'2024-01-01':
-                        return True
-                if 'datenotification' in record:
-                    if record['datenotification'] and self.date_norm(record['datenotification'])<'2024-01-01':
-                        return True
-        else:
-            if 'dateNotification' in record:
-                if record['dateNotification'] and self.date_norm(record['dateNotification'])<'2024-01-01':
-                    return True
-            if 'datenotification' in record:
-                if record['datenotification'] and self.date_norm(record['datenotification'])<'2024-01-01':
-                    return True
-        return False
+    # def date_before_2024(self, record):
+    #     """ La fonction vérifie que les dates contenue dans un marché/concession
+    #         Les dates postérieures à 2024 doivent être de la forme Y-M-J pour les colonnes date et date_de_publication. """
+    #     if 'nature' in record:
+    #         if not record['nature'] is None  and 'concession' in record['nature'].lower():
+    #             if 'dateDebutExecution' in record:
+    #                 if record['dateDebutExecution'] and self.date_norm(record['dateDebutExecution'])<'2024-01-01':
+    #                     return True
+    #             if 'datedebutexecution' in record:
+    #                 if record['datedebutexecution'] and self.date_norm(record['datedebutexecution'])<'2024-01-01':
+    #                     return True
+    #         else:
+    #             if 'dateNotification' in record:
+    #                 if record['dateNotification'] and self.date_norm(record['dateNotification'])<'2024-01-01':
+    #                     return True
+    #             if 'datenotification' in record:
+    #                 if record['datenotification'] and self.date_norm(record['datenotification'])<'2024-01-01':
+    #                     return True
+    #     else:
+    #         if 'dateNotification' in record:
+    #             if record['dateNotification'] and self.date_norm(record['dateNotification'])<'2024-01-01':
+    #                 return True
+    #         if 'datenotification' in record:
+    #             if record['datenotification'] and self.date_norm(record['datenotification'])<'2024-01-01':
+    #                 return True
+    #     return False
     
 
-    def date_after_2024(self, record, col_date, col_date_publication):
-            """ La fonction prend en entrée  et renvoie un booléeen.
-            Les dates postérieures à 2024 doivent être de la forme Y-M-J pour les colonnes date et date_de_publication. """
-            print
+    def date_after_2024(self, record:dict)->bool:
+            """
+            La fonction prend en entrée un dictionnaire : record, et renvoie un booléeen.
+            Les dates postérieures à 2024 doivent être de la forme Y-M-J pour les colonnes date et date_de_publication.
+            @record : marché/concession que l'on souhaite traiter
+            """
             first = datetime.strptime("2024-01-01", "%Y-%m-%d")
             pattern1 = r'20[0-9]{2}-[0-1]{1}[0-9]{1}-[0-9]{2}'
             pattern2 = r'20[0-9]{2}/[0-1]{1}[0-9]{1}/[0-9]{2}'
+            if record['nature']=='Marché':
+                col_date = 'dateNotification'
+            else :
+                col_date = 'dateDebutExecution'
+            col_date_publication='datePublicationDonnees'
             col_list = [col_date,col_date_publication]
             for col in col_list:
                 if col in record and record[col] and (re.match(pattern1,record[col]) or re.match(pattern2,record[col])):
@@ -267,146 +254,33 @@ class SourceProcess:
                         None
             return False
         
-    # def date_after_2024(self, record, col_date, col_date_publication):
 
-    #     first = datetime.strptime("2024-01-01", "%Y-%m-%d")
-    #     pattern = r'20[0-9]{2}-[0-1]{1}[0-9]{1}-[0-9]{2}'
-    #     col_list = [col_date,col_date_publication]
-    #     for col in col_list:
-    #         if col in record and record[col] and re.match(pattern,record[col]):
-    #             try:
-    #                 date = datetime.strptime(record[col], "%Y-%m-%d")
-    #                 if date>=first:
-    #                     if col == col_date_publication:
-    #                         record[col_date] = record[col_date_publication]
-    #                     return True
-    #             except:
-    #                 None
-    #     pattern = r'20[0-9]{2}/[0-1]{1}[0-9]{1}/[0-9]{2}'
-    #     for col in col_list:
-    #         if col in record and record[col] and re.match(pattern,record[col]):
-    #             try:
-    #                 tmp = record[col]
-    #                 date =  datetime.strptime(record[col], '%Y/%m/%d').date()
-    #                 if date>=first:
-    #                     record[col] = tmp
-    #                     if col == col_date_publication:
-    #                         record[col_date] = record[col_date_publication] 
-    #                     return True
-    #             except:
-    #                 None
-    #     return False
-
-    def _retain_with_format(self, dico:dict, file_name:str):
-        #logging.info(f"Content check for {file_name}")
-        dico_ignored = []
-        if self.data_format=='2022':
-            #self.df = self.df[~(((~self.df['nature'].str.contains('concession', case=False, na=False)) & (self.df['dateNotification']<'2024-01-01') |
-            #                 ((self.df['nature'].str.contains('concession', case=False, na=False)) & (self.df['dateDebutExecution']<'2024-01-01'))))]
-            if self.format=='xml':
-                if 'marches' in dico:
-                    if 'marche' in dico['marches']:
-                        dico_ignored_marche = []
-                        for m in dico['marches']['marche']:
-                            if not self._has_all_field_and_date_2024(m, 'marche'):
-                                dico_ignored_marche.append(m)
-                        if len(dico_ignored_marche)>0:
-                            for i in dico_ignored_marche:
-                                dico['marches']['marche'].remove(i)
-                                #del ['marches']['marche'][i]
-                                dico_ignored.append(i)
-                    if  'contrat-concession' in dico['marches']:
-                        dico_ignored_concession = []
-                        for m in dico['marches']['contrat-concession']:
-                            if not self._has_all_field_and_date_2024(m, 'contrat-concession'):
-                                dico_ignored_concession.append(m)
-                        if len(dico_ignored_concession)>0:
-                            for i in dico_ignored_concession:
-                                del dico['marches']['contrat-concession'][i]
-                                #dico['marches']['contrat-concession'].remove(i)
-                                dico_ignored.append(i)
-                else:
-                    logging.error("Balise 'marches' inexistante")
-                    dico.clear()
-            else:    
-                if 'marches' in dico:
-                    if 'marche' in dico['marches']:
-                        for m in dico['marches']['marche']:
-                            #if 'dateNotification' in m and m['dateNotification']=='2024-11-24+01:00':
-                            #    print('debug')
-                            if not self._has_all_field_and_date_2024(m):
-                                dico_ignored.append(m)
-                        if len(dico_ignored)>0:
-                            for i in dico_ignored:
-                                #print(dico['marches']['marche'])
-                                dico['marches']['marche'].remove(i)
-                                #del dico['marches']['marche'][i]
-                    if 'contrat-concession' in dico['marches']:
-                        for m in dico['marches']['contrat-concession']:
-                            #if 'dateNotification' in m and m['dateNotification']=='2024-11-24+01:00':
-                            #    print('debug')
-                            if not self._has_all_field_and_date_2024(m):
-                                dico_ignored.append(m)
-                        if len(dico_ignored)>0:
-                            for i in dico_ignored:
-                                #del dico['marches']['marche'][i]
-                                dico['marches']['marche'].remove(i)
-                else:
-                    logging.error("Balise 'marches' inexistante")
-                    dico.clear()
+    def _retain_with_format(self, dico:dict, file_name:str)->dict:
+        """
+        Cette fonction permet de vérifier la validité des marchés et des concessions du dictionnaire fournit en entrée.
+        Elle garde également en mémoire une liste des marchés/concessions invalides pour un éventuel traitement
+        @dico : dictionnaire 
+        @file_name : nom du fichier d'où provient le dictionnaire
+        """
+        self.dico_ignored = []
+        if 'marches' in dico:
+            if 'marche' in dico['marches']:
+                for m in dico['marches']['marche']:
+                    if not self._has_all_field_and_date_2024(m, 'marche'):
+                        dico['marches']['marche'].remove(m)
+                        self.dico_ignored.append(m)
+                        
+            if'contrat-concession' in dico['marches']:
+                for m in dico['marches']['contrat-concession']:
+                    if not self._has_all_field_and_date_2024(m, 'contrat-concession'):
+                        dico['marches']['contrat-concession'].remove(m)
+                        self.dico_ignored.append(m)
         else:
-            #df_ignored = self.df[(((~self.df['nature'].str.contains('concession', case=False, na=False)) & (self.df['dateNotification']>='2024-01-01') |
-            #                 ((self.df['nature'].str.contains('concession', case=False, na=False)) & (self.df['dateDebutExecution']>='2024-01-01'))))]
-            #self.df = self.df[~(((~self.df['nature'].str.contains('concession', case=False, na=False)) & (self.df['dateNotification']>='2024-01-01') |
-            #                 ((self.df['nature'].str.contains('concession', case=False, na=False)) & (self.df['dateDebutExecution']>='2024-01-01'))))]
-            if self.format=='xml':
-                if 'marches' in dico:
-                    for record in dico['marches']['marche']:
-                        if not self.date_before_2024(record):
-                            dico_ignored.append(record)
-                    if len(dico_ignored)>0:
-                        for i in dico_ignored:
-                            if (type(dico['marches']['marche'])=='dict'):
-                                dico['marches']['marche'].pop(i)
-                            else:
-                                dico['marches']['marche'].remove(i)
-                else:
-                    for record in dico:
-                        if not self.date_before_2024(record):
-                            dico_ignored.append(record)
-                    if len(dico_ignored)>0:
-                        for i in dico_ignored:
-                            dico.remove(i)
-            else:
-                if 'marches' in dico:
-                    for record in dico['marches']:
-                        if not self.date_before_2024(record):
-                            dico_ignored.append(record)
-                    if len(dico_ignored)>0:
-                        for i in dico_ignored:
-                            #print( dico['marches'])
-                            del dico['marches'][i]
-    
-                else:
-                    for record in dico:
-                        if '2018t6Mbc-_qMg00'==record['id']:
-                            print(record['id'])
-                        if not self.date_before_2024(record):
-                            dico_ignored.append(record)
-                    if len(dico_ignored)>0:
-                        for i in dico_ignored:
-                            del dico[i]
-                            #dico.remove(i)
+            logging.error("Balise 'marches' inexistante")
+            dico.clear()
 
-        if len(dico_ignored)>0:
-            logging.info(f"Ignored {len(dico_ignored)} record(s) in {file_name}")
-            #if self.format=='xml':
-            #    with open(file_name, 'w') as f:
-            #        f.write(dict2xml.dict2xml(dico_ignored))
-            #else:
-            #    with open(file_name, 'w') as f:
-            #        f.write(dict2xml.dict2xml(dico_ignored))
-            ##del dico_ignored
+        if len(self.dico_ignored)>0:
+            logging.info(f"Ignored {len(self.dico_ignored)} record(s) in {file_name}")
         return dico
 
     def convert(self):
