@@ -55,8 +55,6 @@ class SourceProcess:
         self.source = self.metadata[self.key]["code"]
         self.format = self.metadata[self.key]["format"]
         self.url_source = self.metadata[self.key]["url_source"]
-        self.liste_2022 = []
-        self.liste_2019 = []
         self.df = pd.DataFrame()
         # Lavage des dossiers de la source
         self._clean_metadata_folder()
@@ -64,8 +62,6 @@ class SourceProcess:
         # Récupération des urls
         self._url_init()
 
-        #self.file_name = [f"{self.metadata[self.key]['code']}_{i}" for i in range(len(self.url))]
-        #self.file_name = self.title
 
     def _clean_metadata_folder(self):
         """La fonction _clean_metadata_folder permet le nettoyage de /metadata/{self.source}"""
@@ -77,23 +73,36 @@ class SourceProcess:
 
     def _url_init(self):
         """_url_init permet la récupération de l'ensemble des url des fichiers qui doivent être
-        téléchargés pour une source. Ces url sont conservés dans self.metadata, le dictionnaire
-        correspondant à la source."""
-        logging.info("Début de la récupération de la liste des url")
+        téléchargés pour une source. Ces urls sont conservés dans self.metadata."""
+
+        logging.info("Initialisation")
         os.makedirs(f"metadata/{self.source}", exist_ok=True)
         os.makedirs(f"old_metadata/{self.source}", exist_ok=True)
         self.cle_api = self.metadata[self.key]["cle_api"]
-        #Liste contenant les url à partir desquels on télécharge les fichiers
+        #Liste contenant les urls à partir desquels on télécharge les fichiers
         url = []
-        #Liste contenant les titres des fichiers
-        title = []
         if self.cle_api==[]:
             url = url + [self.url_source]
+
+        url, title = self.create_metadata_file(len(self.cle_api),url)
+           
+        self.url = url
+        self.title = title
+        logging.info("Initialisation finie")
     
-        for i in range(len(self.cle_api)):
+    def create_metadata_file(self,n:int,url:list)->tuple[list,list]:
+        """
+        Fonction réalisant le téléchargement des métadatas, la copie des
+        fichiers métadatas et la création des listes contenant les titres
+        et les urls des fichiers.
+        n: nombre de clé api (=nombre de tour dans la boucle)
+        """
+        logging.info("Début de la récupération de la liste des url")
+        title = []
+        for i in range(n):
             #Téléchargement du fichier de metadata de self.source et création de la 1ere variable json pour la comparaison 
             wget.download(f"https://www.data.gouv.fr/api/1/datasets/{self.cle_api[i]}/",
-                          f"metadata/{self.source}/metadata_{self.key}_{i}.json")
+                            f"metadata/{self.source}/metadata_{self.key}_{i}.json")
             with open(f"metadata/{self.source}/metadata_{self.key}_{i}.json", 'r+') as f:
                 ref_json = json.load(f)
             ressources = ref_json["resources"]
@@ -109,7 +118,7 @@ class SourceProcess:
                 old_ressources = []
             if old_ressources==[]:
                 url = url + [d["url"] for d in ressources if
-                         (d["url"].endswith("xml") or d["url"].endswith("json"))]
+                            (d["url"].endswith("xml") or d["url"].endswith("json"))]
                 title = title + [d["title"] for d in ressources]
             else: 
                 url = self.check_date_file(url,ressources, old_ressources)
@@ -127,15 +136,18 @@ class SourceProcess:
             else:
                 shutil.copy(f"metadata/{self.source}/metadata_{self.key}_{i}.json",f"old_metadata/{self.source}/old_metadata_{self.key}_{i}.json")
                 print(os.listdir(f"old_metadata/{self.source}"))
+            logging.info("Récupération des url OK")
+            return url,title
 
-        self.metadata[self.key]["url"] = url
-        self.url = self.metadata[self.key]["url"]
-        self.title=title
-        logging.info("Récupération des url OK")
 
-    def check_date_file(self,url, new_ressources,old_ressources):
-        """Fonction vérifiant si la date de dernière modification des fichiers ressources DANS les metadatas est strictement
-           antérieure à la date de dernière modification """
+    def check_date_file(self,url:list, new_ressources:dict,old_ressources:dict)->list:
+        """
+        Fonction vérifiant si la date de dernière modification des fichiers ressources 
+        dans les metadatas est strictement antérieure à la date de dernière modification.
+        @url: la liste contenant les liens pour télécharger les fichiers
+        @new_ressources: dictionnaire correspondant au champ "resources" dans le fichier metadata de la source
+        @old_ressources: dictionnaire correspondant au champ "resources" dans le fichier old_metadata de la source
+        """
         for i in range(len(new_ressources)):
             #condition1 : test si les nouvelles métadonnées sont plus récentes que les anciennes 
             condition1=new_ressources[i]["last_modified"]>old_ressources[i]["last_modified"]
@@ -152,7 +164,7 @@ class SourceProcess:
         logging.info(f"Début du téléchargement : {len(self.url)} fichier(s)")
 
         os.makedirs(f"sources/{self.source}", exist_ok=True)
-        print("SELF.URL:" ,self.url)
+        print("SELF.URL:" , self.url)
         #Verification de l'existence d'un eventuel doublon + nettoyage + téléchargement du nouveau fichier
         for i in range(len(self.url)):
             try:
@@ -310,8 +322,6 @@ class SourceProcess:
         if self.format == 'xml':
             li = []
             for i in range(count):
-                #if i==575:
-                #    print('ERROR')
                 if self.data_format=='2022':
                     if not self.check(None,f"sources/{self.source}/{self.title[i]}"):
                         logging.warning(f"sources/{self.source}/{self.title[i]} not a valide xml")
