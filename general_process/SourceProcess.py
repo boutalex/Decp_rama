@@ -17,6 +17,8 @@ import re
 import logging
 import shutil
 pd.options.mode.chained_assignment = None
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
 
 
 class SourceProcess:
@@ -61,7 +63,7 @@ class SourceProcess:
         self._clean_metadata_folder()
 
         # Récupération des urls
-        self._url_init()
+        self._url_init() 
 
 
     def _clean_metadata_folder(self):
@@ -77,7 +79,7 @@ class SourceProcess:
         téléchargés pour une source. Ces urls sont conservés dans self.metadata."""
 
         logging.info("Initialisation")
-        os.makedirs(f"metadata/{self.source}", exist_ok=True)
+        os.makedirs(f"metadata/{self.source}", exist_ok=True) 
         os.makedirs(f"old_metadata/{self.source}", exist_ok=True)
         self.cle_api = self.metadata[self.key]["cle_api"]
         #Liste contenant les urls à partir desquels on télécharge les fichiers
@@ -316,7 +318,6 @@ class SourceProcess:
         else:
             logging.error("Balise 'marches' inexistante")
             dico.clear()
-
         if len(self.dico_ignored)>0:
             logging.info(f"Ignored {len(self.dico_ignored)} record(s) in {file_name}")
         return dico
@@ -349,6 +350,8 @@ class SourceProcess:
 
         # if count != len(self.url):
         #     logging.warning("Nombre de fichiers en local inégal au nombre d'url trouvé")
+        # if count != len(self.url):
+        #     logging.warning("Nombre de fichiers en local inégal au nombre d'url trouvé")
         logging.info(f"Début de convert: mise au format DataFrame de {self.source}")
         if self.format == 'xml':
             li = []
@@ -364,7 +367,6 @@ class SourceProcess:
  
                     if dico['marches'] is not None:
                         dico = self._retain_with_format(dico,f"sources/{self.source}/{self.title[i]}_ignored.{self.format}")
-                        print(dico)
                         
                         if 'marches' in dico:
                             # Add marchés
@@ -398,8 +400,7 @@ class SourceProcess:
             li = []
             for i in range(count):
                 try:
-                    with open(
-                            f"sources/{self.source}/{self.title[i]}", encoding="utf-8") as json_file:
+                    with open(f"sources/{self.source}/{self.title[i]}", encoding="utf-8") as json_file:
                         
                         #check for format compliance (only for data_format 2022)
                         if self.data_format=='2022':
@@ -552,7 +553,9 @@ class SourceProcess:
         else:
             if self.format=='json':
                 scheme_path = 'schemes/decp_2022.json'
-                jsonScheme = json.load(open(scheme_path, "r",encoding='utf-8'))
+                with open(scheme_path, "r",encoding='utf-8')as jsonfile:
+                    jsonScheme = json.load(jsonfile)
+                    jsonfile.close
                 return self.validateJson(jsonData,jsonScheme)
             else:    # xml
                 scheme_path = 'schemes/decp_2022.xsd'
@@ -563,6 +566,7 @@ class SourceProcess:
                 except xmlschema.exceptions.XMLSchemaException as err:
                     logging.error(f"Erreur de validation xml - {err}")
                     return False
+                
                 #return self.validateXml(xml_path,scheme_path)
         #conform = False
 
@@ -636,6 +640,27 @@ class SourceProcess:
     #         self.df.loc[false_marcheInnovant, col_name] = "non"
     #     false_marcheInnovant = self.df.loc[:,col_name].astype(str)==False
     #     self.df.loc[false_marcheInnovant, col_name] = "non"
+
+
+    # def convert_boolean(self,col_name):
+    #     print(col_name)
+    #     if self.df.loc[:,col_name].dtype=='O':
+    #         true_marcheInnovant = self.df.loc[:,col_name].astype(str).str.match(r'^(1)$',case=False,na=False)
+    #         self.df.loc[true_marcheInnovant, col_name] = "oui"
+    #         true_marcheInnovant = self.df.loc[:,col_name].astype(str).str.match(r'^(true)$',case=False,na=False)
+    #         self.df.loc[true_marcheInnovant, col_name] = "oui"
+    #         false_marcheInnovant = self.df.loc[:, col_name].astype(str).str.match(r'^(0)$',case=False,na=False) 
+    #         self.df.loc[false_marcheInnovant, col_name] = "non"
+    #         false_marcheInnovant = self.df.loc[:, col_name].astype(str).str.match(r'^(false)$',case=False,na=False) 
+    #         self.df.loc[false_marcheInnovant, col_name] = "non"
+    #     elif self.df.loc[:,col_name]==True :
+    #         true_marcheInnovant = self.df.loc[:,col_name]==True
+    #         self.df.loc[true_marcheInnovant, col_name] = "oui"
+
+    #     else :
+    #         false_marcheInnovant = self.df.loc[:,col_name]==False
+    #         self.df.loc[false_marcheInnovant, col_name] = "non"
+
 
     def fix(self):
         """

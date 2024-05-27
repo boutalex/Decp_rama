@@ -6,7 +6,7 @@
         "acheteur": {
           "id": "21750001630066"
         },
-        "marcheInnovant": true,
+        "marcheInnovant": "oui",
         "origineUE": 0.1,
         "origineFrance": 0.1,
         "ccag": "Travaux",
@@ -22,7 +22,7 @@
             "Clause environnementale"
           ]
         },
-        "attributionAvance": true,
+        "attributionAvance": "1",
         "considerationsSociales": {
           "considerationSociale": [
             "Clause sociale",
@@ -116,7 +116,7 @@
         "acheteur": {
           "id": "21750001630040"
         },
-        "marcheInnovant": true,
+        "marcheInnovant": "non",
         "origineUE": 0.1,
         "origineFrance": 0.1,
         "ccag": "Travaux",

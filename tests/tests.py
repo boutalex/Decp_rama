@@ -3,6 +3,9 @@ import sys
 import os
 import json
 import xmltodict
+import pandas as pd
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
 
 # Ajoutez le chemin du projet au sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -17,27 +20,34 @@ class UneClasseDeTest(unittest.TestCase):
         self.process = SampleJsonProcess("2022")
     
         self.url = []
+        
+        self.df = pd.DataFrame()
 
         
     
     def test_select_recent_url(self):
+        """
+        Test de la fonction check date file, on récupère seulement les fichiers qui sont plus récents que les anciens fichiers téléchargés
+        """
         
         old_ressources = [
-            {"last_modified": "2022-01-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite1.xml"},
-            {"last_modified": "2023-04-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite2.json"},
-            {"last_modified": "2023-04-01T00:00:00.000000+00:00", "url": "https://example.com/collectivite3.json"},
-            {"last_modified": "2023-01-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite4.json"}
+            {"last_modified": "2022-01-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite1.xml", "title": "Collectivite 1"},
+            {"last_modified": "2023-04-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite2.json", "title": "Collectivite 2"},
+            {"last_modified": "2023-04-01T00:00:00.000000+00:00", "url": "https://example.com/collectivite3.json", "title": "Collectivite 3"},
+            {"last_modified": "2023-01-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite4.json", "title": "Collectivite 4"}
         ]
+
         new_ressources = [
-            {"last_modified": "2023-01-01T00:00:00.000000+00:00", "url": "https://example.com/collectivite1.xml"},
-            {"last_modified": "2023-04-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite2.json"},
-            {"last_modified": "2023-04-16T00:00:00.000000+00:00", "url": "https://example.com/collectivite3.json"},
-            {"last_modified": "2023-01-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite4.json"}
+            {"last_modified": "2023-01-01T00:00:00.000000+00:00", "url": "https://example.com/collectivite1.xml", "title": "Collectivite 1"},
+            {"last_modified": "2023-04-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite2.json", "title": "Collectivite 2"},
+            {"last_modified": "2023-04-16T00:00:00.000000+00:00", "url": "https://example.com/collectivite3.json", "title": "Collectivite 3"},
+            {"last_modified": "2023-01-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite4.json", "title": "Collectivite 4"}
         ]
-        resultats = self.process.check_date_file(self.url, new_ressources, old_ressources)
+        title=[]
+        resultats = self.process.check_date_file(self.url, title, new_ressources, old_ressources)
 
         # Vérification du résultat
-        expected_url = ["https://example.com/collectivite1.xml","https://example.com/collectivite3.json"]
+        expected_url = (["https://example.com/collectivite1.xml","https://example.com/collectivite3.json"] ,["Collectivite 1", "Collectivite 3"])
         self.assertEqual(resultats, expected_url)
     
     # def test_date_before_2024(self):
@@ -49,6 +59,9 @@ class UneClasseDeTest(unittest.TestCase):
     #     self.assertEqual(resultats, expected_res)
 
     def test_date_after_2024(self):
+        """
+        Test de la fonction date_after_2024, on test si la fonction détecte si le fichier date d'après 2024 ou non  
+        """
         with open(f"tests/test_before2024.xml", encoding='utf-8') as xml_file:
             dico = xmltodict.parse(xml_file.read(), dict_constructor=dict)
         m = dico['marches']['marche']
@@ -57,6 +70,10 @@ class UneClasseDeTest(unittest.TestCase):
         self.assertEqual(resultats, expected_res)
 
     def test_has_all_field_and_date_2024(self):
+        """
+        Test de la fonction has_all_field_and_date_2024, on test si les marchés/concessions possèdent bien les colonnes et les champs necessaires
+        au format 2022 ainsi que leurs date.
+        """
         with open(f"tests/test_before2024.xml", encoding='utf-8') as xml_file:
             dico = xmltodict.parse(xml_file.read(), dict_constructor=dict)
         m = dico['marches']['marche']
@@ -65,6 +82,11 @@ class UneClasseDeTest(unittest.TestCase):
         self.assertEqual(resultats, expected_res)
 
     def test_retain_wit_forma(self):
+        """
+        Test de la fonction retain_with_fomat, on vérifie que le dictionnaire en paramètre est valide par rapport à notre format 2022
+        et trie les dictionnaire dans deux listes différentes, une pour les dico valide que l'on va traiter dans la suite du code
+        et une autre pour les dico invalide que l'on va garder de coté
+        """
         with open(f"tests/test_retain.json", encoding='utf-8') as json_file:
             dico = json.load(json_file)
         resultats= self.process._retain_with_format(dico,"testFile")
@@ -185,7 +207,18 @@ class UneClasseDeTest(unittest.TestCase):
         }
         self.assertDictEqual(resultats,expected_res)
 
-
+    def test_convert(self):
+        """
+        On test la fonction convert, on part du principe que la fonction convert_prestataire fonctionne et renvoi un résultat valide
+        donc on créer un dataframe qui correspond au résultat de la fonction convert_prestataire et on en créer un autre qui 
+        correspond au résultat de notre fonction convert, on vérifie que ces deux dataframe sont identiques
+        """
+        self.process.convert()
+        expected_res=True
+        df_notre= self.process.df
+        df_prestataire = self.process.convert_prestataire()
+        resultats = df_notre.equals(df_prestataire)
+        self.assertEqual(resultats, expected_res)
 
 if __name__ == '__main__':
     unittest.main()
