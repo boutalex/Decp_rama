@@ -168,7 +168,6 @@ class SourceProcess:
         """
         nom_fichier = os.listdir(f"sources/{self.source}")
         if nom_fichier!=[]:
-            print(nom_fichier)
             os.remove(f"sources/{self.source}/{nom_fichier[0]}")
             logging.info(f"Fichier : {nom_fichier[0]} existe déjà, nettoyage du doublon ")
             wget.download(self.url[0], f"sources/{self.source}/{nom_fichier[0]}")
@@ -339,10 +338,9 @@ class SourceProcess:
         for path in os.listdir(repertoire_source):
             if os.path.isfile(os.path.join(repertoire_source, path)):
                 count += 1
-        print(count)
         for i in range(count):
-            print ("title",self.title) 
-            print ("i :",i) 
+            # print ("title",self.title) 
+            # print ("i :",i) 
             file_path = f"sources/{self.source}/{self.title[i]}"
             file_exist = os.path.exists(file_path)
             if not file_exist:
@@ -454,13 +452,13 @@ class SourceProcess:
         logging.info("  ÉTAPE CONVERT")
         # suppression des '
         count = 0
-        list_path = []    #list_path sera la liste de tous les fichiers car self.title est la liste des noms de  fichiers qui ont été téléchargés
+        list_path = []    #list_path sera la liste de tous les fichiers car self.title est la liste des noms de fichiers qui ont été téléchargés
         repertoire_source = f"sources/{self.source}"
+        #on récupère le nom de chaque fichier et on le met dans liste path, en plus de compter le nombre de fichiers présent dnas le dossier source
         for path in os.listdir(repertoire_source):
             if os.path.isfile(os.path.join(repertoire_source, path)):
-                list_path = list_path + [path] #MATHIIIIIILDE ALED (faut lui demander si on peut rendre ça plus propre)
+                list_path = list_path + [path] 
                 count += 1
-                print("repr",path)
 
         logging.info(f"Début de convert: mise au format DataFrame de {self.source}")
 
@@ -483,6 +481,7 @@ class SourceProcess:
                     except Exception as err:
                         logging.error(f"Exception lors du chargement du fichier json {list_path[i]} - {err}")
 
+            #dictionnaire contenant les dictionnaires valide par rapport au schéma 2022
             dico_valide = self._retain_with_format(dico,f"sources/{self.source}/{list_path[i]}_ignored.{self.format}")
 
             # A chaque nouveau marché/concession, on ajoute crée un dataframe d'une
@@ -522,7 +521,7 @@ class SourceProcess:
 
 
 
-    def validateJson(self,jsonData,jsonScheme):
+    def validateJson(self,jsonData,jsonScheme) -> bool:
         try:
             #Draft7Validator.check_schema(jsonScheme)
             #Draft202012Validator.check_schema(jsonScheme)
@@ -547,25 +546,32 @@ class SourceProcess:
         
         return result
     
-    def check(self,jsonData,xml_path):
-        if self.data_format=='2019':
-            return True
-        else:
-            if self.format=='json':
-                scheme_path = 'schemes/decp_2022.json'
-                with open(scheme_path, "r",encoding='utf-8')as jsonfile:
-                    jsonScheme = json.load(jsonfile)
-                    jsonfile.close
-                return self.validateJson(jsonData,jsonScheme)
-            else:    # xml
-                scheme_path = 'schemes/decp_2022.xsd'
-                try:
-                    with open(xml_path, 'r', encoding='utf-8') as xml_file:
-                        xml_content = xml_file.read()
-                    return xmlschema.validate(xml_content, scheme_path)==None
-                except xmlschema.exceptions.XMLSchemaException as err:
-                    logging.error(f"Erreur de validation xml - {err}")
-                    return False
+    def check(self,jsonData,xml_path:str) -> bool:
+        """
+        Fonction qui prend en paramètre une donnée Json ou xml et qui vérifie grâce à un schéma que la donnée est valide
+        @JsonData : donnée json en entrée (nul si xml)
+        @xml_path : donnée xml en entrée (nul si json)
+        """
+        # if self.data_format=='2019':
+        #     return True
+        #else:
+
+        #on vérifie que la donnée en entrée est valide par rapport au schéma
+        if self.format=='json':
+            scheme_path = 'schemes/decp_2022.json'
+            with open(scheme_path, "r",encoding='utf-8')as jsonfile:
+                jsonScheme = json.load(jsonfile)
+                jsonfile.close
+            return self.validateJson(jsonData,jsonScheme)
+        else:    # xml
+            scheme_path = 'schemes/decp_2022.xsd'
+            try:
+                with open(xml_path, 'r', encoding='utf-8') as xml_file:
+                    xml_content = xml_file.read()
+                return xmlschema.validate(xml_content, scheme_path)==None
+            except xmlschema.exceptions.XMLSchemaException as err:
+                logging.error(f"Erreur de validation xml - {err}")
+                return False
                 
                 #return self.validateXml(xml_path,scheme_path)
         #conform = False
@@ -597,28 +603,15 @@ class SourceProcess:
         #return conform
 
     def convert_boolean(self,col_name):
-        #Conversion du type de la colonne en type str
-        print("avant conversion", self.df.loc[:,col_name].dtype)
-        self.df.loc[:,col_name].astype(str)
-        print("apres conversion: ", self.df.loc[:,col_name].dtype)
-        #self.df.loc[:,col_name].replace({True: 'True', False: 'False'})
-
-        true_possibilites = [ 
-        self.df[col_name].str.match(r'^(1)$', case=False, na=False),
-        self.df[col_name].str.match(r'^(true)$', case=False, na=False)]
-
-        false_possiblites = [
-        self.df[col_name].str.match(r'^(0)$', case=False, na=False),
-        self.df[col_name].str.match(r'^(false)$', case=False, na=False)
-        ]
-
-        for i in (true_possibilites):
-            true_marcheInnovant = self.df.loc[:,col_name]==True    #récuperer les lignes valant "True"
-            self.df.loc[true_marcheInnovant, col_name] = "oui"     #remplacement des "True" par "oui"
-            
-        for j in (false_possiblites):
-            false_marcheInnovant = self.df.loc[:,col_name]==True  #récuperer les lignes valant "False"
-            self.df.loc[false_marcheInnovant, col_name] = "non"
+        # Vérification du type de la colonne "col_name". Le type doit être un string
+        print("Type:", self.df[col_name].dtype )
+        if self.df[col_name].dtype == 'O':  # objet
+            print("dans le if")
+            self.df[col_name] = self.df[col_name].str.lower()
+            self.df[col_name] = self.df[col_name].replace({'1': 'oui', 'true': 'oui', '0': 'non', 'false': 'non'})
+        else:
+            print("dans le else")
+            self.df[col_name] = self.df[col_name].astype(str).replace({'True': 'oui', 'False': 'non'}) 
 
 
 
@@ -689,14 +682,15 @@ class SourceProcess:
             if "offresRecues" in self.df.columns:
                 self.df['offresRecues'] = self.df['offresRecues'].fillna(0).astype(int)
             if "marcheInnovant" in self.df.columns:
-                print("TYPE COLONNE MARCHE INNOVANT:", self.df['marcheInnovant'].dtype)
+                #print("TYPE COLONNE MARCHE INNOVANT:", self.df['marcheInnovant'].dtype)
                 self.convert_boolean('marcheInnovant')
             if "attributionAvance" in self.df.columns:
-                print("TYPE COLONNE ATTRIBUTION AVANCEE:", self.df['attributionAvance'].dtype)
+                #print("TYPE COLONNE ATTRIBUTION AVANCEE:", self.df['attributionAvance'].dtype)
                 self.convert_boolean('attributionAvance')
             if "sousTraitanceDeclaree" in self.df.columns:
-                print("TYPE COLONNE sous traitance:", self.df['sousTraitanceDeclaree'].dtype)
+                #print("TYPE COLONNE sous traitance:", self.df['sousTraitanceDeclaree'].dtype)
                 self.convert_boolean('sousTraitanceDeclaree')
+            
         else:
             if "acheteur" in self.df.columns:
                 bool_nan_acheteur = ~self.df.loc[:, "acheteur"].isna()
