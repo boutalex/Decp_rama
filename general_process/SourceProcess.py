@@ -56,6 +56,7 @@ class SourceProcess:
         self.format = self.metadata[self.key]["format"]
         self.url_source = self.metadata[self.key]["url_source"]
         self.df = pd.DataFrame()
+        self.title = []
         # Lavage des dossiers de la source
         self._clean_metadata_folder()
 
@@ -80,17 +81,16 @@ class SourceProcess:
         os.makedirs(f"old_metadata/{self.source}", exist_ok=True)
         self.cle_api = self.metadata[self.key]["cle_api"]
         #Liste contenant les urls à partir desquels on télécharge les fichiers
-        url = []
         if self.cle_api==[]:
-            url = url + [self.url_source]
-
-        url, title = self.create_metadata_file(len(self.cle_api),url)
+            self.url = [self.url_source]
+        else:
+            self.url, self.title = self.create_metadata_file(len(self.cle_api))
            
-        self.url = url
-        self.title = title
+        # self.url = url
+        # self.title = title
         logging.info("Initialisation finie")
     
-    def create_metadata_file(self,n:int,url:list)->tuple[list,list]:
+    def create_metadata_file(self,n:int)->tuple[list,list]:
         """
         Fonction réalisant le téléchargement des métadatas, la copie des
         fichiers métadatas et la création des listes contenant les titres
@@ -98,7 +98,8 @@ class SourceProcess:
         n: nombre de clé api (=nombre de tour dans la boucle)
         """
         logging.info("Début de la récupération de la liste des url")
-        title = []
+        title = []  
+        url = []    
         for i in range(n):
             #Téléchargement du fichier de metadata de self.source et création de la 1ere variable json pour la comparaison 
             wget.download(f"https://www.data.gouv.fr/api/1/datasets/{self.cle_api[i]}/",
@@ -116,22 +117,22 @@ class SourceProcess:
                 print("affectation faite")
             else:
                 old_ressources = []
+            
+            #Création de la liste des urls selon 2 cas: 1er téléchargement, i-nième téléchargement
             if old_ressources==[]:
                 url = url + [d["url"] for d in ressources if
                             (d["url"].endswith("xml") or d["url"].endswith("json"))]
                 title = title + [d["title"] for d in ressources]
             else: 
-                url = self.check_date_file(url,ressources, old_ressources)
+                url, title = self.check_date_file(url,title, ressources, old_ressources)
                 print("Les urls dont le contenu a été modifié sont: ", url)
 
             #Cas où les fichiers old_metadata existent, on écrit dedans à nouveau
             if os.path.exists(f"old_metadata/{self.source}/old_metadata_{self.key}_{i}.json"):
                 with open(f"metadata/{self.source}/metadata_{self.key}_{i}.json", 'r') as source_file:
                     contenu = source_file.read()
-                    print("lecture")
                 with open(f"old_metadata/{self.source}/old_metadata_{self.key}_{i}.json", 'w') as destination_file:
                     destination_file.write(contenu)
-                    print("ecriture")
             #Cas où les fichiers old_metadata n'existent pas, on fait une copie
             else:
                 shutil.copy(f"metadata/{self.source}/metadata_{self.key}_{i}.json",f"old_metadata/{self.source}/old_metadata_{self.key}_{i}.json")
@@ -140,7 +141,7 @@ class SourceProcess:
             return url,title
 
 
-    def check_date_file(self,url:list, new_ressources:dict,old_ressources:dict)->list:
+    def check_date_file(self,url:list, title: list, new_ressources:dict,old_ressources:dict)->list:
         """
         Fonction vérifiant si la date de dernière modification des fichiers ressources 
         dans les metadatas est strictement antérieure à la date de dernière modification.
@@ -155,45 +156,69 @@ class SourceProcess:
             condition2=(new_ressources[i]["url"].endswith("xml") or new_ressources[i]["url"].endswith("json"))
             if condition1 and condition2 :
                 url = url + [new_ressources[i]["url"]] 
-        return url
+                title = title + [new_ressources[i]["title"]] 
+        return url, title
+
+    def download_without_metadata(self):
+        """
+        Fonction téléchargeant un fichier n'ayant pas de clé api. Par conséquent, le
+        téléchargement s'effectue grâce à l'url dans l'atribut url_source
+        """
+        nom_fichier = os.listdir(f"sources/{self.source}")
+        if nom_fichier!=[]:
+            print(nom_fichier)
+            os.remove(f"sources/{self.source}/{nom_fichier[0]}")
+            logging.info(f"Fichier : {nom_fichier[0]} existe déjà, nettoyage du doublon ")
+            wget.download(self.url[0], f"sources/{self.source}/{nom_fichier[0]}")
+            self.title = [ nom_fichier[0] ]
+            print("TITLE :", self.title)
+
+        #Le dossier est vide car il s'agit du 1er téléchargement. Téléchargement 
+        #dans le dossier puis affectation du nom du fichier à l'attribut titre
+        else:
+            wget.download(self.url[0], f"sources/{self.source}/")
+            print(os.listdir(f"sources/{self.source}"))
+            self.title = [ os.listdir(f"sources/{self.source}")[0] ]
+            print("TITLE:", self.title)
+            
 
     def get(self):
-        """Étape get qui permet le lavage du dossier sources/{self.source} et la récupération de
-        l'ensemble des fichiers présents sur chaque url."""
+        """
+        Étape get qui permet le lavage du dossier sources/{self.source} et 
+        la récupération de l'ensemble des fichiers présents sur chaque url.
+        """
         logging.info("  ÉTAPE GET")
         logging.info(f"Début du téléchargement : {len(self.url)} fichier(s)")
-
         os.makedirs(f"sources/{self.source}", exist_ok=True)
         print("SELF.URL:" , self.url)
-        #Verification de l'existence d'un eventuel doublon + nettoyage + téléchargement du nouveau fichier
-        for i in range(len(self.url)):
-            try:
-                if os.path.exists(f"sources/{self.source}/{self.title[i]}"):
-                    os.remove(f"sources/{self.source}/{self.title[i]}")
-                    logging.info(f"Fichier : {self.title[i]} existe déjà, nettoyage du doublon ")
-                wget.download(self.url[i], f"sources/{self.source}/{self.title[i]}")
-            except:
-                logging.error("Problème de téléchargement du fichier ", self.url[i])
+        if self.cle_api==[]:
+            print("Pas  de clé api")
+            self.download_without_metadata()
+        else:
+            # Verification de l'existence d'un eventuel doublon + nettoyage + 
+            # téléchargement du nouveau fichier
+            for i in range(len(self.url)):
+                try:
+                    if os.path.exists(f"sources/{self.source}/{self.title[i]}"):
+                        os.remove(f"sources/{self.source}/{self.title[i]}")
+                        logging.info(f"Fichier : {self.title[i]} existe déjà, nettoyage du doublon ")
+                    wget.download(self.url[i], f"sources/{self.source}/{self.title[i]}")
+                except:
+                    logging.error("Problème de téléchargement du fichier ", self.url[i])
         logging.info(f"Téléchargement : {len(self.url)} fichier(s) OK")
-
-    def _add_column_type(self, df: pd.DataFrame, default_type_name:str = None):
-        if self.data_format=='2022' and not "_type" in df.columns and (default_type_name or "nature" in df.columns):
-            if default_type_name:
-                df['_type'] = default_type_name
-            else:
-                df['_type'] = df["nature"].apply(lambda x: "Marché" if x=="Marché" else "Concession")
 
     def _has_all_field_and_date_2024(self, record:dict, record_type:str)->bool :
         """
-        Fonction vérifiant qu'un marché/concession possède bel et bien toutes les colonnes requise par notre schéma. 
-        Il vérifie également que les dates contenues dans le marché/concession soit postérieur à 2024
+        Fonction vérifiant qu'un marché/concession possède bel et bien toutes 
+        les colonnes requise par notre schéma. Il vérifie également que les 
+        dates contenues dans le marché/concession soit postérieur à 2024.
         @record : marché/concession que l'on souhaite traiter
         @record_type : type du marché (marché/concession)
         """
         if record_type == 'marche':
             for column in self.columns_marche_2022:
                 if not column in record:
-                    logging.info(f"Colonne manquante : {column}")
+                    #logging.info(f"Colonne manquante : {column}")    #A retirer
                     return False
             if not self.date_after_2024(record):
                 logging.info(f"Erreur : date précédant 2024")
@@ -201,7 +226,7 @@ class SourceProcess:
         else:
             for column in self.columns_concession_2022:
                 if not column in record:
-                    logging.info(f"Colonne manquante : {column}")
+                    #logging.info(f"Colonne manquante : {column}")   #A retirer
                     return False
             if not self.date_after_2024(record):
                 logging.info(f"Erreur : date précédant 2024")
@@ -269,10 +294,11 @@ class SourceProcess:
 
     def _retain_with_format(self, dico:dict, file_name:str)->dict:
         """
-        Cette fonction permet de vérifier la validité des marchés et des concessions du dictionnaire fournit en entrée.
-        Elle garde également en mémoire une liste des marchés/concessions invalides pour un éventuel traitement
+        Cette fonction permet de vérifier la validité des marchés et des concessions
+        du dictionnaire fournit en entrée. Elle garde également en mémoire une liste
+        des marchés/concessions invalides pour un éventuel traitement.
         @dico : dictionnaire 
-        @file_name : nom du fichier d'où provient le dictionnaire
+        @file_name : nom du fichier où sont stockés les fichiers non valides et ignorés
         """
         self.dico_ignored = []
         if 'marches' in dico:
@@ -295,7 +321,14 @@ class SourceProcess:
             logging.info(f"Ignored {len(self.dico_ignored)} record(s) in {file_name}")
         return dico
 
-    def convert(self):
+    def _add_column_type(self, df: pd.DataFrame, default_type_name:str = None):
+        if self.data_format=='2022' and not "_type" in df.columns and (default_type_name or "nature" in df.columns):
+            if default_type_name:
+                df['_type'] = default_type_name
+            else:
+                df['_type'] = df["nature"].apply(lambda x: "Marché" if x=="Marché" else "Concession")
+
+    def convert_prestataire(self):
         """Étape de conversion des fichiers qui supprime les ' et concatène les fichiers présents
         dans {self.source} dans un seul DataFrame"""
         logging.info("  ÉTAPE CONVERT")
@@ -306,18 +339,16 @@ class SourceProcess:
             if os.path.isfile(os.path.join(repertoire_source, path)):
                 count += 1
         print(count)
-        for i in range(count):  
+        for i in range(count):
+            print ("title",self.title) 
+            print ("i :",i) 
             file_path = f"sources/{self.source}/{self.title[i]}"
-            #if file_path=='sources/ternum-bfc/ternum-bfc_20.xml':
-            #    print('ERROR')
-            #if file_path=='sources/data.gouv.fr_aife/data.gouv.fr_aife_575.xml':
-            #    print('ERROR')
             file_exist = os.path.exists(file_path)
             if not file_exist:
                 logging.warning(f"Le fichier {file_path} n'existe pas.")
 
-        if count != len(self.url):
-            logging.warning("Nombre de fichiers en local inégal au nombre d'url trouvé")
+        # if count != len(self.url):
+        #     logging.warning("Nombre de fichiers en local inégal au nombre d'url trouvé")
         logging.info(f"Début de convert: mise au format DataFrame de {self.source}")
         if self.format == 'xml':
             li = []
@@ -332,7 +363,8 @@ class SourceProcess:
                         dico = xmltodict.parse(xml_file.read(), dict_constructor=dict)
  
                     if dico['marches'] is not None:
-                        self._retain_with_format(dico,f"sources/{self.source}/{self.title[i]}_ignored.{self.format}")
+                        dico = self._retain_with_format(dico,f"sources/{self.source}/{self.title[i]}_ignored.{self.format}")
+                        print(dico)
                         
                         if 'marches' in dico:
                             # Add marchés
@@ -361,7 +393,7 @@ class SourceProcess:
             else:
                 # create empty dataframe
                 df = pd.DataFrame()
-            self.df = df
+            return df
         elif self.format == 'json':
             li = []
             for i in range(count):
@@ -406,9 +438,88 @@ class SourceProcess:
             df = pd.concat(li)
             ##del li
             df = df.reset_index(drop=True)
-            self.df = df
+            return df
         logging.info("Conversion OK")
         logging.info(f"Nombre de marchés dans {self.source} après convert : {len(self.df)}")
+
+    
+    def convert(self):
+        """
+        Étape de conversion des fichiers qui supprime les ' et concatène les fichiers 
+        présents dans {self.source} dans un seul DataFrame. Elle utilise le dictionnaire 
+        des marchés/concessions valides de chaque fichier pour le convertir en un 
+        dataframe. L'ensemble des dataframes est stocké dans une liste. 
+        """
+        logging.info("  ÉTAPE CONVERT")
+        # suppression des '
+        count = 0
+        list_path = []    #list_path sera la liste de tous les fichiers car self.title est la liste des noms de  fichiers qui ont été téléchargés
+        repertoire_source = f"sources/{self.source}"
+        for path in os.listdir(repertoire_source):
+            if os.path.isfile(os.path.join(repertoire_source, path)):
+                list_path = list_path + [path] #MATHIIIIIILDE ALED (faut lui demander si on peut rendre ça plus propre)
+                count += 1
+                print("repr",path)
+
+        logging.info(f"Début de convert: mise au format DataFrame de {self.source}")
+
+        #Extraction des données dans un dictionnaire, puis création d'un dataframe pour agréger les données
+        li = []
+        for i in range(count):
+            
+            if self.format == 'xml':
+                try:
+                    with open(f"sources/{self.source}/{list_path[i]}", encoding='utf-8') as xml_file:
+                        dico = xmltodict.parse(xml_file.read(), dict_constructor=dict)
+                except Exception as err:
+                    logging.error(f"Exception lors du chargement du fichier xml {list_path[i]} - {err}")
+
+            elif self.format == 'json':
+                    try:
+                        with open(f"sources/{self.source}/{list_path[i]}", encoding="utf-8") as json_file:
+                            dico = json.load(json_file)
+
+                    except Exception as err:
+                        logging.error(f"Exception lors du chargement du fichier json {list_path[i]} - {err}")
+
+            dico_valide = self._retain_with_format(dico,f"sources/{self.source}/{list_path[i]}_ignored.{self.format}")
+
+            # A chaque nouveau marché/concession, on ajoute crée un dataframe d'une
+            # colonne, on l'ajoute en précisant le type (Marché ou Contrat-concession).
+            # Puis, on l'ajoute à la liste des dataframes.
+            if dico_valide!=[] and 'marches' in dico_valide:
+
+                # Add marchés 
+                if 'marche' in dico_valide['marches']:   
+                    df = pd.DataFrame.from_dict(dico_valide['marches']['marche'])
+                    self._add_column_type(df,"Marché")
+                    li.append(df)
+                    ##del df
+
+                # Add Concession
+                if 'contrat-concession' in dico_valide['marches']:
+                    df = pd.DataFrame.from_dict(dico_valide['marches']['contrat-concession'])
+                    self._add_column_type(df,"Concession")
+                    li.append(df)
+                    ##del df
+                ##del dico
+            else:  # cas presque null
+                logging.warning(f"Le fichier {list_path[i]} est vide, il est ignoré")
+                          
+        #Concaténation des dataframes de la liste li en une dataframe                  
+        if len(li) != 0:
+            df = pd.concat(li)
+            df = df.reset_index(drop=True)
+        else:
+            # create empty dataframe
+            df = pd.DataFrame()
+        self.df = df
+
+        logging.info("Conversion OK")
+        logging.info(f"Nombre de marchés dans {self.source} après convert : {len(self.df)}")
+
+
+
 
     def validateJson(self,jsonData,jsonScheme):
         try:
@@ -527,8 +638,10 @@ class SourceProcess:
     #     self.df.loc[false_marcheInnovant, col_name] = "non"
 
     def fix(self):
-        """Étape fix qui crée la colonne source dans le DataFrame et qui supprime les doublons
-        purs."""
+        """
+        Étape fix qui crée la colonne source dans le DataFrame et 
+        qui supprime les doublons purs.
+        """
         
         def get_id(x):
             if 'id' in x:
@@ -543,7 +656,7 @@ class SourceProcess:
         # Transformation des acheteurs
         if self.data_format=='2022':
             if "acheteur" in self.df.columns:
-                bool_nan_acheteur = ~self.df.loc[:, "acheteur"].isna()
+                bool_nan_acheteur = ~self.df.loc[:, "acheteur"].isna()  #Liste de booléen disant si oui ou nn il yale nom d'un acheteur
                 self.df.loc[bool_nan_acheteur, "acheteur.id"] = self.df.loc[bool_nan_acheteur, "acheteur"].apply(get_id)
                 #with_acheteur =  ~pd.isna(self.df["acheteur"])
                 #self.df[with_acheteur,"acheteur.id"]=self.df[with_acheteur,"acheteur"].apply(get_id)

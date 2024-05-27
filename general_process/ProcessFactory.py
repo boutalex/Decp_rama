@@ -26,10 +26,10 @@ class ProcessFactory:
         #self.processes = [DecpAwsProcess, EmarProcess, LyonProcess]  # Supprimer le BRe car pris en compte dans megalisbre, DecpAwsProcess
         #self.processes = [PesProcess, LyonProcess, EmarProcess]
         #self.processes = [AifeProcess]
-        self.processes = [MegaProcess]
+        #self.processes = [MegaProcess]
         #self.processes = [AifeProcess]
         #self.processes = [PesProcess]
-        #self.processes = [SampleJsonProcess]
+        self.processes = [SampleJsonProcess]
         # if data_format=='2022':
         #    self.processes = [SampleXmlProcess] # For test ECO
         self.dataframes = []
