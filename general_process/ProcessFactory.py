@@ -51,11 +51,13 @@ class ProcessFactory:
                 p = process(self.data_format)
                 p.get()
                 loaded = 1
+                p.clean()
+                loaded = 2
                 if (p.title!=[]):
                     p.convert()
-                loaded = 2
-                p.fix()
                 loaded = 3
+                p.fix()
+                loaded = 4
                 #if self.data_format=='2022':
                 #    p.comment()
                 logging.info ("Ajout des données")

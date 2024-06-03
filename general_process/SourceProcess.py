@@ -42,6 +42,14 @@ class SourceProcess:
         'considerationsSociales',
         'considerationsEnvironnementales']
     
+    columns_marche_2019 = [
+
+    ]  
+    
+    columns_concession_2019 = [
+        
+    ]
+    
     """La classe SourceProcess est une classe abstraite qui sert de parent à chaque classe enfant de
     sources. Elle sert à définir le cas général des étapes de traitement d'une source : création des
     variables de classe (__init__), nettoyage des dossiers de la source (_clean_metadata_folder),
@@ -64,6 +72,12 @@ class SourceProcess:
 
         # Récupération des urls
         self._url_init() 
+
+        #Liste des dictionnaires pour l'étape de nettoyage
+        self.dico_ignored = []
+        self.dico_2022_marche = []
+        self.dico_2022_concession = []
+        self.dico_2019 = []
 
 
     def _clean_metadata_folder(self):
@@ -208,10 +222,39 @@ class SourceProcess:
                     logging.error("Problème de téléchargement du fichier ", self.url[i])
         logging.info(f"Téléchargement : {len(self.url)} fichier(s) OK")
 
-    def _has_all_field_and_date_2024(self, record:dict, record_type:str)->bool :
+
+    def _has_all_field_and_date_2019(self, record:dict)->bool :
         """
         Fonction vérifiant qu'un marché/concession possède bel et bien toutes 
         les colonnes requise par notre schéma. Il vérifie également que les 
+        dates contenues dans le marché/concession soit postérieur à 2024.
+        @record : marché/concession que l'on souhaite traiter
+        """
+        liste_marche = ['Marché','Marché de partenariat', 'Accord-cadre', 'Marché subséquent']
+        liste_concession = ['Concession de travaux',  'Concession de service', 'Concession de service public', 'Délégation de service public']
+        print("nature", record['nature'])
+        if record["nature"] in liste_marche : #Il faudra modifier à l'appel de sorte à avoir la nature : marché
+            for column in self.columns_concession_2019 :
+                if not column in record:
+                    logging.info(f"Colonne manquante : {column}")    #A retirer
+                    return False
+            # if self.date_before_2024(record):
+            #     logging.info(f"Erreur : date précédant 2024")
+            #     return True 
+        elif record["nature"] in liste_concession :
+            for column in self.columns_marche_2019 :
+                if not column in record:
+                    logging.info(f"Colonne manquante : {column}")    #A retirer
+                    return False
+        else:
+            return False
+        return True
+
+
+    def _has_all_field_and_date_2024(self, record:dict, record_type:str)->bool :
+        """
+        Fonction vérifiant qu'un marché/concession possède toutes les colonnes 
+        requises par notre schéma. Il vérifie également que les 
         dates contenues dans le marché/concession soit postérieur à 2024.
         @record : marché/concession que l'on souhaite traiter
         @record_type : type du marché (marché/concession)
@@ -219,7 +262,8 @@ class SourceProcess:
         if record_type == 'marche':
             for column in self.columns_marche_2022:
                 if not column in record:
-                    #logging.info(f"Colonne manquante : {column}")    #A retirer
+                    print(f"Colonne manquante : {column}")
+                    logging.info(f"Colonne manquante : {column}")    #A retirer
                     return False
             if not self.date_after_2024(record):
                 logging.info(f"Erreur : date précédant 2024")
@@ -292,6 +336,80 @@ class SourceProcess:
                         None
             return False
         
+    def clean(self):
+        """
+        Fonction réalisant un tri sur le format 2022 ou le format 2019 en complétant
+        les 3 dictionnaires et permettre la conversion en dataframe pour plus tard.
+        """
+        logging.info(" ÉTAPE CLEAN")
+        logging.info("Début du tri des nouveaux fichiers")
+        #Ouverture des fichiers
+        for i in range(len(self.title)):            
+            if self.format == 'xml':
+                try:
+                    with open(f"sources/{self.source}/{self.title[i]}", encoding='utf-8') as xml_file:
+                        dico = xmltodict.parse(xml_file.read(), dict_constructor=dict)
+                except Exception as err:
+                    logging.error(f"Exception lors du chargement du fichier xml {self.title[i]} - {err}")
+
+            elif self.format == 'json':
+                    try:
+                        with open(f"sources/{self.source}/{self.title[i]}", encoding="utf-8") as json_file:
+                            dico = json.load(json_file)
+
+                    except Exception as err:
+                        logging.error(f"Exception lors du chargement du fichier json {self.title[i]} - {err}")
+
+            self.tri_format(dico,self.title[i])    #On obtient 3 listes de dico qui sont mises à jour à chaque tour de boucle
+            
+            print("affichage 2022 marche: ", self.dico_2022_marche)
+            print("affichage 2022 concession: ", self.dico_2022_concession)
+            print("affichage 2019 : ", self.dico_2019)
+            print("affichage ignored : ", self.dico_ignored)
+
+        logging.info("Fin du tri selon le format")
+        logging.info("Nettoyage OK")
+
+
+    def tri_format(self, dico:dict, file_name:str):
+        """
+        Cette fonction permet de vérifier la structure du dictionnaire fournit en
+        entrée. Si un champ est manquant dans un marché ou une concession, ce dernier
+        est stocké dans une liste pour un éventuel traitement.
+        @dico : dictionnaire 
+        @file_name : nom du fichier où sont stockés les fichiers non valides et ignorés
+        """
+        if 'marches' in dico:
+            if 'marche' in dico['marches']:  #format 2022
+                #print("dans le IF")  
+                for m in dico['marches']['marche']:
+                    if self._has_all_field_and_date_2024(m, 'marche'):
+                        self.dico_2022_marche.append(m)
+                    else:                   
+                        self.dico_ignored.append(m)
+
+            elif 'contrat-concession' in dico['marches']:
+                #print("DANS LE ELIF")
+                for m in dico['marches']['contrat-concession']:
+                    if self._has_all_field_and_date_2024(m, 'contrat-concession'):
+                        self.dico_2022_concession.append(m)
+                    else:
+                        self.dico_ignored.append(m)
+
+            else:
+                #print("dans le else")                           #format 2019
+                for m in dico['marches']:
+                    if self._has_all_field_and_date_2019(m):                
+                        self.dico_2019.append(m)
+                    else:
+                        self.dico_ignored.append(m)
+
+        else:
+            logging.error("Balise 'marches' inexistante")
+            dico.clear()
+        if len(self.dico_ignored)>0:
+            logging.info(f"Ignored {len(self.dico_ignored)} record(s) in {file_name}")
+    
 
     def _retain_with_format(self, dico:dict, file_name:str)->dict:
         """
@@ -321,6 +439,7 @@ class SourceProcess:
             logging.info(f"Ignored {len(self.dico_ignored)} record(s) in {file_name}")
         return dico
 
+
     def _add_column_type(self, df: pd.DataFrame, default_type_name:str = None):
         if self.data_format=='2022' and not "_type" in df.columns and (default_type_name or "nature" in df.columns):
             if default_type_name:
@@ -328,20 +447,24 @@ class SourceProcess:
             else:
                 df['_type'] = df["nature"].apply(lambda x: "Marché" if x=="Marché" else "Concession")
 
+
     def convert_prestataire(self):
         """Étape de conversion des fichiers qui supprime les ' et concatène les fichiers présents
         dans {self.source} dans un seul DataFrame"""
         logging.info("  ÉTAPE CONVERT")
         # suppression des '
         count = 0
+        list_path = []    #list_path sera la liste de tous les fichiers car self.title est la liste des noms de fichiers qui ont été téléchargés
         repertoire_source = f"sources/{self.source}"
+        #on récupère le nom de chaque fichier et on le met dans liste path, en plus de compter le nombre de fichiers présent dnas le dossier source
         for path in os.listdir(repertoire_source):
             if os.path.isfile(os.path.join(repertoire_source, path)):
+                list_path = list_path + [path] 
                 count += 1
         for i in range(count):
             # print ("title",self.title) 
             # print ("i :",i) 
-            file_path = f"sources/{self.source}/{self.title[i]}"
+            file_path = f"sources/{self.source}/{list_path[i]}"
             file_exist = os.path.exists(file_path)
             if not file_exist:
                 logging.warning(f"Le fichier {file_path} n'existe pas.")
@@ -355,16 +478,16 @@ class SourceProcess:
             li = []
             for i in range(count):
                 if self.data_format=='2022':
-                    if not self.check(None,f"sources/{self.source}/{self.title[i]}"):
-                        logging.warning(f"sources/{self.source}/{self.title[i]} not a valide xml")
+                    if not self.check(None,f"sources/{self.source}/{list_path[i]}"):
+                        logging.warning(f"sources/{self.source}/{list_path[i]} not a valide xml")
                         continue
                         #raise Exception(f"sources/{self.source}/{self.file_name[i]}.{self.format} not a valide xml")
                 try:
-                    with open(f"sources/{self.source}/{self.title[i]}", encoding='utf-8') as xml_file:
+                    with open(f"sources/{self.source}/{list_path[i]}", encoding='utf-8') as xml_file:
                         dico = xmltodict.parse(xml_file.read(), dict_constructor=dict)
  
                     if dico['marches'] is not None:
-                        dico = self._retain_with_format(dico,f"sources/{self.source}/{self.title[i]}_ignored.{self.format}")
+                        dico = self.format_2022(dico,f"sources/{self.source}/{list_path[i]}_ignored.{self.format}")
                         
                         if 'marches' in dico:
                             # Add marchés
@@ -382,9 +505,9 @@ class SourceProcess:
                                 ##del df
                         ##del dico
                     else:  # cas presque null
-                        logging.warning(f"Le fichier {self.title[i]} est vide, il est ignoré")
+                        logging.warning(f"Le fichier {list_path[i]} est vide, il est ignoré")
                 except Exception as err:
-                    logging.error(f"Exception lors du chargement du fichier xml {self.title[i]} - {err}")
+                    logging.error(f"Exception lors du chargement du fichier xml {list_path[i]} - {err}")
 
             if len(li) != 0:
                 df = pd.concat(li)
@@ -398,16 +521,16 @@ class SourceProcess:
             li = []
             for i in range(count):
                 try:
-                    with open(f"sources/{self.source}/{self.title[i]}", encoding="utf-8") as json_file:
+                    with open(f"sources/{self.source}/{list_path[i]}", encoding="utf-8") as json_file:
                         
                         #check for format compliance (only for data_format 2022)
                         if self.data_format=='2022':
                             if not self.check(json_file,None):
-                                logging.warning(f"sources/{self.source}/{self.title[i]} not a valid json")
+                                logging.warning(f"sources/{self.source}/{list_path[i]} not a valid json")
                                 raise Exception("Json format not valid")
                         
                             dico = json.load(json_file)
-                            self._retain_with_format(dico,f"sources/{self.source}/{self.title[i]}_ignored.{self.format}")
+                            self._retain_with_format(dico,f"sources/{self.source}/{list_path[i]}_ignored.{self.format}")
 
                             
                             if 'marches' in dico:
@@ -426,14 +549,14 @@ class SourceProcess:
                                     ##del df
                         else:
                             dico = json.load(json_file)
-                            self._retain_with_format(dico,f"sources/{self.source}/{self.title[i]}_ignored.{self.format}")
+                            self._retain_with_format(dico,f"sources/{self.source}/{list_path[i]}_ignored.{self.format}")
                             df = pd.DataFrame.from_dict(dico['marches'])
                             self._add_column_type(df)
                             li.append(df)
                             ##del df
                         ##del dico
                 except Exception as err:
-                    logging.error(f"Exception lors du chargement du fichier json {self.title[i]} - {err}")
+                    logging.error(f"Exception lors du chargement du fichier json {list_path[i]} - {err}")
             df = pd.concat(li)
             ##del li
             df = df.reset_index(drop=True)
@@ -442,7 +565,95 @@ class SourceProcess:
         logging.info(f"Nombre de marchés dans {self.source} après convert : {len(self.df)}")
 
     
-    def convert(self):
+    # def convert(self):
+    #     """
+    #     Étape de conversion des fichiers qui supprime les ' et concatène les fichiers 
+    #     présents dans {self.source} dans un seul DataFrame. Elle utilise le dictionnaire 
+    #     des marchés/concessions valides de chaque fichier pour le convertir en un 
+    #     dataframe. L'ensemble des dataframes est stocké dans une liste. 
+    #     """
+    #     logging.info("  ÉTAPE CONVERT")
+    #     # suppression des '
+    #     count = 0
+    #     list_path = []    #list_path sera la liste de tous les fichiers car self.title est la liste des noms de fichiers qui ont été téléchargés
+    #     repertoire_source = f"sources/{self.source}"
+    #     #on récupère le nom de chaque fichier et on le met dans liste path, en plus de compter le nombre de fichiers présent dnas le dossier source
+    #     for path in os.listdir(repertoire_source):
+    #         if os.path.isfile(os.path.join(repertoire_source, path)):
+    #             list_path = list_path + [path] 
+    #             count += 1
+
+    #     logging.info(f"Début de convert: mise au format DataFrame de {self.source}")
+
+    #     #Extraction des données dans un dictionnaire, puis création d'un dataframe pour agréger les données
+    #     li = []
+    #     for i in range(count):
+            
+    #         if self.format == 'xml':
+    #             try:
+    #                 with open(f"sources/{self.source}/{list_path[i]}", encoding='utf-8') as xml_file:
+    #                     dico = xmltodict.parse(xml_file.read(), dict_constructor=dict)
+    #             except Exception as err:
+    #                 logging.error(f"Exception lors du chargement du fichier xml {list_path[i]} - {err}")
+
+    #         elif self.format == 'json':
+    #                 try:
+    #                     with open(f"sources/{self.source}/{list_path[i]}", encoding="utf-8") as json_file:
+    #                         dico = json.load(json_file)
+
+    #                 except Exception as err:
+    #                     logging.error(f"Exception lors du chargement du fichier json {list_path[i]} - {err}")
+
+    #         #dictionnaire contenant les dictionnaires valide par rapport au schéma 2022
+    #         dico_valide = self._retain_with_format(dico,f"sources/{self.source}/{list_path[i]}_ignored.{self.format}")
+        
+    #         # A chaque nouveau marché/concession, on ajoute crée un dataframe d'une
+    #         # colonne, on l'ajoute en précisant le type (Marché ou Contrat-concession).
+    #         # Puis, on l'ajoute à la liste des dataframes.
+    #         if dico_valide!=[] and 'marches' in dico_valide:
+
+    #             # Add marchés 
+    #             if 'marche' in dico_valide['marches']:   
+    #                 df = pd.DataFrame.from_dict(dico_valide['marches']['marche'])
+    #                 self._add_column_type(df,"Marché")
+    #                 li.append(df)
+    #                 ##del df
+
+    #             # Add Concession
+    #             if 'contrat-concession' in dico_valide['marches']:
+    #                 df = pd.DataFrame.from_dict(dico_valide['marches']['contrat-concession'])
+    #                 self._add_column_type(df,"Concession")
+    #                 li.append(df)
+    #                 ##del df
+    #             ##del dico
+    #         else:  # cas presque null
+    #             logging.warning(f"Le fichier {list_path[i]} est vide, il est ignoré")
+                          
+    #     #Concaténation des dataframes de la liste li en une dataframe                  
+    #     if len(li) != 0:
+    #         df = pd.concat(li)
+    #         df = df.reset_index(drop=True)
+    #     else:
+    #         # create empty dataframe
+    #         df = pd.DataFrame()
+    #     self.df = df
+    #     logging.info("Conversion OK")
+    #     logging.info(f"Nombre de marchés dans {self.source} après convert : {len(self.df)}")
+
+    def is_concession(self, dico: dict)->bool:
+        nature = ["Concession de travaux","Concession de service","Concession de service public", "Délégation de service public"]
+        if dico["nature"] in nature:
+            return True
+        return False
+    
+    def is_marche(self, dico: dict)->bool:
+        nature = ["Marché","Marché de partenariat","Marché de défense ou de sécurité"]
+        if dico["nature"] in nature:
+            return True
+        return False
+    
+
+    def convert2(self):
         """
         Étape de conversion des fichiers qui supprime les ' et concatène les fichiers 
         présents dans {self.source} dans un seul DataFrame. Elle utilise le dictionnaire 
@@ -454,58 +665,27 @@ class SourceProcess:
         count = 0
         list_path = []    #list_path sera la liste de tous les fichiers car self.title est la liste des noms de fichiers qui ont été téléchargés
         repertoire_source = f"sources/{self.source}"
-        #on récupère le nom de chaque fichier et on le met dans liste path, en plus de compter le nombre de fichiers présent dnas le dossier source
-        for path in os.listdir(repertoire_source):
-            if os.path.isfile(os.path.join(repertoire_source, path)):
-                list_path = list_path + [path] 
-                count += 1
+        count = len(os.listdir(repertoire_source))
 
         logging.info(f"Début de convert: mise au format DataFrame de {self.source}")
 
-        #Extraction des données dans un dictionnaire, puis création d'un dataframe pour agréger les données
+        #Liste qui conservera les dataframes. 
         li = []
-        for i in range(count):
-            
-            if self.format == 'xml':
-                try:
-                    with open(f"sources/{self.source}/{list_path[i]}", encoding='utf-8') as xml_file:
-                        dico = xmltodict.parse(xml_file.read(), dict_constructor=dict)
-                except Exception as err:
-                    logging.error(f"Exception lors du chargement du fichier xml {list_path[i]} - {err}")
 
-            elif self.format == 'json':
-                    try:
-                        with open(f"sources/{self.source}/{list_path[i]}", encoding="utf-8") as json_file:
-                            dico = json.load(json_file)
+        # Création d'un df a chaque nouveau marché/concession
+        # Ajout du df à la liste des dataframes.
 
-                    except Exception as err:
-                        logging.error(f"Exception lors du chargement du fichier json {list_path[i]} - {err}")
+        # Add marchés 
+        df = pd.DataFrame.from_dict(self.dico_2022_marche)
+        self._add_column_type(df,"Marché")
+        li.append(df)
 
-            #dictionnaire contenant les dictionnaires valide par rapport au schéma 2022
-            dico_valide = self._retain_with_format(dico,f"sources/{self.source}/{list_path[i]}_ignored.{self.format}")
-
-            # A chaque nouveau marché/concession, on ajoute crée un dataframe d'une
-            # colonne, on l'ajoute en précisant le type (Marché ou Contrat-concession).
-            # Puis, on l'ajoute à la liste des dataframes.
-            if dico_valide!=[] and 'marches' in dico_valide:
-
-                # Add marchés 
-                if 'marche' in dico_valide['marches']:   
-                    df = pd.DataFrame.from_dict(dico_valide['marches']['marche'])
-                    self._add_column_type(df,"Marché")
-                    li.append(df)
-                    ##del df
-
-                # Add Concession
-                if 'contrat-concession' in dico_valide['marches']:
-                    df = pd.DataFrame.from_dict(dico_valide['marches']['contrat-concession'])
-                    self._add_column_type(df,"Concession")
-                    li.append(df)
-                    ##del df
-                ##del dico
-            else:  # cas presque null
-                logging.warning(f"Le fichier {list_path[i]} est vide, il est ignoré")
-                          
+    
+        # Add Concession
+        df = pd.DataFrame.from_dict(self.dico_2022_concession)
+        self._add_column_type(df,"Concession")
+        li.append(df)
+           
         #Concaténation des dataframes de la liste li en une dataframe                  
         if len(li) != 0:
             df = pd.concat(li)
@@ -514,16 +694,15 @@ class SourceProcess:
             # create empty dataframe
             df = pd.DataFrame()
         self.df = df
-
         logging.info("Conversion OK")
         logging.info(f"Nombre de marchés dans {self.source} après convert : {len(self.df)}")
 
 
 
-
-    def validateJson(self,jsonData,jsonScheme):
+    def validateJson(self,jsonData,jsonScheme)->bool:
         """
-        Fonction vérifiant si le fichier jsn "jsonData" respecte le schéma spécifié dans le paramètre "jsonScheme"
+        Fonction vérifiant si le fichier jsn "jsonData" respecte
+        le schéma spécifié dans le  schéma en paramètre "jsonScheme". 
         """
         try:
             #Draft7Validator.check_schema(jsonScheme)
@@ -536,7 +715,8 @@ class SourceProcess:
 
     def validateXml(self, xml_path: str, xsd_path: str) -> bool:
         """
-        Fonction vérifiant si le fichier xml "xml_path" respecte le schéma spécifié dans le paramètre "xsd_path"
+        Fonction vérifiant si le fichier xml "xml_path" respecte 
+        le schéma spécifié dans le paramètre "xsd_path".
         """
         xml_schema_doc = etree.parse(xsd_path)
         xml_schema = etree.XMLSchema(xml_schema_doc)
@@ -551,11 +731,12 @@ class SourceProcess:
         
         return result
     
-    def check(self,jsonData,xml_path:str) -> bool:
+    def check(self,jsonData,xml_path) -> bool:
         """
-        Fonction qui prend en paramètre une donnée Json ou xml et qui vérifie grâce à un schéma que la donnée est valide
+        Fonction qui prend en paramètre une donnée Json ou xml 
+        et qui vérifie grâce à un schéma que la donnée est valide.
         @JsonData : donnée json en entrée (nul si xml)
-        @xml_path : donnée xml en entrée (nul si json)
+        @xml_path : chemin du fichier xml en entrée (nul si json)
         """
         # if self.data_format=='2019':
         #     return True
@@ -607,17 +788,18 @@ class SourceProcess:
         #        raise Exception("Format is not valid")
         #return conform
 
-    def convert_boolean(self,col_name):
-        # Vérification du type de la colonne "col_name". Le type doit être un string
-        print("Type:", self.df[col_name].dtype )
-        if self.df[col_name].dtype == 'O':  # objet
-            print("dans le if")
-            self.df[col_name] = self.df[col_name].str.lower()
+    def convert_boolean(self,col_name:str):
+        """
+        Permet de remplacer les valeurs booléennes ou "Vrai" ou "Faux" par "oui" ou "non"
+        """
+        #Conversion si il s'agit de string
+        if self.df[col_name].dtypes == 'object':  
+            #print("dans le if, colonne : ", col_name)
+            #self.df[col_name] = self.df[col_name].str.lower()
             self.df[col_name] = self.df[col_name].replace({'1': 'oui', 'true': 'oui', '0': 'non', 'false': 'non'})
         else:
-            print("dans le else")
-            self.df[col_name] = self.df[col_name].astype(str).replace({'True': 'oui', 'False': 'non'}) 
-
+            #print("dans le else, colonne : ", col_name)
+            self.df[col_name] = self.df[col_name].astype(str).replace({'True': 'oui', 'False': 'non' }) 
 
 
     # def convert_boolean(self,col_name):
@@ -640,37 +822,24 @@ class SourceProcess:
     #     self.df.loc[false_marcheInnovant, col_name] = "non"
 
 
-    # def convert_boolean(self,col_name):
-    #     print(col_name)
-    #     if self.df.loc[:,col_name].dtype=='O':
-    #         true_marcheInnovant = self.df.loc[:,col_name].astype(str).str.match(r'^(1)$',case=False,na=False)
-    #         self.df.loc[true_marcheInnovant, col_name] = "oui"
-    #         true_marcheInnovant = self.df.loc[:,col_name].astype(str).str.match(r'^(true)$',case=False,na=False)
-    #         self.df.loc[true_marcheInnovant, col_name] = "oui"
-    #         false_marcheInnovant = self.df.loc[:, col_name].astype(str).str.match(r'^(0)$',case=False,na=False) 
-    #         self.df.loc[false_marcheInnovant, col_name] = "non"
-    #         false_marcheInnovant = self.df.loc[:, col_name].astype(str).str.match(r'^(false)$',case=False,na=False) 
-    #         self.df.loc[false_marcheInnovant, col_name] = "non"
-    #     elif self.df.loc[:,col_name]==True :
-    #         true_marcheInnovant = self.df.loc[:,col_name]==True
-    #         self.df.loc[true_marcheInnovant, col_name] = "oui"
-
-    #     else :
-    #         false_marcheInnovant = self.df.loc[:,col_name]==False
-    #         self.df.loc[false_marcheInnovant, col_name] = "non"
-
-
     def fix(self):
         """
         Étape fix qui crée la colonne source dans le DataFrame et 
         qui supprime les doublons purs.
         """
+            
+        def check_dico(dico):
+        #Prend en entrée le dictionnaire du champ "acheteur"
+            if dico=={} or dico is None or dico['id']==None:
+                return True
+            return False
         
-        def get_id(x):
-            if 'id' in x:
-                return str(x["id"])
-            else:
-                return pd.NA
+        def update_id(ligne):
+            #Modifie le champ "id" du champ acheteur
+            if check_dico(ligne["acheteur"]):
+                   ligne["acheteur"] = {"id": ligne["id"] } 
+            return ligne      
+
         
         logging.info("  ÉTAPE FIX")
         logging.info(f"Début de fix: Ajout source et suppression des doublons de {self.source}")
@@ -678,24 +847,21 @@ class SourceProcess:
         self.df = self.df.assign(source=self.source)
 
         # Transformation des acheteurs
-        # Les données respectent le format 2022
         if "acheteur" in self.df.columns:
-            bool_nan_acheteur = ~self.df.loc[:, "acheteur"].isna()  #Liste des cases où "acheteur" est nul
-            self.df.loc[bool_nan_acheteur, "acheteur.id"] = self.df.loc[bool_nan_acheteur, "acheteur"].apply(get_id)
+            self.df.loc[:,['id','acheteur']]= self.df.loc[:,['id','acheteur']].apply(update_id,axis=1)
         # Force type integer on column offresRecues
-        if "offresRecues" in self.df.columns:
+        if "offresRecues" in self.df.columns: 
             self.df['offresRecues'] = self.df['offresRecues'].fillna(0).astype(int)
         if "marcheInnovant" in self.df.columns:
-            print("TYPE COLONNE MARCHE INNOVANT:", self.df['marcheInnovant'].dtype)
+            #print("TYPE COLONNE MARCHE INNOVANT:", self.df['marcheInnovant'].dtype)
             self.convert_boolean('marcheInnovant')
         if "attributionAvance" in self.df.columns:
-            print("TYPE COLONNE ATTRIBUTION AVANCEE:", self.df['attributionAvance'].dtype)
+            #print("TYPE COLONNE ATTRIBUTION AVANCEE:", self.df['attributionAvance'].dtype)
             self.convert_boolean('attributionAvance')
         if "sousTraitanceDeclaree" in self.df.columns:
-            print("TYPE COLONNE sous traitance:", self.df['sousTraitanceDeclaree'].dtype)
+            #print("TYPE COLONNE sous traitance:", self.df['sousTraitanceDeclaree'].dtype)
             self.convert_boolean('sousTraitanceDeclaree')
     
-
         # Suppression des doublons
         df_str = self.df.astype(str)
         index_to_keep = df_str.drop_duplicates().index.tolist()

@@ -6,7 +6,7 @@
         "acheteur": {
           "id": "21750001630066"
         },
-        "marcheInnovant": "oui",
+        "marcheInnovant": false,
         "origineUE": 0.1,
         "origineFrance": 0.1,
         "ccag": "Travaux",
