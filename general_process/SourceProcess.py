@@ -521,7 +521,10 @@ class SourceProcess:
 
 
 
-    def validateJson(self,jsonData,jsonScheme) -> bool:
+    def validateJson(self,jsonData,jsonScheme):
+        """
+        Fonction vérifiant si le fichier jsn "jsonData" respecte le schéma spécifié dans le paramètre "jsonScheme"
+        """
         try:
             #Draft7Validator.check_schema(jsonScheme)
             #Draft202012Validator.check_schema(jsonScheme)
@@ -532,7 +535,9 @@ class SourceProcess:
         return True
 
     def validateXml(self, xml_path: str, xsd_path: str) -> bool:
-
+        """
+        Fonction vérifiant si le fichier xml "xml_path" respecte le schéma spécifié dans le paramètre "xsd_path"
+        """
         xml_schema_doc = etree.parse(xsd_path)
         xml_schema = etree.XMLSchema(xml_schema_doc)
 
@@ -617,7 +622,7 @@ class SourceProcess:
 
     # def convert_boolean(self,col_name):
     # #Vérification du type de la colonne "col_name". Le type doit être un string
-    #     if self.df.loc[:,col_name].dtype=='O':
+    #     if self.df.loc[:,col_name].dtype=='O':  #objet
     #         true_marcheInnovant = self.df.loc[:,col_name].astype(str).str.match(r'^(1)$',case=False,na=False)
     #         self.df.loc[true_marcheInnovant, col_name] = "oui"
     #         true_marcheInnovant = self.df.loc[:,col_name].astype(str).str.match(r'^(true)$',case=False,na=False)
@@ -671,30 +676,25 @@ class SourceProcess:
         logging.info(f"Début de fix: Ajout source et suppression des doublons de {self.source}")
         # Ajout de source
         self.df = self.df.assign(source=self.source)
+
         # Transformation des acheteurs
-        if self.data_format=='2022':
-            if "acheteur" in self.df.columns:
-                bool_nan_acheteur = ~self.df.loc[:, "acheteur"].isna()  #Liste de booléen disant si oui ou nn il yale nom d'un acheteur
-                self.df.loc[bool_nan_acheteur, "acheteur.id"] = self.df.loc[bool_nan_acheteur, "acheteur"].apply(get_id)
-                #with_acheteur =  ~pd.isna(self.df["acheteur"])
-                #self.df[with_acheteur,"acheteur.id"]=self.df[with_acheteur,"acheteur"].apply(get_id)
-                # Force type integer on column offresRecues
-            if "offresRecues" in self.df.columns:
-                self.df['offresRecues'] = self.df['offresRecues'].fillna(0).astype(int)
-            if "marcheInnovant" in self.df.columns:
-                #print("TYPE COLONNE MARCHE INNOVANT:", self.df['marcheInnovant'].dtype)
-                self.convert_boolean('marcheInnovant')
-            if "attributionAvance" in self.df.columns:
-                #print("TYPE COLONNE ATTRIBUTION AVANCEE:", self.df['attributionAvance'].dtype)
-                self.convert_boolean('attributionAvance')
-            if "sousTraitanceDeclaree" in self.df.columns:
-                #print("TYPE COLONNE sous traitance:", self.df['sousTraitanceDeclaree'].dtype)
-                self.convert_boolean('sousTraitanceDeclaree')
-            
-        else:
-            if "acheteur" in self.df.columns:
-                bool_nan_acheteur = ~self.df.loc[:, "acheteur"].isna()
-                self.df.loc[bool_nan_acheteur, "acheteur.id"] = self.df.loc[bool_nan_acheteur, "acheteur"].apply(get_id)
+        # Les données respectent le format 2022
+        if "acheteur" in self.df.columns:
+            bool_nan_acheteur = ~self.df.loc[:, "acheteur"].isna()  #Liste des cases où "acheteur" est nul
+            self.df.loc[bool_nan_acheteur, "acheteur.id"] = self.df.loc[bool_nan_acheteur, "acheteur"].apply(get_id)
+        # Force type integer on column offresRecues
+        if "offresRecues" in self.df.columns:
+            self.df['offresRecues'] = self.df['offresRecues'].fillna(0).astype(int)
+        if "marcheInnovant" in self.df.columns:
+            print("TYPE COLONNE MARCHE INNOVANT:", self.df['marcheInnovant'].dtype)
+            self.convert_boolean('marcheInnovant')
+        if "attributionAvance" in self.df.columns:
+            print("TYPE COLONNE ATTRIBUTION AVANCEE:", self.df['attributionAvance'].dtype)
+            self.convert_boolean('attributionAvance')
+        if "sousTraitanceDeclaree" in self.df.columns:
+            print("TYPE COLONNE sous traitance:", self.df['sousTraitanceDeclaree'].dtype)
+            self.convert_boolean('sousTraitanceDeclaree')
+    
 
         # Suppression des doublons
         df_str = self.df.astype(str)
@@ -703,6 +703,8 @@ class SourceProcess:
         self.df = self.df.reset_index(drop=True)
         logging.info(f"Fix de {self.source} OK")
         logging.info(f"Nombre de marchés dans {self.source} après fix : {len(self.df)}")
+    
+
     
 
     def mark_mandatory_field(self,df: pd.DataFrame,field_name:str) -> pd.DataFrame:
@@ -813,6 +815,7 @@ class SourceProcess:
         df_marche = self.df.loc[~self.df['nature'].str.contains('concession', case=False, na=False)]
 
         df_concession1 = self.df.loc[self.df['nature'].str.contains('concession', case=False, na=False)]
+
         # df_concession prend aussi en compte les lignes restantes ou la colonne "_type" contient "concession" dans le df_marche et concatène les deux dataframes
         df_concession = pd.concat([self.df_concession1, df_marche.loc[df_marche['_type'].str.contains('concession', case=False, na=False)]])
         # remove old df for memory

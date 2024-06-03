@@ -35,9 +35,18 @@ class UneClasseDeTest(unittest.TestCase):
             {"last_modified": "2023-04-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite2.json", "title": "Collectivite 2"},
             {"last_modified": "2023-04-01T00:00:00.000000+00:00", "url": "https://example.com/collectivite3.json", "title": "Collectivite 3"},
             {"last_modified": "2023-01-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite4.json", "title": "Collectivite 4"}
+            {"last_modified": "2022-01-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite1.xml", "title": "Collectivite 1"},
+            {"last_modified": "2023-04-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite2.json", "title": "Collectivite 2"},
+            {"last_modified": "2023-04-01T00:00:00.000000+00:00", "url": "https://example.com/collectivite3.json", "title": "Collectivite 3"},
+            {"last_modified": "2023-01-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite4.json", "title": "Collectivite 4"}
         ]
 
+
         new_ressources = [
+            {"last_modified": "2023-01-01T00:00:00.000000+00:00", "url": "https://example.com/collectivite1.xml", "title": "Collectivite 1"},
+            {"last_modified": "2023-04-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite2.json", "title": "Collectivite 2"},
+            {"last_modified": "2023-04-16T00:00:00.000000+00:00", "url": "https://example.com/collectivite3.json", "title": "Collectivite 3"},
+            {"last_modified": "2023-01-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite4.json", "title": "Collectivite 4"}
             {"last_modified": "2023-01-01T00:00:00.000000+00:00", "url": "https://example.com/collectivite1.xml", "title": "Collectivite 1"},
             {"last_modified": "2023-04-02T00:00:00.000000+00:00", "url": "https://example.com/collectivite2.json", "title": "Collectivite 2"},
             {"last_modified": "2023-04-16T00:00:00.000000+00:00", "url": "https://example.com/collectivite3.json", "title": "Collectivite 3"},
@@ -193,6 +202,7 @@ class UneClasseDeTest(unittest.TestCase):
                 }
                 }
             ],
+
             "procedure": "Appel d'offres ouvert",
             "lieuExecution": {
                 "code": "75000",
@@ -222,3 +232,6 @@ class UneClasseDeTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+    classe = UneClasseDeTest()
+    classe.test_select_recent_url()
