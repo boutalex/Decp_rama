@@ -23,9 +23,17 @@ pd.set_option('display.max_rows', None)
 
 class SourceProcess:
     
-    columns_marche_2022 = [
+    columns_marche_2022 = set([
+        'id',
+        'acheteur',
+        'nature',
+        'objet',
+        'codeCPV',
         'techniques',
+        'procedure',
         'dateNotification',
+        'lieuExecution',
+        'dureeMois',
         'modalitesExecution',
         'considerationsSociales',
         'considerationsEnvironnementales',
@@ -34,21 +42,118 @@ class SourceProcess:
         'origineFrance',
         'ccag',
         'offresRecues',
+        'montant',
+        'formePrix',
+        'offresRecues',
         'typesPrix',
-        'attributionAvance']
+        'attributionAvance',
+        'titulaires',
+        'typeGroupementOperateurs',
+        'sousTraitanceDeclaree',
+        'datePublicationDonnees'
+    ])
     
-    columns_concession_2022 = [
+    colums_marche_opt_2022 = set([
+        'idAccordCadre',
+        'tauxAvance',
+        'actesSousTraitance',
+        'modifications',
+        'modificationsActesSousTraitance'
+    ])
+    
+    columns_concession_2022 = set([
+        'id',
+        'autoriteConcedante',
+        'nature',
+        'objet',
+        'procedure',
+        'dureeMois',
         'dateDebutExecution',
+        'dateSignature',
         'considerationsSociales',
-        'considerationsEnvironnementales']
+        'considerationsEnvironnementales',
+        'concessionnaires',
+        'valeurGlobale',
+        'montantSubventionPublique',
+        'datePublicationDonnees',
+        'donneesExecution'
+    ])
     
-    columns_marche_2019 = [
+    columns_concession_opt_2022 = set([
+        'modifications'
+    ])
 
-    ]  
-    
-    columns_concession_2019 = [
-        
-    ]
+    columns_marche_2019 = set([
+        'id',
+        'nature',
+        'objet',
+        'codeCPV',
+        'procedure',
+        'lieuExecution',
+        'dureeMois',
+        'dateNotification',
+        'datePublicationDonnees',
+        'montant',
+        'formePrix',
+        'titulaires',
+        'source',
+        'acheteur'
+    ])
+
+    colums_marche_opt_2019 = set([
+        'modifications'
+    ])
+
+    columns_concession_2019 = set([
+        'id',
+        'nature',
+        'typeContrat',
+        'objet',
+        'codeCPV',
+        'procedure',
+        'lieuExecution',
+        'dureeMois',
+        'dateNotification',
+        'datePublicationDonnees',
+        'montant',
+        'formePrix',
+        'titulaires',
+        'uuid',
+        'source',
+        'acheteur',
+        'modifications'
+    ])
+
+    colums_concession_opt_2019 = set([
+        'modifications'
+    ])
+
+    # #def load_columns_from_file(file_path):
+    # columns_dict = {}
+    # file_path = 'documents/Listes_champs.txt'
+    # with open(file_path, 'r') as file:
+    #     lines = file.readlines()
+    #     current_key = None
+    #     for line in lines:
+    #         line = line.strip()
+    #         if line.endswith(':'):
+    #             current_key = line[:-1]
+    #             columns_dict[current_key] = set()
+    #             print("columns dict",columns_dict)
+    #             print("test", columns_dict[current_key])
+    #         elif current_key:
+    #             columns_dict[current_key].update(line.split(','))
+    #     #return columns_dict
+    #     # Accéder aux ensembles de colonnes
+    #     columns_marche_2022 = columns_dict['columns_marche_2022']
+    #     colums_marche_opt_2022 = columns_dict['colums_marche_opt_2022']
+    #     columns_concession_2022 = columns_dict['columns_concession_2022']
+    #     columns_concession_opt_2022 = columns_dict['columns_concession_opt_2022']
+    #     columns_marche_2019 = columns_dict['columns_marche_2019']
+    #     colums_marche_opt_2019 = columns_dict['colums_marche_opt_2019']
+    #     columns_concession_2019 = columns_dict['columns_concession_2019']
+    #     colums_concession_opt_2019 = columns_dict['colums_concession_opt_2019']
+
     
     """La classe SourceProcess est une classe abstraite qui sert de parent à chaque classe enfant de
     sources. Elle sert à définir le cas général des étapes de traitement d'une source : création des
@@ -230,25 +335,45 @@ class SourceProcess:
         dates contenues dans le marché/concession soit postérieur à 2024.
         @record : marché/concession que l'on souhaite traiter
         """
-        liste_marche = ['Marché','Marché de partenariat', 'Accord-cadre', 'Marché subséquent']
+        liste_marche = ['Marché','Marché de partenariat', 'Accord-cadre', 'Marché subséquent','MARCHE']
         liste_concession = ['Concession de travaux',  'Concession de service', 'Concession de service public', 'Délégation de service public']
         print("nature", record['nature'])
         if record["nature"] in liste_marche : #Il faudra modifier à l'appel de sorte à avoir la nature : marché
-            for column in self.columns_concession_2019 :
-                if not column in record:
-                    logging.info(f"Colonne manquante : {column}")    #A retirer
-                    return False
-            # if self.date_before_2024(record):
-            #     logging.info(f"Erreur : date précédant 2024")
-            #     return True 
+            champs_intersections = set(list(record.keys()))
+            #On soustrait les champs obligatoires, les champs obligatoires qui restent seront ceux en trop
+            champs_intersections = champs_intersections.symmetric_difference(self.columns_marche_2019)
+            if len(champs_intersections)>0:
+                champs_en_moins = champs_intersections & self.columns_marche_2019 #On récupère seulement les champs obligatoires manquant
+                champs_en_trop = champs_intersections.difference(self.colums_marche_opt_2019).difference(champs_en_moins)
+                if len(champs_en_moins)>0:
+                    logging.info(f"Voici les champs manquant :{champs_en_moins}")
+                if len(champs_en_trop)>0:
+                    logging.info(f"Voici les champs en trop :{champs_en_trop}")
+                return False
+            if self.date_before_2024(record,"marché"):
+                logging.info(f"Erreur : date précédant 2024")
+                return True
+            else :
+                return False 
         elif record["nature"] in liste_concession :
-            for column in self.columns_marche_2019 :
-                if not column in record:
-                    logging.info(f"Colonne manquante : {column}")    #A retirer
-                    return False
+            champs_intersections = set(list(record.keys()))
+            #On soustrait les champs obligatoires, les champs obligatoires qui restent seront ceux en trop
+            champs_intersections = champs_intersections.symmetric_difference(self.columns_concession_2019)
+            if len(champs_intersections)>0:
+                champs_en_moins = champs_intersections & self.columns_concession_2019 #On récupère seulement les champs obligatoires manquant
+                champs_en_trop = champs_intersections.difference(self.colums_concession_opt_2019).difference(champs_en_moins)
+                if len(champs_en_moins)>0:
+                    logging.info(f"Voici les champs manquant :{champs_en_moins}")
+                if len(champs_en_trop)>0:
+                    logging.info(f"Voici les champs en trop :{champs_en_trop}")
+                return False
+            if self.date_before_2024(record,"marché"):
+                logging.info(f"Erreur : date précédant 2024")
+                return True
         else:
             return False
         return True
+    
 
 
     def _has_all_field_and_date_2024(self, record:dict, record_type:str)->bool :
@@ -260,19 +385,40 @@ class SourceProcess:
         @record_type : type du marché (marché/concession)
         """
         if record_type == 'marche':
-            for column in self.columns_marche_2022:
-                if not column in record:
-                    print(f"Colonne manquante : {column}")
-                    logging.info(f"Colonne manquante : {column}")    #A retirer
-                    return False
+            champs_intersections = set(list(record.keys()))
+            champs_intersections = champs_intersections.symmetric_difference(self.columns_marche_2022)#On soustrait les champs obligatoires, les champs obligatoires qui restent seront ceux en trop
+            if len(champs_intersections)>0:
+                champs_en_moins = champs_intersections & self.columns_marche_2022 #On récupère seulement les champs obligatoires manquant
+                champs_en_trop = champs_intersections.difference(self.colums_marche_opt_2022).difference(champs_en_moins)
+                if len(champs_en_moins)>0:
+                    logging.info(f"Voici les champs manquant :{champs_en_moins}")
+                if len(champs_en_trop)>0:
+                    logging.info(f"Voici les champs en trop :{champs_en_trop}")
+                return False
+
+            # for column in self.columns_marche_2022:
+            #     if not column in record:
+            #         print(f"Colonne manquante : {column}")
+            #         logging.info(f"Colonne manquante : {column}")    #A retirer
+            #         return False
             if not self.date_after_2024(record):
                 logging.info(f"Erreur : date précédant 2024")
                 return False 
         else:
-            for column in self.columns_concession_2022:
-                if not column in record:
-                    #logging.info(f"Colonne manquante : {column}")   #A retirer
-                    return False
+            champs_intersections = set(list(record.keys()))
+            champs_intersections = champs_intersections.symmetric_difference(self.columns_concession_2022)#On soustrait les champs obligatoires, les champs obligatoires qui restent seront ceux en trop
+            if len(champs_intersections)>0:
+                champs_en_moins = champs_intersections & self.columns_concession_2022 #On récupère seulement les champs obligatoires manquant
+                champs_en_trop = champs_intersections.difference(self.columns_concession_opt_2022).difference(champs_en_moins)
+                if len(champs_en_moins)>0:
+                    logging.info(f"Voici les champs manquant :{champs_en_moins}")
+                if len(champs_en_trop)>0:
+                    logging.info(f"Voici les champs en trop :{champs_en_trop}")
+                return False
+            # for column in self.columns_concession_2022:
+            #     if not column in record:
+            #         #logging.info(f"Colonne manquante : {column}")   #A retirer
+            #         return False
             if not self.date_after_2024(record):
                 logging.info(f"Erreur : date précédant 2024")
                 return False 
@@ -281,32 +427,32 @@ class SourceProcess:
     def date_norm(self,datestr:str):
         return datestr.replace('+','-') if datestr else datestr
 
-    # def date_before_2024(self, record):
-    #     """ La fonction vérifie que les dates contenue dans un marché/concession
-    #         Les dates postérieures à 2024 doivent être de la forme Y-M-J pour les colonnes date et date_de_publication. """
-    #     if 'nature' in record:
-    #         if not record['nature'] is None  and 'concession' in record['nature'].lower():
-    #             if 'dateDebutExecution' in record:
-    #                 if record['dateDebutExecution'] and self.date_norm(record['dateDebutExecution'])<'2024-01-01':
-    #                     return True
-    #             if 'datedebutexecution' in record:
-    #                 if record['datedebutexecution'] and self.date_norm(record['datedebutexecution'])<'2024-01-01':
-    #                     return True
-    #         else:
-    #             if 'dateNotification' in record:
-    #                 if record['dateNotification'] and self.date_norm(record['dateNotification'])<'2024-01-01':
-    #                     return True
-    #             if 'datenotification' in record:
-    #                 if record['datenotification'] and self.date_norm(record['datenotification'])<'2024-01-01':
-    #                     return True
-    #     else:
-    #         if 'dateNotification' in record:
-    #             if record['dateNotification'] and self.date_norm(record['dateNotification'])<'2024-01-01':
-    #                 return True
-    #         if 'datenotification' in record:
-    #             if record['datenotification'] and self.date_norm(record['datenotification'])<'2024-01-01':
-    #                 return True
-    #     return False
+    def date_before_2024(self, record,nature:str):
+        """ La fonction vérifie que les dates contenue dans un marché/concession
+            Les dates postérieures à 2024 doivent être de la forme Y-M-J pour les colonnes date et date_de_publication. """
+        if nature == "marché":
+            if not record['nature'] is None  and 'concession' in record['nature'].lower():
+                if 'dateDebutExecution' in record:
+                    if record['dateDebutExecution'] and self.date_norm(record['dateDebutExecution'])<'2024-01-01':
+                        return True
+                if 'datedebutexecution' in record:
+                    if record['datedebutexecution'] and self.date_norm(record['datedebutexecution'])<'2024-01-01':
+                        return True
+            else:
+                if 'dateNotification' in record:
+                    if record['dateNotification'] and self.date_norm(record['dateNotification'])<'2024-01-01':
+                        return True
+                if 'datenotification' in record:
+                    if record['datenotification'] and self.date_norm(record['datenotification'])<'2024-01-01':
+                        return True
+        else:
+            if 'dateNotification' in record:
+                if record['dateNotification'] and self.date_norm(record['dateNotification'])<'2024-01-01':
+                    return True
+            if 'datenotification' in record:
+                if record['datenotification'] and self.date_norm(record['datenotification'])<'2024-01-01':
+                    return True
+        return False
     
 
     def date_after_2024(self, record:dict)->bool:
@@ -361,11 +507,6 @@ class SourceProcess:
                         logging.error(f"Exception lors du chargement du fichier json {self.title[i]} - {err}")
 
             self.tri_format(dico,self.title[i])    #On obtient 3 listes de dico qui sont mises à jour à chaque tour de boucle
-            
-            print("affichage 2022 marche: ", self.dico_2022_marche)
-            print("affichage 2022 concession: ", self.dico_2022_concession)
-            print("affichage 2019 : ", self.dico_2019)
-            print("affichage ignored : ", self.dico_ignored)
 
         logging.info("Fin du tri selon le format")
         logging.info("Nettoyage OK")
@@ -396,8 +537,7 @@ class SourceProcess:
                     else:
                         self.dico_ignored.append(m)
 
-            else:
-                #print("dans le else")                           #format 2019
+            else:                     #format 2019
                 for m in dico['marches']:
                     if self._has_all_field_and_date_2019(m):                
                         self.dico_2019.append(m)
@@ -639,18 +779,6 @@ class SourceProcess:
     #     self.df = df
     #     logging.info("Conversion OK")
     #     logging.info(f"Nombre de marchés dans {self.source} après convert : {len(self.df)}")
-
-    def is_concession(self, dico: dict)->bool:
-        nature = ["Concession de travaux","Concession de service","Concession de service public", "Délégation de service public"]
-        if dico["nature"] in nature:
-            return True
-        return False
-    
-    def is_marche(self, dico: dict)->bool:
-        nature = ["Marché","Marché de partenariat","Marché de défense ou de sécurité"]
-        if dico["nature"] in nature:
-            return True
-        return False
     
 
     def convert2(self):
@@ -661,12 +789,6 @@ class SourceProcess:
         dataframe. L'ensemble des dataframes est stocké dans une liste. 
         """
         logging.info("  ÉTAPE CONVERT")
-        # suppression des '
-        count = 0
-        list_path = []    #list_path sera la liste de tous les fichiers car self.title est la liste des noms de fichiers qui ont été téléchargés
-        repertoire_source = f"sources/{self.source}"
-        count = len(os.listdir(repertoire_source))
-
         logging.info(f"Début de convert: mise au format DataFrame de {self.source}")
 
         #Liste qui conservera les dataframes. 
@@ -794,32 +916,9 @@ class SourceProcess:
         """
         #Conversion si il s'agit de string
         if self.df[col_name].dtypes == 'object':  
-            #print("dans le if, colonne : ", col_name)
-            #self.df[col_name] = self.df[col_name].str.lower()
-            self.df[col_name] = self.df[col_name].replace({'1': 'oui', 'true': 'oui', '0': 'non', 'false': 'non'})
+            self.df[col_name] = self.df[col_name].astype(str).replace({'1': 'oui', 'true': 'oui', '0': 'non', 'false': 'non'})
         else:
-            #print("dans le else, colonne : ", col_name)
             self.df[col_name] = self.df[col_name].astype(str).replace({'True': 'oui', 'False': 'non' }) 
-
-
-    # def convert_boolean(self,col_name):
-    # #Vérification du type de la colonne "col_name". Le type doit être un string
-    #     if self.df.loc[:,col_name].dtype=='O':  #objet
-    #         true_marcheInnovant = self.df.loc[:,col_name].astype(str).str.match(r'^(1)$',case=False,na=False)
-    #         self.df.loc[true_marcheInnovant, col_name] = "oui"
-    #         true_marcheInnovant = self.df.loc[:,col_name].astype(str).str.match(r'^(true)$',case=False,na=False)
-    #         self.df.loc[true_marcheInnovant, col_name] = "oui"
-
-    #     true_marcheInnovant = self.df.loc[:,col_name].astype(str)==True
-    #     self.df.loc[true_marcheInnovant, col_name] = "oui"
-
-    #     if self.df.loc[:,col_name].dtype=='O':
-    #         false_marcheInnovant = self.df.loc[:, col_name].astype(str).str.match(r'^(0)$',case=False,na=False) 
-    #         self.df.loc[false_marcheInnovant, col_name] = "non"
-    #         false_marcheInnovant = self.df.loc[:, col_name].astype(str).str.match(r'^(false)$',case=False,na=False) 
-    #         self.df.loc[false_marcheInnovant, col_name] = "non"
-    #     false_marcheInnovant = self.df.loc[:,col_name].astype(str)==False
-    #     self.df.loc[false_marcheInnovant, col_name] = "non"
 
 
     def fix(self):
