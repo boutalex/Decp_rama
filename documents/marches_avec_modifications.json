@@ -220,8 +220,10 @@
         },
         "dureeMois": 48,
         "dateNotification": "2024-05-15",
-        "montant": 575000
+        "montant": 575000,
+        "essai": "ceci est un test"
       }
+
     ]
   }
 }

@@ -4,25 +4,27 @@ import sys
 import os
 import json
 import xmltodict
-import pprint
 import pandas as pd
+
+
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', None)
 pd.set_option('display.max_colwidth', None)
+pd.options.mode.chained_assignment = None
 
 # Ajoutez le chemin du projet au sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from general_process.SourceProcess import SourceProcess
-from specific_process.SampleJsonProcess import SampleJsonProcess
+from specific_process import * 
+from general_process import * 
 
 class UneClasseDeTest(unittest.TestCase):
 
     def setUp(self):
         # Initialisation des données de test
         self.process = SampleJsonProcess("2022")
-    
+        self.processes = [SampleJsonProcess, SampleXmlProcess]
+        self.global_process = GlobalProcess()
         self.url = []
         
         self.df = pd.DataFrame()
@@ -89,7 +91,7 @@ class UneClasseDeTest(unittest.TestCase):
         expected_res=False
         self.assertEqual(resultats, expected_res)
 
-    # def test_retain_wit_formaT(self):
+    # def test_retain_wit_format(self):
     #     """
     #     Test de la fonction retain_with_fomat, on vérifie que le dictionnaire en paramètre est valide par rapport à notre format 2022
     #     et trie les dictionnaire dans deux listes différentes, une pour les dico valide que l'on va traiter dans la suite du code
@@ -447,7 +449,7 @@ class UneClasseDeTest(unittest.TestCase):
       }
         ]
         
-        self.process.convert2()
+        self.process.convert()
         expected_res=True
         df_notre= self.process.df
 
@@ -498,8 +500,8 @@ class UneClasseDeTest(unittest.TestCase):
         self.process.convert_boolean('attributionAvance')
         self.process.convert_boolean('sousTraitanceDeclaree')
 
-        # print(" Dataframe modele :", df_modele)
-        # print(" Dataframe resultat :", self.process.df)
+        print(" Dataframe modele :", df_modele)
+        print(" Dataframe resultat :", self.process.df)
 
         expected_result = True
         real_result = self.process.df.equals(df_modele)
@@ -559,6 +561,7 @@ class UneClasseDeTest(unittest.TestCase):
         real_result = self.process.df.equals(df_modele)
         
         self.assertEqual(real_result, expected_result)
+
 
     def test_tri_format_json(self):
         with open(f"documents/marches_avec_modifications.json", encoding='utf8' ) as json_file1:
@@ -846,7 +849,6 @@ class UneClasseDeTest(unittest.TestCase):
         self.assertListEqual(expected_result_xml, self.process.dico_2022_marche)
 
 
-
     def test_clean(self):
         """
         La fonction réalise le test de la fonction "clean" en utilisant
@@ -1079,10 +1081,268 @@ class UneClasseDeTest(unittest.TestCase):
     ]   
         self.assertListEqual(expected_result, self.process.dico_2022_marche)
         
-if __name__ == '__main__':
-    unittest.main()
+    
+    def test_drop_duplicate(self):
+        #Résultat qu'on doit avoir
+        dico_modele = [
+      {
+        "id": "TEST2022Bis",
+        "acheteur": {
+          "id": "21750001630040"
+        },
+        "marcheInnovant": "non",
+        "origineUE": 0.1,
+        "origineFrance": 0.1,
+        "ccag": "Travaux",
+        "offresRecues": 4,
+        "formePrix": "Forfaitaire",
+        "typesPrix": {
+          "typePrix": [
+      "Définitif ferme"
+      ]
+        },
+        "considerationsEnvironnementales": {
+          "considerationEnvironnementale": [
+            "Clause environnementale"
+          ]
+        },
+        "attributionAvance": True,
+        "considerationsSociales": {
+          "considerationSociale": [
+            "Clause sociale",
+            "Critère social"
+          ]
+        },
+        "nature": "Marché",
+        "objet": "envoi pour Json test 2",
+        "codeCPV": "45000000-7",
+        "techniques": {
+          "technique": [
+            "Concours",
+            "Accord-cadre"
+          ]
+        },
+        "modalitesExecution": 
+    {
+      "modaliteExecution": [
+        "Tranches"]
+    }
+    ,
+        "idAccordCadre": "1234567890",
+        "tauxAvance": 0,
+        "titulaires": [
+          {
+            "titulaire": {
+              "id": "55204599900869",
+              "typeIdentifiant": "SIRET"
+            }
+          }
+        ],
+        "typeGroupementOperateurs": "Pas de groupement",
+        "sousTraitanceDeclaree": True,
+        "datePublicationDonnees": "2024-05-25",
+        "actesSousTraitance": [
+          {
+            "acteSousTraitance": {
+              "id": 1,
+              "sousTraitant": {
+                "id": "214356",
+                "typeIdentifiant": "SIRET"
+              },
+              "dureeMois": 12,
+              "dateNotification": "2023-10-11",
+              "montant": 123456.89,
+              "variationPrix": "Révisable",
+              "datePublicationDonnees": "2023-10-12"
+            }
+          }
+        ],
+        "modifications": [
+          {
+            "modification": {
+              "id": 1,
+              "dureeMois": 12,
+              "montant": 123457.87,
+              "titulaires": [
+                {
+                  "titulaire": {
+                    "id": "868768687576575",
+                    "typeIdentifiant": "SIRET"
+                  }
+                }
+              ],
+              "dateNotificationModification": "2022-10-18",
+              "datePublicationDonneesModification": "2022-10-20"
+            }
+          }
+    ],
+        "modificationsActesSousTraitance": [
+          {
+            "modificationActeSousTraitance": {
+              "id": 1,
+              "dureeMois": 12,
+              "dateNotificationModificationSousTraitance": "2022-10-20",
+              "montant": 23465.87,
+              "datePublicationDonnees": "2022-12-15"
+            }
+          }
+    ],
+        "procedure": "Appel d'offres ouvert",
+        "lieuExecution": {
+          "code": "75000",
+          "typeCode": "Code postal"
+        },
+        "dureeMois": 48,
+        "dateNotification": "2024-05-15",
+        "montant": 575000,
+        "source": "sample_json"
+      },
+        {
+        "id": "TEST2022",
+        "acheteur": {
+          "id": "21750001630066"
+        },
+        "marcheInnovant": "false",
+        "origineUE": "0.1",
+        "origineFrance": "0.1",
+        "ccag": "Travaux",
+        "offresRecues": "4",
+        "formePrix": "Forfaitaire",
+        "typesPrix": {
+          "typePrix": [
+      "Définitif ferme"
+      ]
+        },
+        "considerationsEnvironnementales": {
+          "considerationEnvironnementale": [
+            "Clause environnementale"
+          ]
+        },
+        "attributionAvance": "1",
+        "considerationsSociales": {
+          "considerationSociale": [
+            "Clause sociale",
+            "Critère social"
+          ]
+        },
+        "nature": "Marché",
+        "objet": "envoi pour Json test 1",
+        "codeCPV": "45000000-7",
+        "techniques": {
+          "technique": [
+            "Concours",
+            "Accord-cadre"
+          ]
+        },
+        "modalitesExecution": 
+    {
+      "modaliteExecution": [
+        "Tranches"]}
+    ,
+    "idAccordCadre": "1234567890",
+        "tauxAvance": "0",
+        "titulaires": [
+          {
+            "titulaire": {
+              "id": "55204599900869",
+              "typeIdentifiant": "SIRET"
+            }
+          }
+        ],
+        "typeGroupementOperateurs": "Pas de groupement",
+        "sousTraitanceDeclaree": "true",
+        "datePublicationDonnees": "2024-05-29",
+        "actesSousTraitance": [
+          {
+            "acteSousTraitance": {
+              "id": "1",
+              "sousTraitant": {
+                "id": "214356",
+                "typeIdentifiant": "SIRET"
+              },
+              "dureeMois": "12",
+              "dateNotification": "2023-10-11",
+              "montant": "123456.89",
+              "variationPrix": "Révisable",
+              "datePublicationDonnees": "2023-10-12"
+            }
+          }
+        ],
+        "modifications": [
+          {
+            "modification": {
+              "id": "1",
+              "dureeMois": "12",
+              "montant": "123457.87",
+              "titulaires": [
+                {
+                  "titulaire": {
+                    "id": "868768687576575",
+                    "typeIdentifiant": "SIRET"
+                  }
+                }
+        ],
+              "dateNotificationModification": "2022-10-18",
+              "datePublicationDonneesModification": "2022-10-20"
+            }
+          }
+    ],
+        "modificationsActesSousTraitance": [
+          {
+            "modificationActeSousTraitance": {
+              "id": "1",
+              "dureeMois": "12",
+              "dateNotificationModificationSousTraitance": "2022-10-20",
+              "montant": "23465.87",
+              "datePublicationDonnees": "2022-12-15"
+            }
+          }
+    ],
+        "procedure": "Appel d'offres ouvert",
+        "lieuExecution": {
+          "code": "75000",
+          "typeCode": "Code postal"
+        },
+        "dureeMois": "48",
+        "dateNotification": "2024-05-15",
+        "montant": "575000",
+        "source": "sample_xml"
+      }
+    ]
 
-    # obj = UneClasseDeTest()
-    # obj.setUp()
-    # obj.test_clean()
+
+        df_modele = pd.DataFrame.from_dict(dico_modele)
+ 
+        #Ouverture des fichiers où on récupère les données
+        with open(f"documents/marches_avec_modifications.json", encoding='utf8') as json_file :
+            dico_json = json.load(json_file)
+        with open(f"documents/marches_avec_modifications.xml", encoding='utf8') as xml_file:
+            dico_xml =  xmltodict.parse(xml_file.read(), dict_constructor = dict, force_list=('marche','titulaires', \
+                                            'modifications', 'actesSousTraitance','modificationsActesSousTraitance', \
+                                                     'typePrix','considerationEnvironnementale', 'modaliteExecution'))
+        #Transformation Ddes dictionnaires en dataframe dans l'objet GlobalProcess
+        df_json = pd.DataFrame.from_dict(dico_json["marches"]["marche"])
+        df_json = df_json.assign(source="sample_json")
+        
+        df_xml = pd.DataFrame.from_dict(dico_xml["marches"]["marche"])
+        df_xml = df_xml.assign(source="sample_xml")
+        
+        self.global_process.dataframes = [df_json, df_xml]
+        self.global_process.merge_all()
+        
+        #Fonction à tester
+        self.global_process.drop_duplicate()
+
+        result = df_modele.equals(self.global_process.df)
+        expected_result = True
+
+        self.assertEqual(expected_result,result)
+
+
+if __name__ == '__main__':
+    #unittest.main()
+
+    obj = UneClasseDeTest()
+    obj.setUp()
+    obj.test_drop_duplicate()
 

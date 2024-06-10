@@ -13,7 +13,7 @@ class SampleJsonProcess(SourceProcess):
         super().get()
 
     def convert(self):
-        super().convert2()
+        super().convert()
 
     def fix(self):
         self.df = self.df.reset_index(drop=True)

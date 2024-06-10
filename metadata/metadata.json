@@ -5,7 +5,7 @@
     "description": "Données de test",
     "url_source-VLAD-TEST": "http://127.0.0.1:4242/vlad-xml", 
     "url_source-DECP-TEST": "http://127.0.0.1:4242/decp-xml", 
-    "url_source": "http://127.0.0.1:8081/documents/test-xml.xml",
+    "url_source": "http://127.0.0.1:8082/documents/marches_avec_modifications.xml",
     "url_source-DEFAULT": "http://127.0.0.1:4242/data-2022-decp-xml",
     "format": "xml",
     "cle_api": [],
@@ -15,7 +15,7 @@
   {
     "code": "sample_json",
     "description": "Données de test",
-    "url_source": "http://127.0.0.1:8081/documents/marches_avec_modifications.json",
+    "url_source": "http://127.0.0.1:8082/documents/marches_avec_modifications.json",
     "url_source_DECP": "http://127.0.0.1:4242/decp-json", 
     "url_source_VLAD": "http://127.0.0.1:4242/vlad-json", 
     "url_source_DEFAULT": "http://127.0.0.1:4242/data-2022-decp-json",

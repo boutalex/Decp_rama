@@ -15,7 +15,7 @@ class GlobalProcess:
     fusion des sources dans un seul DataFrame (merge_all), suppression des doublons (drop_duplicate)
     et l'exportation des données en json pour publication (export)."""
 
-    def __init__(self,data_format):
+    def __init__(self,data_format="2022"):
         """L'étape __init__ crée les variables associées à la classe GlobalProcess : le DataFrame et
         la liste des dataframes des différentes sources."""
         logging.info("------------------------------GlobalProcess------------------------------")
@@ -46,8 +46,8 @@ class GlobalProcess:
         logging.info("Début de l'étape Fix_all du DataFrame fusionné")
 
         # On met les acheteurs et lieux au bon format
-        if 'acheteur' in self.df.columns:
-            del self.df['acheteur']
+        # if 'acheteur' in self.df.columns:
+        #     del self.df['acheteur']
         if 'acheteur.id' in self.df.columns:
             self.df['acheteur.id'] = self.df['acheteur.id'].astype(str)
         if self.data_format=='2019':
@@ -78,15 +78,16 @@ class GlobalProcess:
                                             x.replace('+', '-') if str(x) != 'nan' else x)
                 self.df[s] = \
                     self.df[s].apply(lambda x:
-                                    date(int(float(x.split("-")[0])), min(int(float(x.split("-")[1])),12),
-                                        min(int(float(x.split("-")[2])),31)).isoformat()
+                                    date(int(float(x.split("-")[0])),\
+                                     min(int(float(x.split("-")[1])),12), \
+                                     min(int(float(x.split("-")[2])),31)).isoformat()
                                     if str(x) != 'nan' and len(x.split("-")) >= 3 else x)
         logging.info(f"Nombre de marchés dans le DataFrame fusionné après merge : {len(self.df)}")
         # DureeMois doit être un float
         self.df['dureeMois'] = self.df['dureeMois'].apply(lambda x: 0 if x == '' or
                                                           str(x) in ['nan', 'None'] else x)
         # Montant doit être un float
-        if 'montant' in self.df.columns:
+        if 'montant' in self.df.columns: 
             self.df['montant'] = self.df['montant'].apply(lambda x: 0 if x == '' or
                                                           str(x) in ['nan', 'None'] else float(x))
         else:
@@ -126,32 +127,51 @@ class GlobalProcess:
                              ((self.df['nature'].str.contains('concession', case=False, na=False)) & (self.df['dateDebutExecution']>='2024-01-01'))))]
 
     def drop_duplicate(self):
+        """
+        L'Étape drop duplicate supprime les duplicats purs après avoir 
+        supprimé les espaces et convertis l'ensemble du DataFrame en string.
+        """
         # if df is empty then return
         if len(self.df) == 0:
             logging.warning(f"Le DataFrame global est vide, impossible de supprimer les doublons")
-            return
-        """L'Étape drop duplicate supprime les duplicats purs après avoir supprimé les espaces et
-        convertis l'ensemble du DataFrame en string."""
-        # Suppression des doublons
+
+
+        # Séparation des lignes selon la colonne "modifications"
         logging.info("Début de l'étape Suppression des doublons")
         self.df.sort_values(by="source", inplace=True) # Pourquoi ? La partie métier (Martin Douysset) a demandé à ce qu'en cas de doublon sur plusieurs sources, ceux de l'AIFE
-        if "modifications" in self.df.columns:
-            df_modif = self.df[self.df.modifications.apply(len)>0] # Les règles de dédoublonnages diffèrent dans ces cas là.
-            df_nomodif = self.df[self.df.modifications.apply(len)==0]
+        if "modifications" in self.df.columns: # Règles de dédoublonnages diffèrentes. On part du principe qu'en cas 
+                                               # de modifications, la colonne "modifications" est créée ou modifiée
+            df_modif = self.df[self.df.modifications.apply(len)>0]     #lignes pour lesquelles il y a eu des modifs     
+            df_nomodif = self.df[self.df.modifications.apply(len)==0]  #lignes sans aucune modif
         else:
-            df_modif = pd.DataFrame() # Les règles de dédoublonnages diffèrent dans ces cas là.
+            df_modif = pd.DataFrame() 
             df_nomodif = self.df
-        # Suppression des doublons
-        if "acheteur.id" in self.df.columns:
-            df_nomodif_str = df_nomodif.astype(str) # Pour avoir des objets dedoublonnables
-            feature_doublons = ["objet", "acheteur.id", "titulaires", "dateNotification", "montant"]
-            index_to_keep_nomodif = df_nomodif_str.drop_duplicates(subset=feature_doublons).index.tolist()
-            df_modif_str = df_modif.astype(str)
-            index_to_keep_modif = df_modif_str.drop_duplicates().index.tolist() # Dans le cas des modifs, un dédoublonnage dure.
-            self.df = pd.concat([df_nomodif.loc[index_to_keep_nomodif, :], df_modif.loc[index_to_keep_modif, :]])
+
+        feature_doublons = []
+        # Colonnes pour trouver les doublons (concession ou marché)
+        if "acheteur" in self.df.columns:  #dans le cas d'un marché
+            feature_doublons = ["objet", "acheteur", "titulaires", "dateNotification", "montant"] 
+        elif "autoriteConcedante" in self.df.columns: #dans le cas d'une concession
+            feature_doublons = ["objet", "autoriteConcedante", "concessionaires", "dateDebutExecution", "valeurGlobale"]
+
+        if not feature_doublons:
+            raise ValueError("Les colonnes nécessaires pour trouver les doublons ne sont pas présentes.")
+        
+        #Conversion colonne, tri selon la date et suppression des doublons
+        df_nomodif_str = df_nomodif.astype(str)    # Pour avoir des objets dedoublonnables
+        index_to_keep_nomodif = df_nomodif_str.drop_duplicates(subset=feature_doublons).index.tolist()
+
+        df_modif_str = df_modif.astype(str)
+        df_modif_str.sort_values(by=["datePublicationDonnees"], inplace=True)    #print("DF", df_modif_str)
+        index_to_keep_modif = df_modif_str.drop_duplicates(subset=feature_doublons,keep='last').index.tolist()  #'last', permet de garder la ligne où la date est la plus récente
+       
+        self.df = pd.concat([df_nomodif.loc[index_to_keep_nomodif, :], df_modif.loc[index_to_keep_modif, :]])
+
         self.df = self.df.reset_index(drop=True)
         logging.info("Suppression OK")
         logging.info(f"Nombre de marchés dans Df après suppression des doublons strictes : {len(self.df)}")
+
+
 
     def export(self):
         # if df is empty then return
@@ -160,7 +180,7 @@ class GlobalProcess:
             return
         """Étape exportation des résultats au format json et xml dans le dossier /results"""
         logging.info("  ÉTAPE EXPORTATION")
-        logging.info("Début de l'étape Exportation en XML")
+        #logging.info("Début de l'étape Exportation en XML")
         """
         dico = {'marches': [{'marche': {k: v for k, v in m.items() if str(v) != 'nan'}}
                             for m in self.df.to_dict(orient='records')]}

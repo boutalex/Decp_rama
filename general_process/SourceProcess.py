@@ -127,34 +127,7 @@ class SourceProcess:
     colums_concession_opt_2019 = set([
         'modifications'
     ])
-
-    # #def load_columns_from_file(file_path):
-    # columns_dict = {}
-    # file_path = 'documents/Listes_champs.txt'
-    # with open(file_path, 'r') as file:
-    #     lines = file.readlines()
-    #     current_key = None
-    #     for line in lines:
-    #         line = line.strip()
-    #         if line.endswith(':'):
-    #             current_key = line[:-1]
-    #             columns_dict[current_key] = set()
-    #             print("columns dict",columns_dict)
-    #             print("test", columns_dict[current_key])
-    #         elif current_key:
-    #             columns_dict[current_key].update(line.split(','))
-    #     #return columns_dict
-    #     # Accéder aux ensembles de colonnes
-    #     columns_marche_2022 = columns_dict['columns_marche_2022']
-    #     colums_marche_opt_2022 = columns_dict['colums_marche_opt_2022']
-    #     columns_concession_2022 = columns_dict['columns_concession_2022']
-    #     columns_concession_opt_2022 = columns_dict['columns_concession_opt_2022']
-    #     columns_marche_2019 = columns_dict['columns_marche_2019']
-    #     colums_marche_opt_2019 = columns_dict['colums_marche_opt_2019']
-    #     columns_concession_2019 = columns_dict['columns_concession_2019']
-    #     colums_concession_opt_2019 = columns_dict['colums_concession_opt_2019']
-
-    
+   
     """La classe SourceProcess est une classe abstraite qui sert de parent à chaque classe enfant de
     sources. Elle sert à définir le cas général des étapes de traitement d'une source : création des
     variables de classe (__init__), nettoyage des dossiers de la source (_clean_metadata_folder),
@@ -178,7 +151,7 @@ class SourceProcess:
         # Récupération des urls
         self._url_init() 
 
-        #Liste des dictionnaires pour l'étape de nettoyage
+        # Liste des dictionnaires pour l'étape de nettoyage
         self.dico_ignored = []
         self.dico_2022_marche = []
         self.dico_2022_concession = []
@@ -207,8 +180,6 @@ class SourceProcess:
         else:
             self.url, self.title = self.create_metadata_file(len(self.cle_api))
            
-        # self.url = url
-        # self.title = title
         logging.info("Initialisation finie")
     
     def create_metadata_file(self,n:int)->tuple[list,list]:
@@ -248,13 +219,13 @@ class SourceProcess:
                 url, title = self.check_date_file(url,title, ressources, old_ressources)
                 print("Les urls dont le contenu a été modifié sont: ", url)
 
-            #Cas où les fichiers old_metadata existent, on écrit dedans à nouveau
+            #Cas où les fichiers old_metadata existent: on écrit dedans à nouveau
             if os.path.exists(f"old_metadata/{self.source}/old_metadata_{self.key}_{i}.json"):
                 with open(f"metadata/{self.source}/metadata_{self.key}_{i}.json", 'r') as source_file:
                     contenu = source_file.read()
                 with open(f"old_metadata/{self.source}/old_metadata_{self.key}_{i}.json", 'w') as destination_file:
                     destination_file.write(contenu)
-            #Cas où les fichiers old_metadata n'existent pas, on fait une copie
+            #Cas où les fichiers old_metadata n'existent pas: on fait une copie
             else:
                 shutil.copy(f"metadata/{self.source}/metadata_{self.key}_{i}.json",f"old_metadata/{self.source}/old_metadata_{self.key}_{i}.json")
                 print(os.listdir(f"old_metadata/{self.source}"))
@@ -283,10 +254,10 @@ class SourceProcess:
     def download_without_metadata(self):
         """
         Fonction téléchargeant un fichier n'ayant pas de clé api. Par conséquent, le
-        téléchargement s'effectue grâce à l'url dans l'atribut url_source
+        téléchargement s'effectue grâce à l'url dans l'attribut url_source
         """
         nom_fichier = os.listdir(f"sources/{self.source}")
-        if nom_fichier!=[]:
+        if nom_fichier!=[]:   #Dossier non vide
             os.remove(f"sources/{self.source}/{nom_fichier[0]}")
             logging.info(f"Fichier : {nom_fichier[0]} existe déjà, nettoyage du doublon ")
             wget.download(self.url[0], f"sources/{self.source}/{nom_fichier[0]}")
@@ -331,48 +302,54 @@ class SourceProcess:
     def _has_all_field_and_date_2019(self, record:dict)->bool :
         """
         Fonction vérifiant qu'un marché/concession possède bel et bien toutes 
-        les colonnes requise par notre schéma. Il vérifie également que les 
-        dates contenues dans le marché/concession soit postérieur à 2024.
+        les colonnes requises par notre schéma. Il vérifie également que les 
+        dates contenues dans le marché/concession soient postérieures à 2024.
         @record : marché/concession que l'on souhaite traiter
         """
         liste_marche = ['Marché','Marché de partenariat', 'Accord-cadre', 'Marché subséquent','MARCHE']
         liste_concession = ['Concession de travaux',  'Concession de service', 'Concession de service public', 'Délégation de service public']
         print("nature", record['nature'])
         if record["nature"] in liste_marche : #Il faudra modifier à l'appel de sorte à avoir la nature : marché
-            champs_intersections = set(list(record.keys()))
-            #On soustrait les champs obligatoires, les champs obligatoires qui restent seront ceux en trop
-            champs_intersections = champs_intersections.symmetric_difference(self.columns_marche_2019)
-            if len(champs_intersections)>0:
-                champs_en_moins = champs_intersections & self.columns_marche_2019 #On récupère seulement les champs obligatoires manquant
-                champs_en_trop = champs_intersections.difference(self.colums_marche_opt_2019).difference(champs_en_moins)
-                if len(champs_en_moins)>0:
-                    logging.info(f"Voici les champs manquant :{champs_en_moins}")
-                if len(champs_en_trop)>0:
-                    logging.info(f"Voici les champs en trop :{champs_en_trop}")
-                return False
+            champs_differents = set(list(record.keys()))
+            #Complémentaire de l'intersection entre les champs du dictionnaire et les champs obligatoires 
+            champs_differents = champs_differents.symmetric_difference(self.columns_marche_2019)
+            if len(champs_differents)>0:
+                champs_en_moins = champs_differents & self.columns_marche_2019 #On récupère seulement les champs obligatoires manquants
+                champs_en_plus = champs_differents.difference(self.colums_marche_opt_2019).difference(champs_en_moins)
+                if len(champs_en_moins)>0 or len(champs_en_plus)>0:
+                    logging.info(f"Voici les champs en moins :{champs_en_moins}")
+                    logging.info(f"Voici les champs en plus :{champs_en_plus}")
+                    return False
+                else :
+                    logging.info(f"Tous les champs sont valides.")
+                    
             if self.date_before_2024(record,"marché"):
-                logging.info(f"Erreur : date précédant 2024")
+                logging.info(f"Dictionnaire conforme au format 2019")
                 return True
-            else :
+            else:
+                logging.info(f"Erreur : date précédant 2024")
                 return False 
         elif record["nature"] in liste_concession :
-            champs_intersections = set(list(record.keys()))
-            #On soustrait les champs obligatoires, les champs obligatoires qui restent seront ceux en trop
-            champs_intersections = champs_intersections.symmetric_difference(self.columns_concession_2019)
-            if len(champs_intersections)>0:
-                champs_en_moins = champs_intersections & self.columns_concession_2019 #On récupère seulement les champs obligatoires manquant
-                champs_en_trop = champs_intersections.difference(self.colums_concession_opt_2019).difference(champs_en_moins)
+            champs_differents = set(list(record.keys()))
+            #Complémentaire de l'intersection entre les champs du dictionnaire et les champs obligatoires 
+            champs_differents = champs_differents.symmetric_difference(self.columns_concession_2019)
+            if len(champs_differents)>0:
+                champs_en_moins = champs_differents & self.columns_concession_2019 #On récupère seulement les champs obligatoires manquants
+                champs_en_plus = champs_differents.difference(self.colums_concession_opt_2019).difference(champs_en_moins)
                 if len(champs_en_moins)>0:
-                    logging.info(f"Voici les champs manquant :{champs_en_moins}")
-                if len(champs_en_trop)>0:
-                    logging.info(f"Voici les champs en trop :{champs_en_trop}")
+                    logging.info(f"Voici les champs en moins :{champs_en_moins}")
+                if len(champs_en_plus)>0:
+                    logging.info(f"Voici les champs en plus :{champs_en_plus}")
                 return False
             if self.date_before_2024(record,"marché"):
-                logging.info(f"Erreur : date précédant 2024")
+                logging.info(f"Dictionnaire conforme au format 2019")
                 return True
+            else: 
+                logging.info(f"Erreur: date après 2024")
+                return False
         else:
             return False
-        return True
+
     
 
 
@@ -380,56 +357,57 @@ class SourceProcess:
         """
         Fonction vérifiant qu'un marché/concession possède toutes les colonnes 
         requises par notre schéma. Il vérifie également que les 
-        dates contenues dans le marché/concession soit postérieur à 2024.
+        dates contenues dans le marché/concession soient postérieures à 2024.
         @record : marché/concession que l'on souhaite traiter
         @record_type : type du marché (marché/concession)
         """
         if record_type == 'marche':
-            champs_intersections = set(list(record.keys()))
-            champs_intersections = champs_intersections.symmetric_difference(self.columns_marche_2022)#On soustrait les champs obligatoires, les champs obligatoires qui restent seront ceux en trop
-            if len(champs_intersections)>0:
-                champs_en_moins = champs_intersections & self.columns_marche_2022 #On récupère seulement les champs obligatoires manquant
-                champs_en_trop = champs_intersections.difference(self.colums_marche_opt_2022).difference(champs_en_moins)
-                if len(champs_en_moins)>0:
-                    logging.info(f"Voici les champs manquant :{champs_en_moins}")
-                if len(champs_en_trop)>0:
-                    logging.info(f"Voici les champs en trop :{champs_en_trop}")
-                return False
+            champs_differents = set(list(record.keys()))
+            #Complémentaire de l'intersection entre les champs du dictionnaire et les champs obligatoires
+            champs_differents = champs_differents.symmetric_difference(self.columns_marche_2022)
+            if len(champs_differents)>0:
+                champs_en_moins = champs_differents & self.columns_marche_2022 #On récupère seulement les champs obligatoires manquants
+                champs_en_plus = champs_differents.difference(self.colums_marche_opt_2022).difference(champs_en_moins)
+                if len(champs_en_moins)>0 or len(champs_en_plus)>0 :
+                    logging.info(f"Voici les champs en moins :{champs_en_moins}")
+                    logging.info(f"Voici les champs en plus :{champs_en_plus}")
+                    return False
+            if not self.date_after_2024(record):
+                logging.info(f"Erreur : date précédant 2024")
+                return False 
+            else:
+                logging.info(f"Dictionnaire valide au format 2024")
+                return True
 
-            # for column in self.columns_marche_2022:
-            #     if not column in record:
-            #         print(f"Colonne manquante : {column}")
-            #         logging.info(f"Colonne manquante : {column}")    #A retirer
-            #         return False
+        elif record_type == 'contrat-concession':
+            champs_differents = set(list(record.keys()))
+            #Complémentaire de l'intersection entre les champs du dictionnaire et les champs obligatoires
+            champs_differents = champs_differents.symmetric_difference(self.columns_concession_2022)
+            if len(champs_differents)>0:
+                champs_en_moins = champs_differents & self.columns_concession_2022 #On récupère seulement les champs obligatoires manquants
+                champs_en_plus = champs_differents.difference(self.columns_concession_opt_2022).difference(champs_en_moins)
+                if len(champs_en_moins)>0 or len(champs_en_plus)>0:
+                    logging.info(f"Voici les champs en moins :{champs_en_moins}")
+                    logging.info(f"Voici les champs en plus :{champs_en_plus}")
+                    return False
             if not self.date_after_2024(record):
                 logging.info(f"Erreur : date précédant 2024")
                 return False 
+            else:
+                logging.info(f"Dictionnaire valide au format 2024")
+                return True
         else:
-            champs_intersections = set(list(record.keys()))
-            champs_intersections = champs_intersections.symmetric_difference(self.columns_concession_2022)#On soustrait les champs obligatoires, les champs obligatoires qui restent seront ceux en trop
-            if len(champs_intersections)>0:
-                champs_en_moins = champs_intersections & self.columns_concession_2022 #On récupère seulement les champs obligatoires manquant
-                champs_en_trop = champs_intersections.difference(self.columns_concession_opt_2022).difference(champs_en_moins)
-                if len(champs_en_moins)>0:
-                    logging.info(f"Voici les champs manquant :{champs_en_moins}")
-                if len(champs_en_trop)>0:
-                    logging.info(f"Voici les champs en trop :{champs_en_trop}")
-                return False
-            # for column in self.columns_concession_2022:
-            #     if not column in record:
-            #         #logging.info(f"Colonne manquante : {column}")   #A retirer
-            #         return False
-            if not self.date_after_2024(record):
-                logging.info(f"Erreur : date précédant 2024")
-                return False 
-        return True
+            return False
     
     def date_norm(self,datestr:str):
         return datestr.replace('+','-') if datestr else datestr
 
     def date_before_2024(self, record,nature:str):
-        """ La fonction vérifie que les dates contenue dans un marché/concession
-            Les dates postérieures à 2024 doivent être de la forme Y-M-J pour les colonnes date et date_de_publication. """
+        """ 
+        La fonction vérifie que les dates contenues dans un marché/une 
+        concession sont postérieures à 2024 et sont de la forme Y-M-J
+        pour les colonnes date et date_de_publication. 
+        """
         if nature == "marché":
             if not record['nature'] is None  and 'concession' in record['nature'].lower():
                 if 'dateDebutExecution' in record:
@@ -457,8 +435,9 @@ class SourceProcess:
 
     def date_after_2024(self, record:dict)->bool:
             """
-            La fonction prend en entrée un dictionnaire : record, et renvoie un booléeen.
-            Les dates postérieures à 2024 doivent être de la forme Y-M-J pour les colonnes date et date_de_publication.
+            La fonction prend en entrée un dictionnaire et renvoie un 
+            booléeen.Les dates postérieures à 2024 doivent être de la
+            forme Y-M-J pour les colonnes date et date_de_publication.
             @record : marché/concession que l'on souhaite traiter
             """
             first = datetime.strptime("2024-01-01", "%Y-%m-%d")
@@ -481,7 +460,40 @@ class SourceProcess:
                     except:
                         None
             return False
+ 
         
+    # def clean(self):
+    #     """
+    #     Fonction réalisant un tri sur le format 2022 ou le format 2019 en complétant
+    #     les 3 dictionnaires et permettre la conversion en dataframe pour plus tard.
+    #     """
+    #     logging.info(" ÉTAPE CLEAN")
+    #     logging.info("Début du tri des nouveaux fichiers")
+    #     #Ouverture des fichiers
+    #     for i in range(len(self.title)):            
+    #         if self.format == 'xml':
+    #             try:
+    #                 with open(f"sources/{self.source}/{self.title[i]}", encoding='utf-8') as xml_file:
+    #                     dico = xmltodict.parse(xml_file.read(), dict_constructor=dict, \
+    #                                            force_list=('marche','titulaires', 'modifications', 'actesSousTraitance',
+    #                                            'modificationsActesSousTraitance', 'typePrix','considerationEnvironnementale',
+    #                                            'modaliteExecution'))
+    #             except Exception as err:
+    #                 logging.error(f"Exception lors du chargement du fichier xml {self.title[i]} - {err}")
+
+    #         elif self.format == 'json':
+    #                 try:
+    #                     with open(f"sources/{self.source}/{self.title[i]}", encoding="utf-8") as json_file:
+    #                         dico = json.load(json_file)
+
+    #                 except Exception as err:  
+    #                     logging.error(f"Exception lors du chargement du fichier json {self.title[i]} - {err}")
+
+    #         self.tri_format(dico,self.title[i])    #On obtient 3 listes de dico qui sont mises à jour à chaque tour de boucle
+
+    #     logging.info("Fin du tri selon le format")
+    #     logging.info("Nettoyage OK")
+    
     def clean(self):
         """
         Fonction réalisant un tri sur le format 2022 ou le format 2019 en complétant
@@ -492,24 +504,45 @@ class SourceProcess:
         #Ouverture des fichiers
         for i in range(len(self.title)):            
             if self.format == 'xml':
+                #Vérification du schéma xml
+                scheme_path = 'schemes/decp_2022.xsd'
+                if not self.check(None,f"sources/{self.source}/{self.title[i]}"):
+                    logging.warning(f"sources/{self.source}/{self.title[i]} not a valide xml")
+                    continue
                 try:
+                    with open(f'sources/{self.source}/{self.title[i]}', 'r', encoding='utf-8') as xml_file:
+                        xml_content = xml_file.read()
+                    xmlschema.validate(xml_content, scheme_path)==None
                     with open(f"sources/{self.source}/{self.title[i]}", encoding='utf-8') as xml_file:
-                        dico = xmltodict.parse(xml_file.read(), dict_constructor=dict)
+                        dico = xmltodict.parse(xml_file.read(), dict_constructor=dict, \
+                                               force_list=('marche','titulaires', 'modifications', 'actesSousTraitance',
+                                               'modificationsActesSousTraitance', 'typePrix','considerationEnvironnementale',
+                                               'modaliteExecution'))
                 except Exception as err:
                     logging.error(f"Exception lors du chargement du fichier xml {self.title[i]} - {err}")
 
             elif self.format == 'json':
-                    try:
-                        with open(f"sources/{self.source}/{self.title[i]}", encoding="utf-8") as json_file:
-                            dico = json.load(json_file)
-
-                    except Exception as err:
-                        logging.error(f"Exception lors du chargement du fichier json {self.title[i]} - {err}")
+                #Vérification du schéma json
+                scheme_path = 'schemes/decp_2022.json'
+                if not self.check(f"sources/{self.source}/{self.title[i]}", None):
+                    logging.warning(f"sources/{self.source}/{self.title[i]} not a valid json")
+                    raise Exception("Json format not valid")
+                try:
+                    with open(f"sources/{self.source}/{self.title[i]}", encoding="utf-8") as json_file1:
+                        dico = json.load(json_file1)
+                    with open(scheme_path, "r",encoding='utf-8')as json_file2:
+                        jsonScheme = json.load(json_file2)
+                        json_file2.close
+                    if self.validateJson(json_file1,jsonScheme): 
+                        print("On est allé jusque là") 
+                except Exception as err:
+                    logging.error(f"Exception lors du chargement du fichier json {self.title[i]} - {err}")
 
             self.tri_format(dico,self.title[i])    #On obtient 3 listes de dico qui sont mises à jour à chaque tour de boucle
-
+        print("dico2",dico)
         logging.info("Fin du tri selon le format")
         logging.info("Nettoyage OK")
+
 
 
     def tri_format(self, dico:dict, file_name:str):
@@ -522,7 +555,6 @@ class SourceProcess:
         """
         if 'marches' in dico:
             if 'marche' in dico['marches']:  #format 2022
-                #print("dans le IF")  
                 for m in dico['marches']['marche']:
                     if self._has_all_field_and_date_2024(m, 'marche'):
                         self.dico_2022_marche.append(m)
@@ -530,14 +562,13 @@ class SourceProcess:
                         self.dico_ignored.append(m)
 
             elif 'contrat-concession' in dico['marches']:
-                #print("DANS LE ELIF")
                 for m in dico['marches']['contrat-concession']:
                     if self._has_all_field_and_date_2024(m, 'contrat-concession'):
                         self.dico_2022_concession.append(m)
                     else:
                         self.dico_ignored.append(m)
 
-            else:                     #format 2019
+            else:                            #format 2019
                 for m in dico['marches']:
                     if self._has_all_field_and_date_2019(m):                
                         self.dico_2019.append(m)
@@ -705,7 +736,7 @@ class SourceProcess:
         logging.info(f"Nombre de marchés dans {self.source} après convert : {len(self.df)}")
 
     
-    # def convert(self):
+    # def convert2(self):
     #     """
     #     Étape de conversion des fichiers qui supprime les ' et concatène les fichiers 
     #     présents dans {self.source} dans un seul DataFrame. Elle utilise le dictionnaire 
@@ -781,7 +812,7 @@ class SourceProcess:
     #     logging.info(f"Nombre de marchés dans {self.source} après convert : {len(self.df)}")
     
 
-    def convert2(self):
+    def convert(self):
         """
         Étape de conversion des fichiers qui supprime les ' et concatène les fichiers 
         présents dans {self.source} dans un seul DataFrame. Elle utilise le dictionnaire 
@@ -791,19 +822,48 @@ class SourceProcess:
         logging.info("  ÉTAPE CONVERT")
         logging.info(f"Début de convert: mise au format DataFrame de {self.source}")
 
+        #Mise à jour des dictionnaires
+        old_files = os.listdir(f"sources/{self.source}") - self.title   #liste des titres des fichiers déja présents en local
+        print("old files ", old_files)
+
+        for i in range(len(old_files)):
+            logging.info("Extraction des données des anciens fichiers")
+
+            if self.format == 'xml':
+                try:
+                    with open(f"sources/{self.source}/{old_files[i]}", encoding='utf-8') as xml_file:
+                        dico = xmltodict.parse(xml_file.read(), dict_constructor=dict,  \
+                                               force_list=('marche','titulaires', 'modifications', 'actesSousTraitance',
+                                               'modificationsActesSousTraitance', 'typePrix','considerationEnvironnementale',
+                                               'modaliteExecution'))
+                        #Ajout du dictionnaire dans la bonne variable (dico_2022_marche, dico_2022_concession, dico_2019  ou dico_ignored)
+                        self.tri_format(dico, f"sources/{self.source}/{old_files[i]}")
+                except Exception as err:
+                    logging.error(f"Exception lors du chargement du fichier xml {old_files[i]} - {err}")
+
+            elif self.format == 'json':
+                    try:
+                        with open(f"sources/{self.source}/{old_files[i]}", encoding="utf-8") as json_file:
+                            dico = json.load(json_file)
+                            #Ajout du dictionnaire dans la bonne variable (dico_2022_marche, dico_2022_concession, dico_2019  ou dico_ignored)
+                            self.tri_format(dico, f"sources/{self.source}/{old_files[i]}")
+
+                    except Exception as err:
+                        logging.error(f"Exception lors du chargement du fichier json {old_files[i]} - {err}")
+
+           
+
+        logging.info(f"Début de convert: mise au format DataFrame de {self.source}")
         #Liste qui conservera les dataframes. 
         li = []
 
-        # Création d'un df a chaque nouveau marché/concession
-        # Ajout du df à la liste des dataframes.
-
-        # Add marchés 
+        # Ajout d'un marché à la liste des dataframes
         df = pd.DataFrame.from_dict(self.dico_2022_marche)
         self._add_column_type(df,"Marché")
         li.append(df)
 
     
-        # Add Concession
+        # Ajoutd'une concession à la liste des dataframes
         df = pd.DataFrame.from_dict(self.dico_2022_concession)
         self._add_column_type(df,"Concession")
         li.append(df)
@@ -855,15 +915,11 @@ class SourceProcess:
     
     def check(self,jsonData,xml_path) -> bool:
         """
-        Fonction qui prend en paramètre une donnée Json ou xml 
+        Fonction qui prend en paramètre une donnée json ou xml 
         et qui vérifie grâce à un schéma que la donnée est valide.
         @JsonData : donnée json en entrée (nul si xml)
         @xml_path : chemin du fichier xml en entrée (nul si json)
         """
-        # if self.data_format=='2019':
-        #     return True
-        #else:
-
         #on vérifie que la donnée en entrée est valide par rapport au schéma
         if self.format=='json':
             scheme_path = 'schemes/decp_2022.json'
@@ -916,7 +972,7 @@ class SourceProcess:
         """
         #Conversion si il s'agit de string
         if self.df[col_name].dtypes == 'object':  
-            self.df[col_name] = self.df[col_name].astype(str).replace({'1': 'oui', 'true': 'oui', '0': 'non', 'false': 'non'})
+            self.df[col_name] = self.df[col_name].astype(str).replace({'1': 'oui', 'true': 'oui', '0': 'non', 'false': 'non','True': 'oui', 'False': 'non'})
         else:
             self.df[col_name] = self.df[col_name].astype(str).replace({'True': 'oui', 'False': 'non' }) 
 
