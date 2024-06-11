@@ -15,10 +15,10 @@ class ProcessFactory:
         #self.processes = [DecpAwsProcess, EmarProcess, LyonProcess]  # Supprimer le BRe car pris en compte dans megalisbre, DecpAwsProcess
         #self.processes = [PesProcess, LyonProcess, EmarProcess]
         #self.processes = [AifeProcess]
-        self.processes = [MegaProcess]
+        #self.processes = [MegaProcess]
         #self.processes = [AifeProcess]
         #self.processes = [PesProcess]
-        #self.processes = [SampleJsonProcess, SampleXmlProcess]
+        self.processes = [SampleJsonProcess]
         # if data_format=='2022':
         #    self.processes = [SampleXmlProcess] # For test ECO
         self.dataframes = []
@@ -42,8 +42,7 @@ class ProcessFactory:
                 loaded = 1
                 p.clean()
                 loaded = 2
-                if (p.title!=[]):
-                    p.convert()
+                p.convert()
                 loaded = 3
                 p.fix()
                 loaded = 4
@@ -64,7 +63,6 @@ class ProcessFactory:
         p = self.process()
         p.get()
         p.clean()
-        if (p.title!=[]):
-            p.convert()
+        p.convert()
         p.fix()
         self.dataframes.append(p.df)

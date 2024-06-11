@@ -75,7 +75,7 @@
         </modifications>
 
         <modificationsActesSousTraitance>
-            <modificationActeSousTraitance>
+            <modificationActesSousTraitance>
                 <id>1</id>
                 <dureeMois>12</dureeMois>
                 <dateNotificationModificationSousTraitance>
@@ -84,7 +84,7 @@
                 <montant>23465.87</montant>
                 <datePublicationDonnees> 2022-12-15
                 </datePublicationDonnees>
-            </modificationActeSousTraitance>
+            </modificationActesSousTraitance>
         </modificationsActesSousTraitance>
 
         <procedure>Appel d'offres ouvert</procedure>

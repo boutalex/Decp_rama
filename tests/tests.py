@@ -1178,7 +1178,7 @@ class UneClasseDeTest(unittest.TestCase):
     ],
         "modificationsActesSousTraitance": [
           {
-            "modificationActeSousTraitance": {
+            "modificationActesSousTraitance": {
               "id": 1,
               "dureeMois": 12,
               "dateNotificationModificationSousTraitance": "2022-10-20",
@@ -1289,7 +1289,7 @@ class UneClasseDeTest(unittest.TestCase):
     ],
         "modificationsActesSousTraitance": [
           {
-            "modificationActeSousTraitance": {
+            "modificationActesSousTraitance": {
               "id": "1",
               "dureeMois": "12",
               "dateNotificationModificationSousTraitance": "2022-10-20",

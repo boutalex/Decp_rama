@@ -138,10 +138,10 @@ class GlobalProcess:
 
         # Séparation des lignes selon la colonne "modifications"
         logging.info("Début de l'étape Suppression des doublons")
-        self.df.sort_values(by="source", inplace=True) # Pourquoi ? La partie métier (Martin Douysset) a demandé à ce qu'en cas de doublon sur plusieurs sources, ceux de l'AIFE
+        self.df.sort_values(by="source", inplace=True) 
         if "modifications" in self.df.columns: # Règles de dédoublonnages diffèrentes. On part du principe qu'en cas 
                                                # de modifications, la colonne "modifications" est créée ou modifiée
-            df_modif = self.df[self.df.modifications.apply(len)>0]     #lignes pour lesquelles il y a eu des modifs     
+            df_modif = self.df[self.df.modifications.apply(len)>0]     #lignes avec modifs     
             df_nomodif = self.df[self.df.modifications.apply(len)==0]  #lignes sans aucune modif
         else:
             df_modif = pd.DataFrame() 

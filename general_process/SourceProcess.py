@@ -166,6 +166,7 @@ class SourceProcess:
             shutil.rmtree(f"metadata/{self.source}")
         logging.info(f"Nettoyage metadata/{self.source} OK")
 
+
     def _url_init(self):
         """_url_init permet la récupération de l'ensemble des url des fichiers qui doivent être
         téléchargés pour une source. Ces urls sont conservés dans self.metadata."""
@@ -182,6 +183,7 @@ class SourceProcess:
            
         logging.info("Initialisation finie")
     
+
     def create_metadata_file(self,n:int)->tuple[list,list]:
         """
         Fonction réalisant le téléchargement des métadatas, la copie des
@@ -251,6 +253,7 @@ class SourceProcess:
                 title = title + [new_ressources[i]["title"]] 
         return url, title
 
+
     def download_without_metadata(self):
         """
         Fonction téléchargeant un fichier n'ayant pas de clé api. Par conséquent, le
@@ -317,8 +320,10 @@ class SourceProcess:
                 champs_en_moins = champs_differents & self.columns_marche_2019 #On récupère seulement les champs obligatoires manquants
                 champs_en_plus = champs_differents.difference(self.colums_marche_opt_2019).difference(champs_en_moins)
                 if len(champs_en_moins)>0 or len(champs_en_plus)>0:
-                    logging.info(f"Voici les champs en moins :{champs_en_moins}")
-                    logging.info(f"Voici les champs en plus :{champs_en_plus}")
+                    self.champs_moins = self.champs_moins | champs_en_moins
+                    self.champs_plus =  self.champs_plus  | champs_en_plus
+                    # logging.info(f"Voici les champs en moins :{champs_en_moins}")
+                    # logging.info(f"Voici les champs en plus :{champs_en_plus}")
                     return False
                 else :
                     logging.info(f"Tous les champs sont valides.")
@@ -336,11 +341,12 @@ class SourceProcess:
             if len(champs_differents)>0:
                 champs_en_moins = champs_differents & self.columns_concession_2019 #On récupère seulement les champs obligatoires manquants
                 champs_en_plus = champs_differents.difference(self.colums_concession_opt_2019).difference(champs_en_moins)
-                if len(champs_en_moins)>0:
-                    logging.info(f"Voici les champs en moins :{champs_en_moins}")
-                if len(champs_en_plus)>0:
-                    logging.info(f"Voici les champs en plus :{champs_en_plus}")
-                return False
+                if len(champs_en_moins)>0 or len(champs_en_plus)>0:
+                    self.champs_moins = self.champs_moins | champs_en_moins
+                    self.champs_plus =  self.champs_plus  | champs_en_plus
+                    #logging.info(f"Voici les champs en moins :{champs_en_moins}")
+                    #logging.info(f"Voici les champs en plus :{champs_en_plus}")
+                    return False
             if self.date_before_2024(record,"marché"):
                 logging.info(f"Dictionnaire conforme au format 2019")
                 return True
@@ -351,8 +357,6 @@ class SourceProcess:
             return False
 
     
-
-
     def _has_all_field_and_date_2024(self, record:dict, record_type:str)->bool :
         """
         Fonction vérifiant qu'un marché/concession possède toutes les colonnes 
@@ -361,6 +365,7 @@ class SourceProcess:
         @record : marché/concession que l'on souhaite traiter
         @record_type : type du marché (marché/concession)
         """
+        
         if record_type == 'marche':
             champs_differents = set(list(record.keys()))
             #Complémentaire de l'intersection entre les champs du dictionnaire et les champs obligatoires
@@ -369,9 +374,12 @@ class SourceProcess:
                 champs_en_moins = champs_differents & self.columns_marche_2022 #On récupère seulement les champs obligatoires manquants
                 champs_en_plus = champs_differents.difference(self.colums_marche_opt_2022).difference(champs_en_moins)
                 if len(champs_en_moins)>0 or len(champs_en_plus)>0 :
-                    logging.info(f"Voici les champs en moins :{champs_en_moins}")
-                    logging.info(f"Voici les champs en plus :{champs_en_plus}")
+                    self.champs_moins = self.champs_moins | champs_en_moins
+                    self.champs_plus =  self.champs_plus  | champs_en_plus
                     return False
+                    # logging.info(f"Voici les champs en moins :{champs_en_moins}")
+                    # logging.info(f"Voici les champs en plus :{champs_en_plus}")
+                    
             if not self.date_after_2024(record):
                 logging.info(f"Erreur : date précédant 2024")
                 return False 
@@ -387,8 +395,10 @@ class SourceProcess:
                 champs_en_moins = champs_differents & self.columns_concession_2022 #On récupère seulement les champs obligatoires manquants
                 champs_en_plus = champs_differents.difference(self.columns_concession_opt_2022).difference(champs_en_moins)
                 if len(champs_en_moins)>0 or len(champs_en_plus)>0:
-                    logging.info(f"Voici les champs en moins :{champs_en_moins}")
-                    logging.info(f"Voici les champs en plus :{champs_en_plus}")
+                    self.champs_moins = self.champs_moins | champs_en_moins
+                    self.champs_plus =  self.champs_plus  | champs_en_plus
+                    # logging.info(f"Voici les champs en moins :{champs_en_moins}")
+                    # logging.info(f"Voici les champs en plus :{champs_en_plus}")
                     return False
             if not self.date_after_2024(record):
                 logging.info(f"Erreur : date précédant 2024")
@@ -399,8 +409,10 @@ class SourceProcess:
         else:
             return False
     
+
     def date_norm(self,datestr:str):
         return datestr.replace('+','-') if datestr else datestr
+
 
     def date_before_2024(self, record,nature:str):
         """ 
@@ -502,10 +514,11 @@ class SourceProcess:
         logging.info(" ÉTAPE CLEAN")
         logging.info("Début du tri des nouveaux fichiers")
         #Ouverture des fichiers
+        dico = {}
         for i in range(len(self.title)):            
             if self.format == 'xml':
                 #Vérification du schéma xml
-                scheme_path = 'schemes/decp_2022.xsd'
+                scheme_path = 'schemes/schema_decp_v2.0.2.xsd'
                 if not self.check(None,f"sources/{self.source}/{self.title[i]}"):
                     logging.warning(f"sources/{self.source}/{self.title[i]} not a valide xml")
                     continue
@@ -537,9 +550,10 @@ class SourceProcess:
                         print("On est allé jusque là") 
                 except Exception as err:
                     logging.error(f"Exception lors du chargement du fichier json {self.title[i]} - {err}")
-
+            self.champs_plus = set()
+            self.champs_moins = set()
             self.tri_format(dico,self.title[i])    #On obtient 3 listes de dico qui sont mises à jour à chaque tour de boucle
-        print("dico2",dico)
+            
         logging.info("Fin du tri selon le format")
         logging.info("Nettoyage OK")
 
@@ -578,8 +592,12 @@ class SourceProcess:
         else:
             logging.error("Balise 'marches' inexistante")
             dico.clear()
+        if len(self.champs_plus)>0:
+            logging.info(f"Dans le fichier {file_name}, les champs en plus sont: {self.champs_plus} ")
+        if len(self.champs_moins)>0:
+            logging.info(f"Dans le fichier {file_name}, les champs en moins sont: {self.champs_moins} ")
         if len(self.dico_ignored)>0:
-            logging.info(f"Ignored {len(self.dico_ignored)} record(s) in {file_name}")
+            logging.info(f"Nombre de marchés invalides: {len(self.dico_ignored)} dans {file_name}")
     
 
     def _retain_with_format(self, dico:dict, file_name:str)->dict:
@@ -823,7 +841,7 @@ class SourceProcess:
         logging.info(f"Début de convert: mise au format DataFrame de {self.source}")
 
         #Mise à jour des dictionnaires
-        old_files = os.listdir(f"sources/{self.source}") - self.title   #liste des titres des fichiers déja présents en local
+        old_files = list(set(os.listdir(f"sources/{self.source}")) - set(self.title))   #liste des titres des fichiers déja présents en local
         print("old files ", old_files)
 
         for i in range(len(old_files)):
@@ -928,7 +946,7 @@ class SourceProcess:
                 jsonfile.close
             return self.validateJson(jsonData,jsonScheme)
         else:    # xml
-            scheme_path = 'schemes/decp_2022.xsd'
+            scheme_path = 'schemes/schema_decp_v2.0.2.xsd'
             try:
                 with open(xml_path, 'r', encoding='utf-8') as xml_file:
                     xml_content = xml_file.read()
