@@ -34,9 +34,32 @@ def main(data_format:str = 2022):
 
 if __name__ == "__main__":
     """Lorsqu'on appelle la fonction main (courante), on définit le niveau de logging et le format d'affichage."""
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
-    logging.root.setLevel(logging.INFO)
+
+    file_handler = logging.FileHandler(filename="Logs/app.log", mode='a', encoding='utf-8')
+    file_handler.setLevel(logging.INFO)
+
+    # Création du StreamHandler pour afficher les logs dans la console
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+
+    # Définir le format du log
+    formatter = logging.Formatter(u'%(asctime)s %(levelname)s: %(message)s')
+    file_handler.setFormatter(formatter)
+    console_handler.setFormatter(formatter)
+
+    # Obtenir le logger root
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+
+    # Ajouter les handlers au logger root
+    logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
+    logging.info("---------------------------------------------------------------")
+    logging.info("                      NOUVELLE EXECUTION")
+    logging.info("---------------------------------------------------------------")
+
     print('Launching ...')
+
     all_data_format = ['2022']
     for data_format in all_data_format:
         print(f"---------------------------------------------------------------")
