@@ -35,7 +35,7 @@ def main(data_format:str = 2022):
 if __name__ == "__main__":
     """Lorsqu'on appelle la fonction main (courante), on définit le niveau de logging et le format d'affichage."""
 
-    file_handler = logging.FileHandler(filename="Logs/app.log", mode='a', encoding='utf-8')
+    file_handler = logging.FileHandler(filename="logs/app.log", mode='a', encoding='utf-8')
     file_handler.setLevel(logging.INFO)
 
     # Création du StreamHandler pour afficher les logs dans la console

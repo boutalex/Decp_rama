@@ -118,14 +118,14 @@ class SourceProcess:
         'montant',
         'formePrix',
         'titulaires',
-        'uuid',
         'source',
         'acheteur',
         'modifications'
     ])
 
     colums_concession_opt_2019 = set([
-        'modifications'
+        'modifications',
+        'uuid'
     ])
    
     """La classe SourceProcess est une classe abstraite qui sert de parent à chaque classe enfant de
@@ -940,7 +940,7 @@ class SourceProcess:
         """
         #on vérifie que la donnée en entrée est valide par rapport au schéma
         if self.format=='json':
-            scheme_path = 'schemes/decp_2022.json'
+            scheme_path = 'schemes/schema_decp_v2.0.2.json'
             with open(scheme_path, "r",encoding='utf-8')as jsonfile:
                 jsonScheme = json.load(jsonfile)
                 jsonfile.close
