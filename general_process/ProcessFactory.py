@@ -19,6 +19,7 @@ class ProcessFactory:
         #self.processes = [AifeProcess]
         #self.processes = [PesProcess]
         self.processes = [SampleJsonProcess]
+        #self.processes = [SampleXmlProcess]
         # if data_format=='2022':
         #    self.processes = [SampleXmlProcess] # For test ECO
         self.dataframes = []

@@ -131,6 +131,8 @@ class GlobalProcess:
         L'Étape drop duplicate supprime les duplicats purs après avoir 
         supprimé les espaces et convertis l'ensemble du DataFrame en string.
         """
+
+        logging.info("  ÉTAPE DROP DUPLICATE")
         # if df is empty then return
         if len(self.df) == 0:
             logging.warning(f"Le DataFrame global est vide, impossible de supprimer les doublons")
@@ -148,26 +150,28 @@ class GlobalProcess:
             df_nomodif = self.df
 
         feature_doublons = []
+
         # Colonnes pour trouver les doublons (concession ou marché)
         if "acheteur" in self.df.columns:  #dans le cas d'un marché
-            feature_doublons = ["objet", "acheteur", "titulaires", "dateNotification", "montant"] 
+            feature_doublons = ["acheteur", "titulaires", "dateNotification", "montant"] 
         elif "autoriteConcedante" in self.df.columns: #dans le cas d'une concession
-            feature_doublons = ["objet", "autoriteConcedante", "concessionaires", "dateDebutExecution", "valeurGlobale"]
+            feature_doublons = ["autoriteConcedante", "concessionnaires", "dateDebutExecution", "valeurGlobale"]
 
         if not feature_doublons:
             raise ValueError("Les colonnes nécessaires pour trouver les doublons ne sont pas présentes.")
         
-        #Conversion colonne, tri selon la date et suppression des doublons
+        #Conversion du type des colonnes, tri selon la date et suppression des doublons
         df_nomodif_str = df_nomodif.astype(str)    # Pour avoir des objets dedoublonnables
         index_to_keep_nomodif = df_nomodif_str.drop_duplicates(subset=feature_doublons).index.tolist()
+        
 
         df_modif_str = df_modif.astype(str)
         df_modif_str.sort_values(by=["datePublicationDonnees"], inplace=True)    #print("DF", df_modif_str)
-        index_to_keep_modif = df_modif_str.drop_duplicates(subset=feature_doublons,keep='last').index.tolist()  #'last', permet de garder la ligne où la date est la plus récente
-       
+        index_to_keep_modif = df_modif_str.drop_duplicates(subset=feature_doublons,keep='last').index.tolist()  #'last', permet de garder la ligne avec la date est la plus récente
         self.df = pd.concat([df_nomodif.loc[index_to_keep_nomodif, :], df_modif.loc[index_to_keep_modif, :]])
 
         self.df = self.df.reset_index(drop=True)
+        #print("DF ", self.df)
         logging.info("Suppression OK")
         logging.info(f"Nombre de marchés dans Df après suppression des doublons strictes : {len(self.df)}")
 
