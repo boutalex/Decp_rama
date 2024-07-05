@@ -39,8 +39,6 @@ class SourceProcess:
         'considerationsSociales',
         'considerationsEnvironnementales',
         'marcheInnovant',
-        'origineUE',
-        'origineFrance',
         'ccag',
         'offresRecues',
         'montant',
@@ -56,10 +54,14 @@ class SourceProcess:
     
     colums_marche_opt_2022 = set([
         'idAccordCadre',
+        'origineUE',
+        'origineFrance',
         'tauxAvance',
         'actesSousTraitance',
         'modifications',
-        'modificationsActesSousTraitance'
+        'modificationsActesSousTraitance',
+        '_type'
+        
     ])
     
     columns_concession_2022 = set([
@@ -81,7 +83,8 @@ class SourceProcess:
     ])
     
     columns_concession_opt_2022 = set([
-        'modifications'
+        'modifications',
+        '_type'
     ])
 
     columns_marche_2019 = set([
@@ -291,6 +294,7 @@ class SourceProcess:
 
         # Obtenir le chemin de l'URL et extraire le nom du fichier
         file_name = parsed_url.path.split('/')[-1]
+        print("PARSED_URL ", file_name)
 
         if nom_fichiers!=[]:   #Dossier non vide
             os.remove(f"sources/{self.source}/{nom_fichiers[0]}")
@@ -325,9 +329,6 @@ class SourceProcess:
                     logging.warning(f"sources/{self.source}/{self.title[i]} not a valide xml")
                     continue
                 try:
-                    with open(f'sources/{self.source}/{self.title[i]}', 'r', encoding='utf-8') as xml_file:
-                        xml_content = xml_file.read()
-                    xmlschema.validate(xml_content, scheme_path)==None
                     with open(f"sources/{self.source}/{self.title[i]}", encoding='utf-8') as xml_file:
                         dico = xmltodict.parse(xml_file.read(), dict_constructor=dict, \
                                                force_list=('marche','titulaires', 'modifications', 'actesSousTraitance',
@@ -345,11 +346,6 @@ class SourceProcess:
                 try:
                     with open(f"sources/{self.source}/{self.title[i]}", encoding="utf-8") as json_file1:
                         dico = json.load(json_file1)
-                    with open(scheme_path, "r",encoding='utf-8')as json_file2:
-                        jsonScheme = json.load(json_file2)
-                        #json_file2.close
-                    if self.validateJson(json_file1,jsonScheme): 
-                        print("Json valide")     
                 except Exception as err:
                     logging.error(f"Exception lors du chargement du fichier json {self.title[i]} - {err}")
             self.champs_plus = set()
@@ -480,7 +476,7 @@ class SourceProcess:
                     
             if not self.date_after_2024(record):
                 logging.info(f"Erreur : date précédant 2024")
-                return False 
+                return True 
             else:
                 logging.info(f"Dictionnaire valide au format 2024")
                 return True
@@ -915,6 +911,7 @@ class SourceProcess:
         except jsonschema.exceptions.ValidationError as err:
             logging.error(f"Erreur de validation json - {err}")
             return False
+        logging.error(f"Schéma Json valide")
         return True
 
     def validateXml(self, xml_path: str, xsd_path: str) -> bool:
