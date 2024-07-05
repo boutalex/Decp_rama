@@ -294,14 +294,13 @@ class SourceProcess:
 
         # Obtenir le chemin de l'URL et extraire le nom du fichier
         file_name = parsed_url.path.split('/')[-1]
-        print("PARSED_URL ", file_name)
 
         if nom_fichiers!=[]:   #Dossier non vide
             os.remove(f"sources/{self.source}/{nom_fichiers[0]}")
             logging.info(f"Le fichier {nom_fichiers[0]} était présent. Il a été supprimé")
             wget.download(self.url[0], f"sources/{self.source}/{file_name}")
             self.title = [ file_name ]
-            print("TITLE :", self.title)
+            logging.info(f"Titre des fichiers : {self.title}")
 
         #Le dossier est vide car il s'agit du 1er téléchargement. Téléchargement 
         #dans le dossier puis affectation du nom du fichier à l'attribut titre
@@ -309,7 +308,7 @@ class SourceProcess:
             wget.download(self.url[0], f"sources/{self.source}/")
             print(os.listdir(f"sources/{self.source}"))
             self.title = [ os.listdir(f"sources/{self.source}")[0] ]
-            print("TITLE:", self.title)
+            logging.info(f"Titre des fichiers : {self.title}")
 
 
     def clean(self):
@@ -421,13 +420,8 @@ class SourceProcess:
                     return False
                 else :
                     logging.info(f"Tous les champs sont valides.")
-                    
-            if self.date_before_2024(record,"marché"):
-                logging.info(f"Dictionnaire conforme au format 2019")
-                return True
-            else:
-                logging.info(f"Erreur : date précédant 2024")
-                return False 
+                    return True
+
         elif record["nature"] in liste_concession :
             champs_differents = set(list(record.keys()))
             #Complémentaire de l'intersection entre les champs du dictionnaire et les champs obligatoires 
@@ -441,12 +435,10 @@ class SourceProcess:
                     #logging.info(f"Voici les champs en moins :{champs_en_moins}")
                     #logging.info(f"Voici les champs en plus :{champs_en_plus}")
                     return False
-            if self.date_before_2024(record,"marché"):
-                logging.info(f"Dictionnaire conforme au format 2019")
-                return True
-            else: 
-                logging.info(f"Erreur: date après 2024")
-                return False
+                else:
+                    logging.info(f"Tous les champs sont valides.")
+                    return True
+
         else:
             return False
 
@@ -473,13 +465,9 @@ class SourceProcess:
                     return False
                     # logging.info(f"Voici les champs en moins :{champs_en_moins}")
                     # logging.info(f"Voici les champs en plus :{champs_en_plus}")
-                    
-            if not self.date_after_2024(record):
-                logging.info(f"Erreur : date précédant 2024")
-                return True 
-            else:
-                logging.info(f"Dictionnaire valide au format 2024")
-                return True
+                else:
+                    logging.info(f"Dictionnaire valide au format 2024")
+                    return True
 
         elif record_type == 'contrat-concession':
             champs_differents = set(list(record.keys()))
@@ -494,12 +482,10 @@ class SourceProcess:
                     # logging.info(f"Voici les champs en moins :{champs_en_moins}")
                     # logging.info(f"Voici les champs en plus :{champs_en_plus}")
                     return False
-            if not self.date_after_2024(record):
-                logging.info(f"Erreur : date précédant 2024")
-                return False 
-            else:
-                logging.info(f"Dictionnaire valide au format 2024")
-                return True
+                
+                else:
+                    logging.info(f"Dictionnaire valide au format 2024")
+                    return True
         else:
             return False
     
