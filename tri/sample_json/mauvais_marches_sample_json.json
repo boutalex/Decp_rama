@@ -1,0 +1,570 @@
+{
+    "marches": {
+        "marche": [
+            {
+                "id": "2021-799412-01",
+                "acheteur": {
+                    "id": "55655032500030"
+                },
+                "nature": "Marché",
+                "objet": "Construction de 12 logements collectifs locatifs sociaux, 4 réhabilitations et 4 cellules commerciales - \"Résidence Fontaine Saint-Georges\" - 53470 MARTIGNE/MAYENNE: Lot 7 : MENUISERIES INTERIEURES",
+                "codeCPV": "45421000",
+                "procedure": "Procédure adaptée",
+                "lieuExecution": {
+                    "code": "53470",
+                    "typeCode": "Code postal"
+                },
+                "dureeMois": 14,
+                "dateNotification": "2021-06-29",
+                "datePublicationDonnees": "2021-07-06",
+                "montant": 55600,
+                "formePrix": "Forfaitaire",
+                "attributionAvance": false,
+                "offresRecues": 8,
+                "marcheInnovant": false,
+                "ccag": "Pas de CCAG",
+                "sousTraitanceDeclaree": false,
+                "typeGroupementOperateurs": "Pas de groupement",
+                "titulaires": [
+                    {
+                        "titulaire": {
+                            "typeIdentifiant": "SIRET",
+                            "id": "79466656000022"
+                        }
+                    }
+                ],
+                "considerationsSociales": {
+                    "considerationSociale": [
+                        "Pas de considération sociale"
+                    ]
+                },
+                "considerationsEnvironnementales": {
+                    "considerationEnvironnementale": [
+                        "Pas de considération environnementale"
+                    ]
+                },
+                "modalitesExecution": {
+                    "modaliteExecution": [
+                        "Sans objet"
+                    ]
+                },
+                "techniques": {
+                    "technique": [
+                        "Sans objet"
+                    ]
+                },
+                "typesPrix": {
+                    "typePrix": [
+                        "Définitif ferme"
+                    ]
+                },
+                "modifications": [
+                    {
+                        "modification": {
+                            "dateNotificationModification": "2022-12-13",
+                            "montant": 55600,
+                            "id": 0,
+                            "datePublicationDonneesModification": "2023-01-09"
+                        }
+                    },
+                    {
+                        "modification": {
+                            "dateNotificationModification": "2024-06-06",
+                            "montant": 54564,
+                            "id": 2,
+                            "datePublicationDonneesModification": "2024-07-02"
+                        }
+                    }
+                ],
+                "_type": "Marché"
+            },
+            {
+                "id": "2022-835118-00",
+                "acheteur": {
+                    "id": "55655032500030"
+                },
+                "nature": "Marché",
+                "objet": "Construction de 5 logements individuels locatifs sociaux - \"La mine\" - 53240 LA BACONNIERE: Lot 1 : TERRASSEMENT - VDR",
+                "codeCPV": "45112500",
+                "procedure": "Procédure adaptée",
+                "lieuExecution": {
+                    "code": "53240",
+                    "typeCode": "Code postal"
+                },
+                "dureeMois": 11,
+                "dateNotification": "2022-01-05",
+                "datePublicationDonnees": "2022-01-06",
+                "montant": 61500,
+                "formePrix": "Forfaitaire",
+                "attributionAvance": false,
+                "offresRecues": 4,
+                "marcheInnovant": false,
+                "ccag": "Pas de CCAG",
+                "sousTraitanceDeclaree": false,
+                "typeGroupementOperateurs": "Pas de groupement",
+                "titulaires": [
+                    {
+                        "titulaire": {
+                            "typeIdentifiant": "SIRET",
+                            "id": "79114182300017"
+                        }
+                    }
+                ],
+                "considerationsSociales": {
+                    "considerationSociale": [
+                        "Pas de considération sociale"
+                    ]
+                },
+                "considerationsEnvironnementales": {
+                    "considerationEnvironnementale": [
+                        "Pas de considération environnementale"
+                    ]
+                },
+                "modalitesExecution": {
+                    "modaliteExecution": [
+                        "Sans objet"
+                    ]
+                },
+                "techniques": {
+                    "technique": [
+                        "Sans objet"
+                    ]
+                },
+                "typesPrix": {
+                    "typePrix": [
+                        "Définitif ferme"
+                    ]
+                },
+                "modifications": [
+                    {
+                        "modification": {
+                            "dateNotificationModification": "2024-04-15",
+                            "montant": 60425,
+                            "id": 0,
+                            "datePublicationDonneesModification": "2024-07-02"
+                        }
+                    },
+                    {
+                        "modification": {
+                            "dateNotificationModification": "2024-05-16",
+                            "montant": 60884,
+                            "id": 2,
+                            "datePublicationDonneesModification": "2024-07-02"
+                        }
+                    }
+                ],
+                "_type": "Marché"
+            },
+            {
+                "id": "2022-862227-00",
+                "acheteur": {
+                    "id": "55655032500030"
+                },
+                "nature": "Marché",
+                "objet": "Construction de 39 logements locatifs sociaux \" Les Orangers \" - Domaine de Castanéa - 53940 SAINT-BERTHEVIN: Lot 12 : PLOMBERIE - SANITAIRE - CHAUFFAGE",
+                "codeCPV": "45330000",
+                "procedure": "Procédure adaptée",
+                "lieuExecution": {
+                    "code": "53940",
+                    "typeCode": "Code postal"
+                },
+                "dureeMois": 20,
+                "dateNotification": "2022-04-27",
+                "datePublicationDonnees": "2022-05-06",
+                "montant": 471924,
+                "formePrix": "Forfaitaire",
+                "attributionAvance": false,
+                "offresRecues": 3,
+                "marcheInnovant": false,
+                "ccag": "Pas de CCAG",
+                "sousTraitanceDeclaree": false,
+                "typeGroupementOperateurs": "Pas de groupement",
+                "titulaires": [
+                    {
+                        "titulaire": {
+                            "typeIdentifiant": "SIRET",
+                            "id": "31176816200027"
+                        }
+                    }
+                ],
+                "considerationsSociales": {
+                    "considerationSociale": [
+                        "Pas de considération sociale"
+                    ]
+                },
+                "considerationsEnvironnementales": {
+                    "considerationEnvironnementale": [
+                        "Pas de considération environnementale"
+                    ]
+                },
+                "modalitesExecution": {
+                    "modaliteExecution": [
+                        "Sans objet"
+                    ]
+                },
+                "techniques": {
+                    "technique": [
+                        "Sans objet"
+                    ]
+                },
+                "typesPrix": {
+                    "typePrix": [
+                        "Définitif ferme"
+                    ]
+                },
+                "modifications": [
+                    {
+                        "modification": {
+                            "dateNotificationModification": "2022-09-22",
+                            "montant": 471924,
+                            "id": 0,
+                            "datePublicationDonneesModification": "2024-07-02"
+                        }
+                    },
+                    {
+                        "modification": {
+                            "dateNotificationModification": "2024-06-06",
+                            "montant": 472322,
+                            "id": 2,
+                            "datePublicationDonneesModification": "2024-07-02"
+                        }
+                    }
+                ],
+                "_type": "Marché"
+            },
+            {
+                "id": "24-991343",
+                "acheteur": {
+                    "id": "55655032500030"
+                },
+                "nature": "Marché",
+                "objet": "Construction du siège social MEDUANE HABITAT - ZAC GARE - îlot 5A - 53000 LAVAL",
+                "codeCPV": "45000000",
+                "procedure": "Appel d'offres ouvert",
+                "marcheInnovant": false,
+                "ccag": "Pas de CCAG",
+                "offresRecues": 5,
+                "attributionAvance": false,
+                "typeGroupementOperateurs": "Pas de groupement",
+                "lieuExecution": {
+                    "code": "53000",
+                    "typeCode": "Code postal"
+                },
+                "dureeMois": 24,
+                "dateNotification": "2023-11-07",
+                "datePublicationDonnees": "2024-03-12",
+                "montant": 10534570,
+                "formePrix": "Unitaire",
+                "sousTraitanceDeclaree": false,
+                "titulaires": [
+                    {
+                        "titulaire": {
+                            "typeIdentifiant": "SIRET",
+                            "id": "39930153000057"
+                        }
+                    }
+                ],
+                "considerationsSociales": {
+                    "considerationSociale": [
+                        "Pas de considération sociale"
+                    ]
+                },
+                "considerationsEnvironnementales": {
+                    "considerationEnvironnementale": [
+                        "Pas de considération environnementale"
+                    ]
+                },
+                "modalitesExecution": {
+                    "modaliteExecution": [
+                        "Sans objet"
+                    ]
+                },
+                "techniques": {
+                    "technique": [
+                        "Sans objet"
+                    ]
+                },
+                "typesPrix": {
+                    "typePrix": [
+                        "Définitif ferme"
+                    ]
+                },
+                "actesSousTraitance": [
+                    {
+                        "acteSousTraitance": {
+                            "sousTraitant": {
+                                "typeIdentifiant": "SIRET",
+                                "id": "CSM"
+                            },
+                            "dureeMois": 24,
+                            "montant": 910000,
+                            "variationPrix": "Ferme",
+                            "id": 1,
+                            "dateNotification": "2024-01-12",
+                            "datePublicationDonnees": "2024-01-17"
+                        }
+                    },
+                    {
+                        "acteSousTraitance": {
+                            "sousTraitant": {
+                                "typeIdentifiant": "SIRET",
+                                "id": "OTIS"
+                            },
+                            "dureeMois": 24,
+                            "montant": 70000,
+                            "variationPrix": "Ferme",
+                            "id": 2,
+                            "dateNotification": "2024-01-12",
+                            "datePublicationDonnees": "2024-01-17"
+                        }
+                    },
+                    {
+                        "acteSousTraitance": {
+                            "sousTraitant": {
+                                "typeIdentifiant": "SIRET",
+                                "id": "CCL"
+                            },
+                            "dureeMois": 24,
+                            "montant": 1315824,
+                            "variationPrix": "Ferme",
+                            "id": 3,
+                            "dateNotification": "2024-01-18",
+                            "datePublicationDonnees": "2024-01-23"
+                        }
+                    },
+                    {
+                        "acteSousTraitance": {
+                            "sousTraitant": {
+                                "typeIdentifiant": "SIRET",
+                                "id": "ISOLEC"
+                            },
+                            "dureeMois": 24,
+                            "montant": 830000,
+                            "variationPrix": "Ferme",
+                            "id": 4,
+                            "dateNotification": "2024-01-18",
+                            "datePublicationDonnees": "2024-01-23"
+                        }
+                    },
+                    {
+                        "acteSousTraitance": {
+                            "sousTraitant": {
+                                "typeIdentifiant": "SIRET",
+                                "id": "DORE SOLS"
+                            },
+                            "dureeMois": 24,
+                            "montant": 11280,
+                            "variationPrix": "Ferme",
+                            "id": 5,
+                            "dateNotification": "2024-02-21",
+                            "datePublicationDonnees": "2024-02-28"
+                        }
+                    },
+                    {
+                        "acteSousTraitance": {
+                            "sousTraitant": {
+                                "typeIdentifiant": "SIRET",
+                                "id": "34809998700029"
+                            },
+                            "dureeMois": 24,
+                            "montant": 107000,
+                            "variationPrix": "Ferme",
+                            "id": 6,
+                            "dateNotification": "2024-03-11",
+                            "datePublicationDonnees": "2024-03-12"
+                        }
+                    },
+                    {
+                        "acteSousTraitance": {
+                            "sousTraitant": {
+                                "typeIdentifiant": "SIRET",
+                                "id": "50822413600012"
+                            },
+                            "dureeMois": 24,
+                            "montant": 113000,
+                            "variationPrix": "Ferme",
+                            "id": 7,
+                            "dateNotification": "2024-04-30",
+                            "datePublicationDonnees": "2024-05-23"
+                        }
+                    },
+                    {
+                        "acteSousTraitance": {
+                            "sousTraitant": {
+                                "typeIdentifiant": "SIRET",
+                                "id": "83385013400010"
+                            },
+                            "dureeMois": 24,
+                            "montant": 170000,
+                            "variationPrix": "Ferme",
+                            "id": 8,
+                            "dateNotification": "2024-05-14",
+                            "datePublicationDonnees": "2024-05-23"
+                        }
+                    },
+                    {
+                        "acteSousTraitance": {
+                            "sousTraitant": {
+                                "typeIdentifiant": "SIRET",
+                                "id": "3288638900079"
+                            },
+                            "dureeMois": 24,
+                            "montant": 43000,
+                            "variationPrix": "Ferme",
+                            "id": 9,
+                            "dateNotification": "2024-04-30",
+                            "datePublicationDonnees": "2024-05-23"
+                        }
+                    },
+                    {
+                        "acteSousTraitance": {
+                            "sousTraitant": {
+                                "typeIdentifiant": "SIRET",
+                                "id": "80302269800010"
+                            },
+                            "dureeMois": 24,
+                            "montant": 180000,
+                            "variationPrix": "Ferme",
+                            "id": 10,
+                            "dateNotification": "2024-04-03",
+                            "datePublicationDonnees": "2024-05-23"
+                        }
+                    },
+                    {
+                        "acteSousTraitance": {
+                            "sousTraitant": {
+                                "typeIdentifiant": "SIRET",
+                                "id": "38520933300025"
+                            },
+                            "dureeMois": 24,
+                            "montant": 97500,
+                            "variationPrix": "Ferme",
+                            "id": 11,
+                            "dateNotification": "2023-12-14",
+                            "datePublicationDonnees": "2024-07-02"
+                        }
+                    },
+                    {
+                        "acteSousTraitance": {
+                            "sousTraitant": {
+                                "typeIdentifiant": "SIRET",
+                                "id": "44255621300076"
+                            },
+                            "dureeMois": 24,
+                            "montant": 23500,
+                            "variationPrix": "Ferme",
+                            "id": 12,
+                            "dateNotification": "2024-06-25",
+                            "datePublicationDonnees": "2024-07-02"
+                        }
+                    },
+                    {
+                        "acteSousTraitance": {
+                            "sousTraitant": {
+                                "typeIdentifiant": "SIRET",
+                                "id": "49327687700021"
+                            },
+                            "dureeMois": 24,
+                            "montant": 77000,
+                            "variationPrix": "Ferme",
+                            "id": 13,
+                            "dateNotification": "2024-06-26",
+                            "datePublicationDonnees": "2024-07-02"
+                        }
+                    }
+                ],
+                "modifications": [
+                    {
+                        "modification": {
+                            "dateNotificationModification": "2024-02-14",
+                            "montant": 10511187,
+                            "id": 1,
+                            "datePublicationDonneesModification": "2024-03-19"
+                        }
+                    },
+                    {
+                        "modification": {
+                            "dateNotificationModification": "2024-04-05",
+                            "montant": 10528968,
+                            "id": 2,
+                            "datePublicationDonneesModification": "2024-07-02"
+                        }
+                    }
+                ],
+                "modificationsActesSousTraitance": [
+                    {
+                        "modificationActeSousTraitance": {
+                            "dureeMois": 0,
+                            "montant": 9902,
+                            "id": 5,
+                            "dateNotificationModificationActeSousTraitance": "2024-06-06",
+                            "datePublicationDonneesModificationActeSousTraitance": "2024-06-07"
+                        }
+                    }
+                ],
+                "_type": "Marché"
+            },
+            {
+                "id": "24-1029484",
+                "acheteur": {
+                    "id": "20009118900015"
+                },
+                "nature": "Marché",
+                "objet": "Création d'un site internet multisite (4 sous sites) dans le cadre d'AMI, et prestations de maintenance associées",
+                "codeCPV": "48000000",
+                "procedure": "Procédure adaptée",
+                "idAccordCadre": "multisite AMI - 2024",
+                "marcheInnovant": false,
+                "ccag": "Techniques de l'information et de la communication",
+                "offresRecues": 3,
+                "attributionAvance": false,
+                "typeGroupementOperateurs": "Pas de groupement",
+                "lieuExecution": {
+                    "code": "76",
+                    "typeCode": "Code département"
+                },
+                "dureeMois": 12,
+                "dateNotification": "2024-07-01",
+                "datePublicationDonnees": "2024-07-02",
+                "montant": 21250,
+                "formePrix": "Mixte",
+                "sousTraitanceDeclaree": false,
+                "titulaires": [
+                    {
+                        "titulaire": {
+                            "typeIdentifiant": "SIRET",
+                            "id": "34981259400050"
+                        }
+                    }
+                ],
+                "considerationsSociales": {
+                    "considerationSociale": [
+                        "Pas de considération sociale"
+                    ]
+                },
+                "considerationsEnvironnementales": {
+                    "considerationEnvironnementale": [
+                        "Pas de considération environnementale"
+                    ]
+                },
+                "modalitesExecution": {
+                    "modaliteExecution": [
+                        "Bons de commande"
+                    ]
+                },
+                "techniques": {
+                    "technique": [
+                        "Accord-cadre"
+                    ]
+                },
+                "typesPrix": {
+                    "typePrix": [
+                        "Définitif ferme"
+                    ]
+                },
+                "_type": "Marché"
+            }
+        ],
+        "contrat-concession": []
+    }
+}

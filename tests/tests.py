@@ -70,12 +70,12 @@ class UneClasseDeTest(unittest.TestCase):
 
     def test_date_after_2024(self):
         """
-        Test de la fonction date_after_2024, on test si la fonction détecte si le fichier date d'après 2024 ou non  
+        Test de la fonction date_after_2024, on teste si la fonction détecte si le fichier date d'après 2024 ou non  
         """
         with open(f"tests/test_before2024.xml", encoding='utf-8') as xml_file:
             dico = xmltodict.parse(xml_file.read(), dict_constructor=dict)
         m = dico['marches']['marche']
-        resultats= self.process.date_after_2024(m)#ici on séléctionne seuelement le premier marché contenu dans m
+        resultats= self.process.date_after_2024(m)#ici on séléctionne seulement le premier marché contenu dans m
         expected_res=False
         self.assertEqual(resultats, expected_res)
 

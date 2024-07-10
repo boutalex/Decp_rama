@@ -36,23 +36,21 @@ class GlobalProcess:
         logging.info(f"Nombre de marchés dans le DataFrame fusionné après merge : {len(self.df)}")
 
     def fix_all(self):
-        # if df is empty then return
-        if len(self.df) == 0:
-            logging.warning("Le DataFrame est vide, pas de fix à faire.")
-            return
-        """Étape fix all qui permet l'uniformisation du DataFrame."""
-
+        """
+        Étape fix all qui permet l'uniformisation du DataFrame.
+        """
         logging.info("  ÉTAPE FIX ALL")
         logging.info("Début de l'étape Fix_all du DataFrame fusionné")
 
+        if len(self.df) == 0:
+            logging.warning("Le DataFrame est vide, pas de fix à faire.")
+        
         # On met les acheteurs et lieux au bon format
-        # if 'acheteur' in self.df.columns:
-        #     del self.df['acheteur']
         if 'acheteur.id' in self.df.columns:
             self.df['acheteur.id'] = self.df['acheteur.id'].astype(str)
-        if self.data_format=='2019':
-            if 'lieuExecution.code' in self.df.columns:
-                self.df['lieuExecution.code'] = self.df['lieuExecution.code'].astype(str)
+        if self.data_format=='2019' and 'lieuExecution.code' in self.df.columns:
+            self.df['lieuExecution.code'] = self.df['lieuExecution.code'].astype(str)
+
         # Suppression des colonnes inutiles
         if 'dateTransmissionDonneesEtalab' in self.df.columns:
             self.df = self.df.drop('dateTransmissionDonneesEtalab', axis=1)
@@ -118,6 +116,11 @@ class GlobalProcess:
         #self.df.loc[mask_modif, "modifications"] = self.df.loc[mask_modif, "modifications"].apply(remove_titulaire_key_in_modif)
 
     def drop_by_date_2024(self):
+        """ 
+        Supprime les lignes ne respectant pas les critères de date. Si le format suivi est de 2022, 
+        les champs 'dateNotification' et 'dateDebutExecution' doivent être supérieurs au 01/01/24.
+        Si le format suivi est de 2019, ces champs doivent être inférieurs au 01/01/24.
+        """
         # Delete all records with dateNotification or dateDebutExecution> 2024-01-01 ECO Compatibility V4
         if self.data_format=='2022':
             self.df = self.df[~(((~self.df['nature'].str.contains('concession', case=False, na=False)) & (self.df['dateNotification']<'2024-01-01') |
@@ -128,7 +131,7 @@ class GlobalProcess:
 
     def drop_duplicate(self):
         """
-        L'Étape drop duplicate supprime les duplicats purs après avoir 
+        L'étape drop_duplicate supprime les duplicats purs après avoir 
         supprimé les espaces et convertis l'ensemble du DataFrame en string.
         """
 
@@ -149,29 +152,40 @@ class GlobalProcess:
             df_modif = pd.DataFrame() 
             df_nomodif = self.df
 
-        feature_doublons = []
-
-        # Colonnes pour trouver les doublons (concession ou marché)
-        if "acheteur" in self.df.columns:  #dans le cas d'un marché
-            feature_doublons = ["acheteur", "titulaires", "dateNotification", "montant"] 
-        elif "autoriteConcedante" in self.df.columns: #dans le cas d'une concession
-            feature_doublons = ["autoriteConcedante", "concessionnaires", "dateDebutExecution", "valeurGlobale"]
-
-        if not feature_doublons:
-            raise ValueError("Les colonnes nécessaires pour trouver les doublons ne sont pas présentes.")
+        #Critères de ddoublonnage
+        feature_doublons_marche = ["id","acheteur", "titulaires", "dateNotification", "montant"] 
+        feature_doublons_concession = [ "id", "autoriteConcedante", "concessionnaires", "dateDebutExecution", "valeurGlobale"]
         
-        #Conversion du type des colonnes, tri selon la date et suppression des doublons
-        df_nomodif_str = df_nomodif.astype(str)    # Pour avoir des objets dedoublonnables
-        index_to_keep_nomodif = df_nomodif_str.drop_duplicates(subset=feature_doublons).index.tolist()
-        
+        #Séparation des marches et des concessions, suppression des doublons
+        df_nomodif_str = df_nomodif.astype(str)
+        df_nomodif_marche = df_nomodif_str[df_nomodif_str['_type'].str.contains("Marché")]
+        index_to_keep_nomodif = df_nomodif_marche.drop_duplicates(subset=feature_doublons_marche).index.tolist()
 
-        df_modif_str = df_modif.astype(str)
-        df_modif_str.sort_values(by=["datePublicationDonnees"], inplace=True)    #print("DF", df_modif_str)
-        index_to_keep_modif = df_modif_str.drop_duplicates(subset=feature_doublons,keep='last').index.tolist()  #'last', permet de garder la ligne avec la date est la plus récente
-        self.df = pd.concat([df_nomodif.loc[index_to_keep_nomodif, :], df_modif.loc[index_to_keep_modif, :]])
+        df_nomodif_concession = df_nomodif_str[~df_nomodif_str['_type'].str.contains("Marché")]
+        index_to_keep_nomodif += df_nomodif_concession.drop_duplicates(subset=feature_doublons_concession).index.tolist()
+
+        # duplicates = df_nomodif_str[df_nomodif_str.duplicated(subset=feature_doublons_marche, keep='first')]
+        # print("nb doublons ", len(duplicates.axes[0]))
+        # doublons = duplicates.to_json(orient='records', lines=True, force_ascii=False)
+        # with open('doublons_demantis.json', 'w', encoding='utf-8') as f:
+        #     f.write(doublons)
+
+        #Séparation des marches et des concessions, tri selon la date et suppression ses doublons
+        if not df_modif.empty:
+            df_modif_str  = df_modif.astype(str)     #en str pour réaliser le dédoublonnage
+            df_modif_str.sort_values(by=["datePublicationDonnees"], inplace=True)   
+            df_modif_marche = df_modif_str[df_modif_str['_type'].str.contains("Marché")]
+            index_to_keep_modif = df_modif_marche.drop_duplicates(subset=feature_doublons_marche,keep='last').index.tolist()  #'last', permet de garder la ligne avec la date est la plus récente
+
+            df_modif_concession = df_modif_str[~df_modif_str['_type'].str.contains("Marché")]
+            index_to_keep_modif += df_modif_concession.drop_duplicates(subset=feature_doublons_concession).index.tolist()  #on ne garde que que les indexs pour récupérer les lignes qui sont dans df_modif (dont le type est dict)
+
+            self.df = pd.concat([df_nomodif.loc[index_to_keep_nomodif, :], df_modif.loc[index_to_keep_modif, :]])   
+
+        else:
+            self.df = df_nomodif.loc[index_to_keep_nomodif, :]
 
         self.df = self.df.reset_index(drop=True)
-        #print("DF ", self.df)
         logging.info("Suppression OK")
         logging.info(f"Nombre de marchés dans Df après suppression des doublons strictes : {len(self.df)}")
 
@@ -183,7 +197,7 @@ class GlobalProcess:
             logging.warning(f"Le DataFrame global est vide, impossible d'exporter")
             return
         """Étape exportation des résultats au format json et xml dans le dossier /results"""
-        logging.info("  ÉTAPE EXPORTATION")
+        logging.info("ÉTAPE EXPORTATION")
         #logging.info("Début de l'étape Exportation en XML")
         """
         dico = {'marches': [{'marche': {k: v for k, v in m.items() if str(v) != 'nan'}}
@@ -216,15 +230,15 @@ class GlobalProcess:
                     marche['modifications'] = marche['modifications'][0]['modification']
                 else:
                     marche['modifications'] = [marche['modifications'][0]['modification']]
-            """
-            A servit à un moment pour régler un soucis avec concessionaire mais la clef à disparue depuis
-            if 'concessionnaires' in marche.keys() and marche[
-                    'concessionnaires'] is not None and len(marche['concessionnaires']) > 0:
-                if type(marche['concessionnaires'][0]['concessionnaire']) == list:
-                    marche['concessionnaires'] = marche['concessionnaires'][0]['concessionnaire']
-                else:
-                    marche['concessionnaires'] = [marche['concessionnaires'][0]['concessionnaire']]
-            """
+            
+            # A servit à un moment pour régler un soucis avec concessionaire mais la clef à disparue depuis
+            # if 'concessionnaires' in marche.keys() and marche[
+            #         'concessionnaires'] is not None and len(marche['concessionnaires']) > 0:
+            #     if type(marche['concessionnaires'][0]['concessionnaire']) == list:
+            #         marche['concessionnaires'] = marche['concessionnaires'][0]['concessionnaire']
+            #     else:
+            #         marche['concessionnaires'] = [marche['concessionnaires'][0]['concessionnaire']]
+            
         path_result = f"results/decp_{self.data_format}.json"
         os.makedirs("results", exist_ok=True)
         with open(path_result, 'w', encoding="utf-8") as f:

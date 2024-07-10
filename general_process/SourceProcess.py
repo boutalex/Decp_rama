@@ -136,6 +136,7 @@ class SourceProcess:
     sources. Elle sert à définir le cas général des étapes de traitement d'une source : création des
     variables de classe (__init__), nettoyage des dossiers de la source (_clean_metadata_folder),
     récupération des URLs (_url_init), get, convert et fix."""
+
     def __init__(self, key,data_format):
         """L'étape __init__ crée les variables associées à la classe SourceProcess : key, source,
         format, df, title, url, cle_api et metadata."""
@@ -156,10 +157,10 @@ class SourceProcess:
         self._url_init() 
 
         # Liste des dictionnaires pour l'étape de nettoyage
-        self.dico_ignored = []
+        self.dico_ignored_marche = []
+        self.dico_ignored_concession= []
         self.dico_2022_marche = []
         self.dico_2022_concession = []
-        self.dico_2019 = []
 
 
     def _clean_metadata_folder(self):
@@ -193,7 +194,8 @@ class SourceProcess:
         Fonction réalisant le téléchargement des métadatas, la copie des
         fichiers métadatas et la création des listes contenant les titres
         et les urls des fichiers.
-        n: nombre de clé api (=nombre de tour dans la boucle)
+        Args: 
+            n: nombre de clé api 
         """
         logging.info("Début de la récupération de la liste des url")
         title = []  
@@ -243,9 +245,10 @@ class SourceProcess:
         """
         Fonction vérifiant si la date de dernière modification des fichiers ressources 
         dans les metadatas est strictement antérieure à la date de dernière modification.
-        @url: la liste contenant les liens pour télécharger les fichiers
-        @new_ressources: dictionnaire correspondant au champ "resources" dans le fichier metadata de la source
-        @old_ressources: dictionnaire correspondant au champ "resources" dans le fichier old_metadata de la source
+        Args:
+            url: la liste contenant les liens pour télécharger les fichiers
+            new_ressources: dictionnaire correspondant au champ "resources" dans le fichier metadata de la source
+            old_ressources: dictionnaire correspondant au champ "resources" dans le fichier old_metadata de la source
         """
         for i in range(len(new_ressources)):
             #condition1 : test si les nouvelles métadonnées sont plus récentes que les anciennes 
@@ -272,7 +275,7 @@ class SourceProcess:
             self.download_without_metadata()
         else:
             # Verification de l'existence d'un eventuel doublon + nettoyage + 
-            # téléchargement du nouveau fichier
+            # Téléchargement du nouveau fichier
             for i in range(len(self.url)):
                 try:
                     if os.path.exists(f"sources/{self.source}/{self.title[i]}"):
@@ -286,8 +289,9 @@ class SourceProcess:
 
     def download_without_metadata(self):
         """
-        Fonction téléchargeant un fichier n'ayant pas de clé api. Par conséquent, le
-        téléchargement s'effectue grâce à l'url dans l'attribut url_source
+        Fonction téléchargeant un fichier n'ayant pas de clé api. Par 
+        conséquent, le téléchargement s'effectue grâce à l'url dans 
+        l'attribut url_source
         """
         nom_fichiers = os.listdir(f"sources/{self.source}")
         parsed_url = urlparse(self.url[0])
@@ -311,9 +315,60 @@ class SourceProcess:
             logging.info(f"Titre des fichiers : {self.title}")
 
 
+    # def clean(self):
+    #     """
+    #     Fonction réalisant un tri sur le format 2022 ou le format 2019 en complétant
+    #     les 3 dictionnaires et permettre la conversion en dataframe pour plus tard.
+    #     """
+    #     logging.info(" ÉTAPE CLEAN")
+    #     logging.info("Début du tri des nouveaux fichiers")
+    #     #Ouverture des fichiers
+    #     dico = {}
+    #     for i in range(len(self.title)):            
+    #         if self.format == 'xml':
+    #             #Vérification du schéma xml
+    #             scheme_path = 'schemes/schema_decp_v2.0.2.xsd'
+    #             if not self.check(None,f"sources/{self.source}/{self.title[i]}"):
+    #                 logging.warning(f"sources/{self.source}/{self.title[i]} not a valide xml")
+    #                 continue
+    #             try:
+    #                 with open(f"sources/{self.source}/{self.title[i]}", encoding='utf-8') as xml_file:
+    #                     dico = xmltodict.parse(xml_file.read(), dict_constructor=dict, \
+    #                                            force_list=('marche','titulaires', 'modifications', 'actesSousTraitance',
+    #                                            'modificationsActesSousTraitance', 'typePrix','considerationEnvironnementale',
+    #                                            'modaliteExecution'))
+    #             except Exception as err:
+    #                 logging.error(f"Exception lors du chargement du fichier xml {self.title[i]} - {err}")
+
+    #         elif self.format == 'json':
+    #             #Vérification du schéma json
+    #             scheme_path = 'schemes/schema_decp_v2.0.2.json'
+    #             if not self.check(f"sources/{self.source}/{self.title[i]}", None):
+    #                 logging.warning(f"sources/{self.source}/{self.title[i]} not a valid json")
+    #                 continue
+    #             try:
+    #                 with open(f"sources/{self.source}/{self.title[i]}", encoding="utf-8") as json_file1:
+    #                     dico = json.load(json_file1)
+    #             except Exception as err:
+    #                 logging.error(f"Exception lors du chargement du fichier json {self.title[i]} - {err}")
+    #         self.champs_plus = set()
+    #         self.champs_moins = set()
+    #         self.tri_format(dico,self.title[i])    #On obtient 3 listes de dico qui sont mises à jour à chaque tour de boucle
+            
+    #     logging.info("Fin du tri selon le format")
+    #     logging.info("Nettoyage OK")
+
     def clean(self):
         """
-        Fonction réalisant un tri sur le format 2022 ou le format 2019 en complétant
+        Cette fonction extrait les dictionnaires des fichiers pour 
+        qu'ils puissent être nettoyé. Seuls les fichiers suivant 
+        le format 2022 passent ont 
+        Grâce à la fonction tri_format, 
+        un tri est effectué sur ces dictionnaires pour séparer les 
+        bons marchés, des mauvais.
+        
+        réalisant un tri sur les fichiers qui suivent le format 2022. Selon
+        le format des fichier (xml, json)  en complétant
         les 3 dictionnaires et permettre la conversion en dataframe pour plus tard.
         """
         logging.info(" ÉTAPE CLEAN")
@@ -322,11 +377,6 @@ class SourceProcess:
         dico = {}
         for i in range(len(self.title)):            
             if self.format == 'xml':
-                #Vérification du schéma xml
-                scheme_path = 'schemes/schema_decp_v2.0.2.xsd'
-                if not self.check(None,f"sources/{self.source}/{self.title[i]}"):
-                    logging.warning(f"sources/{self.source}/{self.title[i]} not a valide xml")
-                    continue
                 try:
                     with open(f"sources/{self.source}/{self.title[i]}", encoding='utf-8') as xml_file:
                         dico = xmltodict.parse(xml_file.read(), dict_constructor=dict, \
@@ -337,63 +387,128 @@ class SourceProcess:
                     logging.error(f"Exception lors du chargement du fichier xml {self.title[i]} - {err}")
 
             elif self.format == 'json':
-                #Vérification du schéma json
-                scheme_path = 'schemes/schema_decp_v2.0.2.json'
-                if not self.check(f"sources/{self.source}/{self.title[i]}", None):
-                    logging.warning(f"sources/{self.source}/{self.title[i]} not a valid json")
-                    continue
                 try:
                     with open(f"sources/{self.source}/{self.title[i]}", encoding="utf-8") as json_file1:
                         dico = json.load(json_file1)
                 except Exception as err:
                     logging.error(f"Exception lors du chargement du fichier json {self.title[i]} - {err}")
-            self.champs_plus = set()
-            self.champs_moins = set()
-            self.tri_format(dico,self.title[i])    #On obtient 3 listes de dico qui sont mises à jour à chaque tour de boucle
+            try:
+                self.tri_format(dico['marches'], self.title[i])    #On obtient 2 fichiers qui sont mis jour à chaque tour de boucle
+            except Exception as err:
+                logging.error("clean: Balise 'marches' inexistante")
             
-        logging.info("Fin du tri selon le format")
+        logging.info("Fin du tri")
         logging.info("Nettoyage OK")
 
 
-    def tri_format(self, dico:dict, file_name:str):
+    def tri_format(self, dico:dict, file_name:str) -> None:
         """
         Cette fonction permet de vérifier la structure du dictionnaire fournit en
         entrée. Si un champ est manquant dans un marché ou une concession, ce dernier
         est stocké dans une liste pour un éventuel traitement.
-        @dico : dictionnaire 
-        @file_name : nom du fichier où sont stockés les fichiers non valides et ignorés
+        Args:
+            dico : dictionnaire , il s'agit d'un dictionnaire avec 2 clés: 'marchés' et 'contrat-concession'
+            file_name : nom du fichier où sont stockés les fichiers non valides et ignorés
         """
-        if 'marches' in dico:
-            if 'marche' in dico['marches']:  #format 2022
-                for m in dico['marches']['marche']:
-                    if self._has_all_field_and_date_2024(m, 'marche'):
-                        self.dico_2022_marche.append(m)
-                    else:                   
-                        self.dico_ignored.append(m)
+        n, m = 0, 0
+        if 'marche' in dico:
+            while n < len(dico['marche']) :
+                self.dico_2022_marche.append(dico['marche'][n])
+                dico_test = {'marches': {'marche': self.dico_2022_marche,'contrat-concession': self.dico_2022_concession}}
 
-            if 'contrat-concession' in dico['marches']:
-                for m in dico['marches']['contrat-concession']:
-                    if self._has_all_field_and_date_2024(m, 'contrat-concession'):
-                        self.dico_2022_concession.append(m)
-                    else:
-                        self.dico_ignored.append(m)
+                if not self.check(dico_test, None):
+                    self.dico_2022_marche.remove(dico['marche'][n])
+                    self.dico_ignored_marche.append(dico['marche'][n])
+                n+=1
 
-            if ('marche' not in dico['marches']) and ('contrat-concession' not in dico['marches']):  #format 2019
-                for m in dico['marches']:
-                    if self._has_all_field_and_date_2019(m):                
-                        self.dico_2019.append(m)
-                    else:
-                        self.dico_ignored.append(m)
 
-        else:
-            logging.error("Balise 'marches' inexistante")
-            dico.clear()
-        if len(self.champs_plus)>0:
-            logging.info(f"Dans le fichier {file_name}, les champs en plus sont: {self.champs_plus} ")
-        if len(self.champs_moins)>0:
-            logging.info(f"Dans le fichier {file_name}, les champs en moins sont: {self.champs_moins} ")
-        if len(self.dico_ignored)>0:
-            logging.info(f"Nombre de marchés invalides dans {file_name}: {len(self.dico_ignored)} ")
+        if 'contrat-concession' in dico:
+            while m < len(dico['contrat-concession']) :
+                self.dico_2022_concession.append(dico['contrat-concession'][m])
+                dico_test = {'marches': {'marche': self.dico_2022_marche,'contrat-concession': self.dico_2022_concession}}
+
+
+                if not self.check(dico_test, None):
+                    self.dico_2022_concession.remove(dico['contrat-concession'][m])
+                    self.dico_ignored_concession.append(dico['contrat-concession'][m])
+                m+=1
+           
+
+        # Structure du nouveau fichier JSON, création des dictionnaires valides et invalides
+        jsonfile1 = {'marches': {'marche': self.dico_2022_marche, 'contrat-concession': self.dico_2022_concession}}
+        jsonfile2 = {'marches': {'marche':  self.dico_ignored_marche, 'contrat-concession': self.dico_ignored_concession}}
+
+        #Creation des dossiers
+        os.makedirs(f"tri", exist_ok=True) 
+        os.makedirs(f"tri/{self.source}", exist_ok=True) 
+
+        #Ecriture dans les nouveaux fichiers
+        with open(f'tri/{self.source}/bons_marches_{self.source}.json', "w", encoding='utf8') as new_f1:
+            print("ouverture fichier 1er")
+            json.dump(jsonfile1, new_f1, ensure_ascii=False, indent=4)
+
+        with open(f'tri/{self.source}/mauvais_marches_{self.source}.json', "w", encoding='utf8') as new_f2:
+            print("ouverture fichier 2eme")
+            json.dump(jsonfile2, new_f2, ensure_ascii=False, indent=4)
+
+        logging.info(f"Nombre de marchés et concessions invalides dans {file_name}: {len(self.dico_ignored_marche)+len(self.dico_ignored_concession)} ")
+        logging.info(f"Nombre de marchés et de concessions valides dans {file_name}: {len(self.dico_2022_marche)+len (self.dico_2022_concession)} ")
+    
+
+# def erreurs_acceptables():   #il faut ajouter une colonne source 
+#     marches_a_ajouter = []
+#     with open(f'data/mauvais_marches.json', 'r', encoding ='utf8') as f :
+#         bad_file = json.dumps(f)
+#     if "marche" in bad_file["marches"]:
+#         for i in range(len(bad_file["marches"])): 
+
+#     if 'concession-contrat' in bad_file["marches"]['concession-contrat']:
+#         for i in range(len(bad_file["marches"]['concession-contrat'])): 
+        
+
+
+
+
+
+    # def tri_format(self, dico:dict, file_name:str):
+    #     """
+    #     Cette fonction permet de vérifier la structure du dictionnaire fournit en
+    #     entrée. Si un champ est manquant dans un marché ou une concession, ce dernier
+    #     est stocké dans une liste pour un éventuel traitement.
+    #     @dico : dictionnaire 
+    #     @file_name : nom du fichier où sont stockés les fichiers non valides et ignorés
+    #     """
+    #     if 'marches' in dico:
+    #         if 'marche' in dico['marches']:  #format 2022
+    #             for m in dico['marches']['marche']:
+    #                 if self._has_all_field_and_date_2024(m, 'marche'):
+    #                     self.dico_2022_marche.append(m)
+    #                 else:                   
+    #                     self.dico_ignored.append(m)
+
+    #         if 'contrat-concession' in dico['marches']:
+    #             for m in dico['marches']['contrat-concession']:
+    #                 if self._has_all_field_and_date_2024(m, 'contrat-concession'):
+    #                     self.dico_2022_concession.append(m)
+    #                 else:
+    #                     self.dico_ignored.append(m)
+
+    #         if ('marche' not in dico['marches']) and ('contrat-concession' not in dico['marches']):  #format 2019
+    #             for m in dico['marches']:
+    #                 if self._has_all_field_and_date_2019(m):                
+    #                     self.dico_2019.append(m)
+    #                 else:
+    #                     self.dico_ignored.append(m)
+
+    #     else:
+    #         logging.error("Balise 'marches' inexistante")
+    #         dico.clear()
+    #     if len(self.champs_plus)>0:
+    #         logging.info(f"Dans le fichier {file_name}, les champs en plus sont: {self.champs_plus} ")
+    #     if len(self.champs_moins)>0:
+    #         logging.info(f"Dans le fichier {file_name}, les champs en moins sont: {self.champs_moins} ")
+    #     if len(self.dico_ignored)>0:
+    #         logging.info(f"Nombre de marchés invalides dans {file_name}: {len(self.dico_ignored)} ")
     
 
     def _has_all_field_and_date_2019(self, record:dict)->bool :
@@ -552,41 +667,7 @@ class SourceProcess:
                     except:
                         None
             return False
- 
-        
-    # def clean(self):
-    #     """
-    #     Fonction réalisant un tri sur le format 2022 ou le format 2019 en complétant
-    #     les 3 dictionnaires et permettre la conversion en dataframe pour plus tard.
-    #     """
-    #     logging.info(" ÉTAPE CLEAN")
-    #     logging.info("Début du tri des nouveaux fichiers")
-    #     #Ouverture des fichiers
-    #     for i in range(len(self.title)):            
-    #         if self.format == 'xml':
-    #             try:
-    #                 with open(f"sources/{self.source}/{self.title[i]}", encoding='utf-8') as xml_file:
-    #                     dico = xmltodict.parse(xml_file.read(), dict_constructor=dict, \
-    #                                            force_list=('marche','titulaires', 'modifications', 'actesSousTraitance',
-    #                                            'modificationsActesSousTraitance', 'typePrix','considerationEnvironnementale',
-    #                                            'modaliteExecution'))
-    #             except Exception as err:
-    #                 logging.error(f"Exception lors du chargement du fichier xml {self.title[i]} - {err}")
 
-    #         elif self.format == 'json':
-    #                 try:
-    #                     with open(f"sources/{self.source}/{self.title[i]}", encoding="utf-8") as json_file:
-    #                         dico = json.load(json_file)
-
-    #                 except Exception as err:  
-    #                     logging.error(f"Exception lors du chargement du fichier json {self.title[i]} - {err}")
-
-    #         self.tri_format(dico,self.title[i])    #On obtient 3 listes de dico qui sont mises à jour à chaque tour de boucle
-
-    #     logging.info("Fin du tri selon le format")
-    #     logging.info("Nettoyage OK")
-    
-    
 
     def _retain_with_format(self, dico:dict, file_name:str)->dict:
         """
@@ -741,82 +822,6 @@ class SourceProcess:
         logging.info("Conversion OK")
         logging.info(f"Nombre de marchés dans {self.source} après convert : {len(self.df)}")
 
-    
-    # def convert2(self):
-    #     """
-    #     Étape de conversion des fichiers qui supprime les ' et concatène les fichiers 
-    #     présents dans {self.source} dans un seul DataFrame. Elle utilise le dictionnaire 
-    #     des marchés/concessions valides de chaque fichier pour le convertir en un 
-    #     dataframe. L'ensemble des dataframes est stocké dans une liste. 
-    #     """
-    #     logging.info("  ÉTAPE CONVERT")
-    #     # suppression des '
-    #     count = 0
-    #     list_path = []    #list_path sera la liste de tous les fichiers car self.title est la liste des noms de fichiers qui ont été téléchargés
-    #     repertoire_source = f"sources/{self.source}"
-    #     #on récupère le nom de chaque fichier et on le met dans liste path, en plus de compter le nombre de fichiers présent dnas le dossier source
-    #     for path in os.listdir(repertoire_source):
-    #         if os.path.isfile(os.path.join(repertoire_source, path)):
-    #             list_path = list_path + [path] 
-    #             count += 1
-
-    #     logging.info(f"Début de convert: mise au format DataFrame de {self.source}")
-
-    #     #Extraction des données dans un dictionnaire, puis création d'un dataframe pour agréger les données
-    #     li = []
-    #     for i in range(count):
-            
-    #         if self.format == 'xml':
-    #             try:
-    #                 with open(f"sources/{self.source}/{list_path[i]}", encoding='utf-8') as xml_file:
-    #                     dico = xmltodict.parse(xml_file.read(), dict_constructor=dict)
-    #             except Exception as err:
-    #                 logging.error(f"Exception lors du chargement du fichier xml {list_path[i]} - {err}")
-
-    #         elif self.format == 'json':
-    #                 try:
-    #                     with open(f"sources/{self.source}/{list_path[i]}", encoding="utf-8") as json_file:
-    #                         dico = json.load(json_file)
-
-    #                 except Exception as err:
-    #                     logging.error(f"Exception lors du chargement du fichier json {list_path[i]} - {err}")
-
-    #         #dictionnaire contenant les dictionnaires valide par rapport au schéma 2022
-    #         dico_valide = self._retain_with_format(dico,f"sources/{self.source}/{list_path[i]}_ignored.{self.format}")
-        
-    #         # A chaque nouveau marché/concession, on ajoute crée un dataframe d'une
-    #         # colonne, on l'ajoute en précisant le type (Marché ou Contrat-concession).
-    #         # Puis, on l'ajoute à la liste des dataframes.
-    #         if dico_valide!=[] and 'marches' in dico_valide:
-
-    #             # Add marchés 
-    #             if 'marche' in dico_valide['marches']:   
-    #                 df = pd.DataFrame.from_dict(dico_valide['marches']['marche'])
-    #                 self._add_column_type(df,"Marché")
-    #                 li.append(df)
-    #                 ##del df
-
-    #             # Add Concession
-    #             if 'contrat-concession' in dico_valide['marches']:
-    #                 df = pd.DataFrame.from_dict(dico_valide['marches']['contrat-concession'])
-    #                 self._add_column_type(df,"Concession")
-    #                 li.append(df)
-    #                 ##del df
-    #             ##del dico
-    #         else:  # cas presque null
-    #             logging.warning(f"Le fichier {list_path[i]} est vide, il est ignoré")
-                          
-    #     #Concaténation des dataframes de la liste li en une dataframe                  
-    #     if len(li) != 0:
-    #         df = pd.concat(li)
-    #         df = df.reset_index(drop=True)
-    #     else:
-    #         # create empty dataframe
-    #         df = pd.DataFrame()
-    #     self.df = df
-    #     logging.info("Conversion OK")
-    #     logging.info(f"Nombre de marchés dans {self.source} après convert : {len(self.df)}")
-    
 
     def convert(self):
         """
@@ -842,7 +847,10 @@ class SourceProcess:
                                                'modificationsActesSousTraitance', 'typePrix','considerationEnvironnementale',
                                                'modaliteExecution'))
                         #Ajout du dictionnaire dans la bonne variable (dico_2022_marche, dico_2022_concession, dico_2019  ou dico_ignored)
-                        self.tri_format(dico, f"sources/{self.source}/{old_files[i]}")
+                        try:
+                            self.tri_format(dico["marches"], f"sources/{self.source}/{old_files[i]}")
+                        except Exception as err:
+                            logging.error("Balise 'marches' inexistante")
                 except Exception as err:
                     logging.error(f"Exception lors du chargement du fichier xml {old_files[i]} - {err}")
 
@@ -851,7 +859,10 @@ class SourceProcess:
                         with open(f"sources/{self.source}/{old_files[i]}", encoding="utf-8") as json_file:
                             dico = json.load(json_file)
                             #Ajout du dictionnaire dans la bonne variable (dico_2022_marche, dico_2022_concession, dico_2019  ou dico_ignored)
-                            self.tri_format(dico, f"sources/{self.source}/{old_files[i]}")
+                        try:
+                            self.tri_format(dico["marches"], f"sources/{self.source}/{old_files[i]}")
+                        except Exception as err:
+                            logging.error("Balise 'marches' inexistante")
 
                     except Exception as err:
                         logging.error(f"Exception lors du chargement du fichier json {old_files[i]} - {err}")
@@ -862,13 +873,15 @@ class SourceProcess:
 
         # Ajout d'un marché à la liste des dataframes
         df = pd.DataFrame.from_dict(self.dico_2022_marche)
-        self._add_column_type(df,"Marché")
+        if "_type" not in df.columns:
+            self._add_column_type(df,"Marché")
         li.append(df)
 
     
         # Ajoutd'une concession à la liste des dataframes
         df = pd.DataFrame.from_dict(self.dico_2022_concession)
-        self._add_column_type(df,"Concession")
+        if "_type" not in df.columns:
+            self._add_column_type(df,"Concession")
         li.append(df)
            
         #Concaténation des dataframes de la liste li en une dataframe                  
@@ -884,7 +897,6 @@ class SourceProcess:
         #print("DF", self.df)
 
 
-
     def validateJson(self,jsonData,jsonScheme)->bool:
         """
         Fonction vérifiant si le fichier jsn "jsonData" respecte
@@ -894,11 +906,12 @@ class SourceProcess:
             #Draft7Validator.check_schema(jsonScheme)
             #Draft202012Validator.check_schema(jsonScheme)
             validate(instance=jsonData, schema=jsonScheme)
-        except jsonschema.exceptions.ValidationError as err:
+        except jsonschema.exceptions.ValidationError as err: 
             logging.error(f"Erreur de validation json - {err}")
+            with open(f'tri/{self.source}/log_erreurs_{self.source}.txt', 'a', encoding='utf8') as error_file:
+              error_file.write(str(err) + '\n')
             return False
-        logging.error(f"Schéma Json valide")
-        return True
+        return True     
 
     def validateXml(self, xml_path: str, xsd_path: str) -> bool:
         """
@@ -914,8 +927,9 @@ class SourceProcess:
             result = xml_schema.validate(xml_doc)
         except jsonschema.exceptions.ValidationError as err:
             logging.error(f"Erreur de validation xml - {err}")
+            with open(f'tri/{self.source}/log_erreurs_{self.source}.txt', 'a', encoding='utf8') as error_file:
+              error_file.write(str(err) + '\n')
             return False
-        
         return result
     
     def check(self,jsonData,xml_path) -> bool:
@@ -926,14 +940,15 @@ class SourceProcess:
         @xml_path : chemin du fichier xml en entrée (nul si json)
         """
         #on vérifie que la donnée en entrée est valide par rapport au schéma
+        scheme_path = 'schemes/schema_decp_v2.0.2.json'
+        #print("ouverture fichier")
         if self.format=='json':
-            scheme_path = 'schemes/schema_decp_v2.0.2.json'
-            with open(scheme_path, "r",encoding='utf-8')as jsonfile:
-                jsonScheme = json.load(jsonfile)
-                jsonfile.close
+            with open(scheme_path, "r",encoding='utf-8') as jsonfile1:
+                #print("ouverture fichier 2")
+                jsonScheme = json.load(jsonfile1)
+                jsonfile1.close
             return self.validateJson(jsonData,jsonScheme)
         else:    # xml
-            scheme_path = 'schemes/schema_decp_v2.0.2.xsd'
             try:
                 with open(xml_path, 'r', encoding='utf-8') as xml_file:
                     xml_content = xml_file.read()
@@ -941,9 +956,7 @@ class SourceProcess:
             except xmlschema.exceptions.XMLSchemaException as err:
                 logging.error(f"Erreur de validation xml - {err}")
                 return False
-                
-                #return self.validateXml(xml_path,scheme_path)
-        #conform = False
+
 
         #all_columns_marche = ['procedure', 'modifications', 'nature', 'codecpv', 'considerationssociales',
         #'considerationsenvironnementales','dureemo is',

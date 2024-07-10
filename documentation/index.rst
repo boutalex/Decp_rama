@@ -8,8 +8,9 @@ Welcome to decp_doc's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Sommaire: 
 
+   modules 
 
 
 Indices and tables
