@@ -59,7 +59,7 @@ class ProcessFactory:
                     logging.error(f"Source introuvable - {err}")
 
     def run_process(self):
-        """Lance un seul process pour tester"""
+        """Lance un seul processus"""
         logging.info(f"------------------------------{self.process.__name__}------------------------------")
         p = self.process()
         p.get()

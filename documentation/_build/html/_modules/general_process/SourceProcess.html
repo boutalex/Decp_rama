@@ -1,36 +1,256 @@
-<!DOCTYPE html>
+<!doctype html>
+<html class="no-js" lang="fr" data-content_root="../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Recherche" href="../../search.html" />
 
-<html lang="fr" data-content_root="../../">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>general_process.SourceProcess &#8212; Documentation DECP_doc 1.0.0</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d1102ebc" />
-    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=12dfc556" />
-    <script src="../../_static/documentation_options.js?v=05dadb3a"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/translations.js?v=bf059b8c"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Recherche" href="../../search.html" />
-   
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    <!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
+        <title>general_process.SourceProcess - Documentation DECP_doc 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=387cc868" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
   
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
 
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" /
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">Documentation DECP_doc 1.0.0</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-
-  </head><body>
+  <span class="sidebar-brand-text">Documentation DECP_doc 1.0.0</span>
   
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Recherche" name="q" aria-label="Recherche">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Sommaire:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../modules.html">general_process</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of general_process</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../general_process.html">general_process package</a></li>
+</ul>
+</li>
+</ul>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
+</div>
+</div>
 
-          <div class="body" role="main">
-            
-  <h1>Code source de general_process.SourceProcess</h1><div class="highlight"><pre>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Code source de general_process.SourceProcess</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">linecache</span>
 <span class="kn">from</span> <span class="nn">xml.etree</span> <span class="kn">import</span> <span class="n">ElementTree</span>
 <span class="kn">import</span> <span class="nn">wget</span>
@@ -58,119 +278,12 @@
 <div class="viewcode-block" id="SourceProcess">
 <a class="viewcode-back" href="../../general_process.html#general_process.SourceProcess.SourceProcess">[docs]</a>
 <span class="k">class</span> <span class="nc">SourceProcess</span><span class="p">:</span>
-    
-    <span class="n">columns_marche_2022</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span>
-        <span class="s1">&#39;id&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;acheteur&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;nature&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;objet&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;codeCPV&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;techniques&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;procedure&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;dateNotification&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;lieuExecution&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;dureeMois&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;modalitesExecution&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;considerationsSociales&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;considerationsEnvironnementales&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;marcheInnovant&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;ccag&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;offresRecues&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;montant&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;formePrix&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;offresRecues&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;typesPrix&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;attributionAvance&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;titulaires&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;typeGroupementOperateurs&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;sousTraitanceDeclaree&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;datePublicationDonnees&#39;</span>
-    <span class="p">])</span>
-    
-    <span class="n">colums_marche_opt_2022</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span>
-        <span class="s1">&#39;idAccordCadre&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;origineUE&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;origineFrance&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;tauxAvance&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;actesSousTraitance&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;modifications&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;modificationsActesSousTraitance&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;_type&#39;</span>
-        
-    <span class="p">])</span>
-    
-    <span class="n">columns_concession_2022</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span>
-        <span class="s1">&#39;id&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;autoriteConcedante&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;nature&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;objet&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;procedure&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;dureeMois&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;dateDebutExecution&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;dateSignature&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;considerationsSociales&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;considerationsEnvironnementales&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;concessionnaires&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;valeurGlobale&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;montantSubventionPublique&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;datePublicationDonnees&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;donneesExecution&#39;</span>
-    <span class="p">])</span>
-    
-    <span class="n">columns_concession_opt_2022</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span>
-        <span class="s1">&#39;modifications&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;_type&#39;</span>
-    <span class="p">])</span>
-
-    <span class="n">columns_marche_2019</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span>
-        <span class="s1">&#39;id&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;nature&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;objet&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;codeCPV&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;procedure&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;lieuExecution&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;dureeMois&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;dateNotification&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;datePublicationDonnees&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;montant&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;formePrix&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;titulaires&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;source&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;acheteur&#39;</span>
-    <span class="p">])</span>
-
-    <span class="n">colums_marche_opt_2019</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span>
-        <span class="s1">&#39;modifications&#39;</span>
-    <span class="p">])</span>
-
-    <span class="n">columns_concession_2019</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span>
-        <span class="s1">&#39;id&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;nature&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;typeContrat&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;objet&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;codeCPV&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;procedure&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;lieuExecution&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;dureeMois&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;dateNotification&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;datePublicationDonnees&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;montant&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;formePrix&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;titulaires&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;source&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;acheteur&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;modifications&#39;</span>
-    <span class="p">])</span>
-
-    <span class="n">colums_concession_opt_2019</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span>
-        <span class="s1">&#39;modifications&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;uuid&#39;</span>
-    <span class="p">])</span>
 <span class="w">   </span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;La classe SourceProcess est une classe abstraite qui sert de parent à chaque classe enfant de</span>
 <span class="sd">    sources. Elle sert à définir le cas général des étapes de traitement d&#39;une source : création des</span>
 <span class="sd">    variables de classe (__init__), nettoyage des dossiers de la source (_clean_metadata_folder),</span>
 <span class="sd">    récupération des URLs (_url_init), get, convert et fix.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span><span class="n">data_format</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;L&#39;étape __init__ crée les variables associées à la classe SourceProcess : key, source,</span>
 <span class="sd">        format, df, title, url, cle_api et metadata.&quot;&quot;&quot;</span>
@@ -230,7 +343,10 @@
 <span class="sd">        Fonction réalisant le téléchargement des métadatas, la copie des</span>
 <span class="sd">        fichiers métadatas et la création des listes contenant les titres</span>
 <span class="sd">        et les urls des fichiers.</span>
-<span class="sd">        n: nombre de clé api (=nombre de tour dans la boucle)</span>
+<span class="sd">        </span>
+<span class="sd">        Args: </span>
+
+<span class="sd">            n: nombre de clé api </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Début de la récupération de la liste des url&quot;</span><span class="p">)</span>
         <span class="n">title</span> <span class="o">=</span> <span class="p">[]</span>  
@@ -246,7 +362,6 @@
             <span class="c1">#Creation de la deuxième variable json pour la comparaison si le fichier old_metadata existe</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;old_metadata/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s2">/old_metadata_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">):</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;old_metadata/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s2">/old_metadata_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fl</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ouverture fichier&quot;</span><span class="p">)</span>
                     <span class="n">refjson</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fl</span><span class="p">)</span>
                 <span class="n">old_ressources</span> <span class="o">=</span> <span class="n">refjson</span><span class="p">[</span><span class="s2">&quot;resources&quot;</span><span class="p">]</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;affectation faite&quot;</span><span class="p">)</span>
@@ -283,9 +398,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fonction vérifiant si la date de dernière modification des fichiers ressources </span>
 <span class="sd">        dans les metadatas est strictement antérieure à la date de dernière modification.</span>
-<span class="sd">        @url: la liste contenant les liens pour télécharger les fichiers</span>
-<span class="sd">        @new_ressources: dictionnaire correspondant au champ &quot;resources&quot; dans le fichier metadata de la source</span>
-<span class="sd">        @old_ressources: dictionnaire correspondant au champ &quot;resources&quot; dans le fichier old_metadata de la source</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            url: la liste contenant les liens pour télécharger les fichiers</span>
+<span class="sd">            new_ressources: dictionnaire correspondant au champ &quot;resources&quot; dans le fichier metadata de la source</span>
+<span class="sd">            old_ressources: dictionnaire correspondant au champ &quot;resources&quot; dans le fichier old_metadata de la source</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_ressources</span><span class="p">)):</span>
             <span class="c1">#condition1 : test si les nouvelles métadonnées sont plus récentes que les anciennes </span>
@@ -315,7 +433,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">download_without_metadata</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Verification de l&#39;existence d&#39;un eventuel doublon + nettoyage + </span>
-            <span class="c1"># téléchargement du nouveau fichier</span>
+            <span class="c1"># Téléchargement du nouveau fichier</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)):</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sources/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
@@ -332,8 +450,9 @@
 <a class="viewcode-back" href="../../general_process.html#general_process.SourceProcess.SourceProcess.download_without_metadata">[docs]</a>
     <span class="k">def</span> <span class="nf">download_without_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Fonction téléchargeant un fichier n&#39;ayant pas de clé api. Par conséquent, le</span>
-<span class="sd">        téléchargement s&#39;effectue grâce à l&#39;url dans l&#39;attribut url_source</span>
+<span class="sd">        Fonction téléchargeant un fichier n&#39;ayant pas de clé api. Par </span>
+<span class="sd">        conséquent, le téléchargement s&#39;effectue grâce à l&#39;url dans </span>
+<span class="sd">        l&#39;attribut url_source</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">nom_fichiers</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sources/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">parsed_url</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -358,55 +477,14 @@
 
 
 
-    <span class="c1"># def clean(self):</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     Fonction réalisant un tri sur le format 2022 ou le format 2019 en complétant</span>
-    <span class="c1">#     les 3 dictionnaires et permettre la conversion en dataframe pour plus tard.</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     logging.info(&quot; ÉTAPE CLEAN&quot;)</span>
-    <span class="c1">#     logging.info(&quot;Début du tri des nouveaux fichiers&quot;)</span>
-    <span class="c1">#     #Ouverture des fichiers</span>
-    <span class="c1">#     dico = {}</span>
-    <span class="c1">#     for i in range(len(self.title)):            </span>
-    <span class="c1">#         if self.format == &#39;xml&#39;:</span>
-    <span class="c1">#             #Vérification du schéma xml</span>
-    <span class="c1">#             scheme_path = &#39;schemes/schema_decp_v2.0.2.xsd&#39;</span>
-    <span class="c1">#             if not self.check(None,f&quot;sources/{self.source}/{self.title[i]}&quot;):</span>
-    <span class="c1">#                 logging.warning(f&quot;sources/{self.source}/{self.title[i]} not a valide xml&quot;)</span>
-    <span class="c1">#                 continue</span>
-    <span class="c1">#             try:</span>
-    <span class="c1">#                 with open(f&quot;sources/{self.source}/{self.title[i]}&quot;, encoding=&#39;utf-8&#39;) as xml_file:</span>
-    <span class="c1">#                     dico = xmltodict.parse(xml_file.read(), dict_constructor=dict, \</span>
-    <span class="c1">#                                            force_list=(&#39;marche&#39;,&#39;titulaires&#39;, &#39;modifications&#39;, &#39;actesSousTraitance&#39;,</span>
-    <span class="c1">#                                            &#39;modificationsActesSousTraitance&#39;, &#39;typePrix&#39;,&#39;considerationEnvironnementale&#39;,</span>
-    <span class="c1">#                                            &#39;modaliteExecution&#39;))</span>
-    <span class="c1">#             except Exception as err:</span>
-    <span class="c1">#                 logging.error(f&quot;Exception lors du chargement du fichier xml {self.title[i]} - {err}&quot;)</span>
-
-    <span class="c1">#         elif self.format == &#39;json&#39;:</span>
-    <span class="c1">#             #Vérification du schéma json</span>
-    <span class="c1">#             scheme_path = &#39;schemes/schema_decp_v2.0.2.json&#39;</span>
-    <span class="c1">#             if not self.check(f&quot;sources/{self.source}/{self.title[i]}&quot;, None):</span>
-    <span class="c1">#                 logging.warning(f&quot;sources/{self.source}/{self.title[i]} not a valid json&quot;)</span>
-    <span class="c1">#                 continue</span>
-    <span class="c1">#             try:</span>
-    <span class="c1">#                 with open(f&quot;sources/{self.source}/{self.title[i]}&quot;, encoding=&quot;utf-8&quot;) as json_file1:</span>
-    <span class="c1">#                     dico = json.load(json_file1)</span>
-    <span class="c1">#             except Exception as err:</span>
-    <span class="c1">#                 logging.error(f&quot;Exception lors du chargement du fichier json {self.title[i]} - {err}&quot;)</span>
-    <span class="c1">#         self.champs_plus = set()</span>
-    <span class="c1">#         self.champs_moins = set()</span>
-    <span class="c1">#         self.tri_format(dico,self.title[i])    #On obtient 3 listes de dico qui sont mises à jour à chaque tour de boucle</span>
-            
-    <span class="c1">#     logging.info(&quot;Fin du tri selon le format&quot;)</span>
-    <span class="c1">#     logging.info(&quot;Nettoyage OK&quot;)</span>
-
 <div class="viewcode-block" id="SourceProcess.clean">
 <a class="viewcode-back" href="../../general_process.html#general_process.SourceProcess.SourceProcess.clean">[docs]</a>
     <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Fonction réalisant un tri sur le format 2022 ou le format 2019 en complétant</span>
-<span class="sd">        les 3 dictionnaires et permettre la conversion en dataframe pour plus tard.</span>
+<span class="sd">        Cette fonction extrait les dictionnaires des fichiers </span>
+<span class="sd">        (suivant le format 2022) pour qu&#39;ils puissent être nettoyé.</span>
+<span class="sd">        Grâce à la fonction tri_format, un tri est effectué sur ces</span>
+<span class="sd">        dictionnaires pour séparer les bons marchés, des mauvais.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot; ÉTAPE CLEAN&quot;</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Début du tri des nouveaux fichiers&quot;</span><span class="p">)</span>
@@ -434,7 +512,7 @@
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;clean: Balise &#39;marches&#39; inexistante&quot;</span><span class="p">)</span>
             
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Fin du tri selon le format&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Fin du tri&quot;</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Nettoyage OK&quot;</span><span class="p">)</span></div>
 
 
@@ -444,10 +522,14 @@
     <span class="k">def</span> <span class="nf">tri_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dico</span><span class="p">:</span><span class="nb">dict</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cette fonction permet de vérifier la structure du dictionnaire fournit en</span>
-<span class="sd">        entrée. Si un champ est manquant dans un marché ou une concession, ce dernier</span>
-<span class="sd">        est stocké dans une liste pour un éventuel traitement.</span>
-<span class="sd">        @dico : dictionnaire , il s&#39;agit d&#39;un dictionnaire avec 2 clés: &#39;marchés&#39; et &#39;contrat-concession&#39;</span>
-<span class="sd">        @file_name : nom du fichier où sont stockés les fichiers non valides et ignorés</span>
+<span class="sd">        entrée. Si le schéma n&#39;est pas respecté, les marchés et concessions correctes</span>
+<span class="sd">        sont stockés dans des listes et des fichiers pour une future utilisation.</span>
+<span class="sd">        Il en est de même pour les marchés et les concessions incorrectes.</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            dico : il s&#39;agit d&#39;un dictionnaire avec 2 clés: &#39;marchés&#39; et &#39;contrat-concession&#39;</span>
+<span class="sd">            file_name : nom du fichier où se trouve le dictionnaire dico</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="s1">&#39;marche&#39;</span> <span class="ow">in</span> <span class="n">dico</span><span class="p">:</span>
@@ -483,182 +565,38 @@
 
         <span class="c1">#Ecriture dans les nouveaux fichiers</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;tri/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s1">/bons_marches_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_f1</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ouverture fichier 1er&quot;</span><span class="p">)</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">jsonfile1</span><span class="p">,</span> <span class="n">new_f1</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;tri/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s1">/mauvais_marches_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_f2</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ouverture fichier 2eme&quot;</span><span class="p">)</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">jsonfile2</span><span class="p">,</span> <span class="n">new_f2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nombre de marchés et concessions invalides dans </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dico_ignored_marche</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dico_ignored_concession</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nombre de marchés et de concessions valides dans </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dico_2022_marche</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="w"> </span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dico_2022_concession</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span><span class="p">)</span></div>
 
-    
-
-<span class="c1"># def erreurs_acceptables():   #il faut ajouter une colonne source </span>
-<span class="c1">#     marches_a_ajouter = []</span>
-<span class="c1">#     with open(f&#39;data/mauvais_marches.json&#39;, &#39;r&#39;, encoding =&#39;utf8&#39;) as f :</span>
-<span class="c1">#         bad_file = json.dumps(f)</span>
-<span class="c1">#     if &quot;marche&quot; in bad_file[&quot;marches&quot;]:</span>
-<span class="c1">#         for i in range(len(bad_file[&quot;marches&quot;])): </span>
-
-<span class="c1">#     if &#39;concession-contrat&#39; in bad_file[&quot;marches&quot;][&#39;concession-contrat&#39;]:</span>
-<span class="c1">#         for i in range(len(bad_file[&quot;marches&quot;][&#39;concession-contrat&#39;])): </span>
-        
-
-
-
-
-
-    <span class="c1"># def tri_format(self, dico:dict, file_name:str):</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     Cette fonction permet de vérifier la structure du dictionnaire fournit en</span>
-    <span class="c1">#     entrée. Si un champ est manquant dans un marché ou une concession, ce dernier</span>
-    <span class="c1">#     est stocké dans une liste pour un éventuel traitement.</span>
-    <span class="c1">#     @dico : dictionnaire </span>
-    <span class="c1">#     @file_name : nom du fichier où sont stockés les fichiers non valides et ignorés</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     if &#39;marches&#39; in dico:</span>
-    <span class="c1">#         if &#39;marche&#39; in dico[&#39;marches&#39;]:  #format 2022</span>
-    <span class="c1">#             for m in dico[&#39;marches&#39;][&#39;marche&#39;]:</span>
-    <span class="c1">#                 if self._has_all_field_and_date_2024(m, &#39;marche&#39;):</span>
-    <span class="c1">#                     self.dico_2022_marche.append(m)</span>
-    <span class="c1">#                 else:                   </span>
-    <span class="c1">#                     self.dico_ignored.append(m)</span>
-
-    <span class="c1">#         if &#39;contrat-concession&#39; in dico[&#39;marches&#39;]:</span>
-    <span class="c1">#             for m in dico[&#39;marches&#39;][&#39;contrat-concession&#39;]:</span>
-    <span class="c1">#                 if self._has_all_field_and_date_2024(m, &#39;contrat-concession&#39;):</span>
-    <span class="c1">#                     self.dico_2022_concession.append(m)</span>
-    <span class="c1">#                 else:</span>
-    <span class="c1">#                     self.dico_ignored.append(m)</span>
-
-    <span class="c1">#         if (&#39;marche&#39; not in dico[&#39;marches&#39;]) and (&#39;contrat-concession&#39; not in dico[&#39;marches&#39;]):  #format 2019</span>
-    <span class="c1">#             for m in dico[&#39;marches&#39;]:</span>
-    <span class="c1">#                 if self._has_all_field_and_date_2019(m):                </span>
-    <span class="c1">#                     self.dico_2019.append(m)</span>
-    <span class="c1">#                 else:</span>
-    <span class="c1">#                     self.dico_ignored.append(m)</span>
-
-    <span class="c1">#     else:</span>
-    <span class="c1">#         logging.error(&quot;Balise &#39;marches&#39; inexistante&quot;)</span>
-    <span class="c1">#         dico.clear()</span>
-    <span class="c1">#     if len(self.champs_plus)&gt;0:</span>
-    <span class="c1">#         logging.info(f&quot;Dans le fichier {file_name}, les champs en plus sont: {self.champs_plus} &quot;)</span>
-    <span class="c1">#     if len(self.champs_moins)&gt;0:</span>
-    <span class="c1">#         logging.info(f&quot;Dans le fichier {file_name}, les champs en moins sont: {self.champs_moins} &quot;)</span>
-    <span class="c1">#     if len(self.dico_ignored)&gt;0:</span>
-    <span class="c1">#         logging.info(f&quot;Nombre de marchés invalides dans {file_name}: {len(self.dico_ignored)} &quot;)</span>
-    
-
-    <span class="k">def</span> <span class="nf">_has_all_field_and_date_2019</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span><span class="nb">dict</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span> <span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Fonction vérifiant qu&#39;un marché/concession possède bel et bien toutes </span>
-<span class="sd">        les colonnes requises par notre schéma. Il vérifie également que les </span>
-<span class="sd">        dates contenues dans le marché/concession soient postérieures à 2024.</span>
-<span class="sd">        @record : marché/concession que l&#39;on souhaite traiter</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">liste_marche</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Marché&#39;</span><span class="p">,</span><span class="s1">&#39;Marché de partenariat&#39;</span><span class="p">,</span> <span class="s1">&#39;Accord-cadre&#39;</span><span class="p">,</span> <span class="s1">&#39;Marché subséquent&#39;</span><span class="p">,</span><span class="s1">&#39;MARCHE&#39;</span><span class="p">]</span>
-        <span class="n">liste_concession</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Concession de travaux&#39;</span><span class="p">,</span>  <span class="s1">&#39;Concession de service&#39;</span><span class="p">,</span> <span class="s1">&#39;Concession de service public&#39;</span><span class="p">,</span> <span class="s1">&#39;Délégation de service public&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">record</span><span class="p">[</span><span class="s2">&quot;nature&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">liste_marche</span> <span class="p">:</span> <span class="c1">#Il faudra modifier à l&#39;appel de sorte à avoir la nature : marché</span>
-            <span class="n">champs_differents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-            <span class="c1">#Complémentaire de l&#39;intersection entre les champs du dictionnaire et les champs obligatoires </span>
-            <span class="n">champs_differents</span> <span class="o">=</span> <span class="n">champs_differents</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">columns_marche_2019</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">champs_differents</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-                <span class="n">champs_en_moins</span> <span class="o">=</span> <span class="n">champs_differents</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns_marche_2019</span> <span class="c1">#On récupère seulement les champs obligatoires manquants</span>
-                <span class="n">champs_en_plus</span> <span class="o">=</span> <span class="n">champs_differents</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colums_marche_opt_2019</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">champs_en_moins</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">champs_en_moins</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">champs_en_plus</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">champs_moins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">champs_moins</span> <span class="o">|</span> <span class="n">champs_en_moins</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">champs_plus</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">champs_plus</span>  <span class="o">|</span> <span class="n">champs_en_plus</span>
-                    <span class="c1"># logging.info(f&quot;Voici les champs en moins :{champs_en_moins}&quot;)</span>
-                    <span class="c1"># logging.info(f&quot;Voici les champs en plus :{champs_en_plus}&quot;)</span>
-                    <span class="k">return</span> <span class="kc">False</span>
-                <span class="k">else</span> <span class="p">:</span>
-                    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tous les champs sont valides.&quot;</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="kc">True</span>
-
-        <span class="k">elif</span> <span class="n">record</span><span class="p">[</span><span class="s2">&quot;nature&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">liste_concession</span> <span class="p">:</span>
-            <span class="n">champs_differents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-            <span class="c1">#Complémentaire de l&#39;intersection entre les champs du dictionnaire et les champs obligatoires </span>
-            <span class="n">champs_differents</span> <span class="o">=</span> <span class="n">champs_differents</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">columns_concession_2019</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">champs_differents</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-                <span class="n">champs_en_moins</span> <span class="o">=</span> <span class="n">champs_differents</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns_concession_2019</span> <span class="c1">#On récupère seulement les champs obligatoires manquants</span>
-                <span class="n">champs_en_plus</span> <span class="o">=</span> <span class="n">champs_differents</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colums_concession_opt_2019</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">champs_en_moins</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">champs_en_moins</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">champs_en_plus</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">champs_moins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">champs_moins</span> <span class="o">|</span> <span class="n">champs_en_moins</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">champs_plus</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">champs_plus</span>  <span class="o">|</span> <span class="n">champs_en_plus</span>
-                    <span class="c1">#logging.info(f&quot;Voici les champs en moins :{champs_en_moins}&quot;)</span>
-                    <span class="c1">#logging.info(f&quot;Voici les champs en plus :{champs_en_plus}&quot;)</span>
-                    <span class="k">return</span> <span class="kc">False</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tous les champs sont valides.&quot;</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="kc">True</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-
-    
-    <span class="k">def</span> <span class="nf">_has_all_field_and_date_2024</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span><span class="nb">dict</span><span class="p">,</span> <span class="n">record_type</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span> <span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Fonction vérifiant qu&#39;un marché/concession possède toutes les colonnes </span>
-<span class="sd">        requises par notre schéma. Il vérifie également que les </span>
-<span class="sd">        dates contenues dans le marché/concession soient postérieures à 2024.</span>
-<span class="sd">        @record : marché/concession que l&#39;on souhaite traiter</span>
-<span class="sd">        @record_type : type du marché (marché/concession)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        
-        <span class="k">if</span> <span class="n">record_type</span> <span class="o">==</span> <span class="s1">&#39;marche&#39;</span><span class="p">:</span>
-            <span class="n">champs_differents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-            <span class="c1">#Complémentaire de l&#39;intersection entre les champs du dictionnaire et les champs obligatoires</span>
-            <span class="n">champs_differents</span> <span class="o">=</span> <span class="n">champs_differents</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">columns_marche_2022</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">champs_differents</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-                <span class="n">champs_en_moins</span> <span class="o">=</span> <span class="n">champs_differents</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns_marche_2022</span> <span class="c1">#On récupère seulement les champs obligatoires manquants</span>
-                <span class="n">champs_en_plus</span> <span class="o">=</span> <span class="n">champs_differents</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colums_marche_opt_2022</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">champs_en_moins</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">champs_en_moins</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">champs_en_plus</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">champs_moins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">champs_moins</span> <span class="o">|</span> <span class="n">champs_en_moins</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">champs_plus</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">champs_plus</span>  <span class="o">|</span> <span class="n">champs_en_plus</span>
-                    <span class="k">return</span> <span class="kc">False</span>
-                    <span class="c1"># logging.info(f&quot;Voici les champs en moins :{champs_en_moins}&quot;)</span>
-                    <span class="c1"># logging.info(f&quot;Voici les champs en plus :{champs_en_plus}&quot;)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dictionnaire valide au format 2024&quot;</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="kc">True</span>
-
-        <span class="k">elif</span> <span class="n">record_type</span> <span class="o">==</span> <span class="s1">&#39;contrat-concession&#39;</span><span class="p">:</span>
-            <span class="n">champs_differents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-            <span class="c1">#Complémentaire de l&#39;intersection entre les champs du dictionnaire et les champs obligatoires</span>
-            <span class="n">champs_differents</span> <span class="o">=</span> <span class="n">champs_differents</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">columns_concession_2022</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">champs_differents</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-                <span class="n">champs_en_moins</span> <span class="o">=</span> <span class="n">champs_differents</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns_concession_2022</span> <span class="c1">#On récupère seulement les champs obligatoires manquants</span>
-                <span class="n">champs_en_plus</span> <span class="o">=</span> <span class="n">champs_differents</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">columns_concession_opt_2022</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">champs_en_moins</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">champs_en_moins</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">champs_en_plus</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">champs_moins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">champs_moins</span> <span class="o">|</span> <span class="n">champs_en_moins</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">champs_plus</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">champs_plus</span>  <span class="o">|</span> <span class="n">champs_en_plus</span>
-                    <span class="c1"># logging.info(f&quot;Voici les champs en moins :{champs_en_moins}&quot;)</span>
-                    <span class="c1"># logging.info(f&quot;Voici les champs en plus :{champs_en_plus}&quot;)</span>
-                    <span class="k">return</span> <span class="kc">False</span>
-                
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dictionnaire valide au format 2024&quot;</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-    
 
 <div class="viewcode-block" id="SourceProcess.date_norm">
 <a class="viewcode-back" href="../../general_process.html#general_process.SourceProcess.SourceProcess.date_norm">[docs]</a>
     <span class="k">def</span> <span class="nf">date_norm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">datestr</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Permet de modifier le format d&#39;une date. Plus</span>
+<span class="sd">        précsément, les &#39;+&#39; sont remplacés par des &#39;-&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">datestr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">datestr</span> <span class="k">else</span> <span class="n">datestr</span></div>
 
 
 
 <div class="viewcode-block" id="SourceProcess.date_before_2024">
 <a class="viewcode-back" href="../../general_process.html#general_process.SourceProcess.SourceProcess.date_before_2024">[docs]</a>
-    <span class="k">def</span> <span class="nf">date_before_2024</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span><span class="n">nature</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">date_before_2024</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span><span class="nb">dict</span><span class="p">,</span> <span class="n">nature</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">        La fonction vérifie que les dates contenues dans un marché/une </span>
 <span class="sd">        concession sont postérieures à 2024 et sont de la forme Y-M-J</span>
 <span class="sd">        pour les colonnes date et date_de_publication. </span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            record: dictionnaire dans lequel se fait la vérification</span>
+<span class="sd">            nature: il s&#39;agit soit d&#39;une concession, soit d&#39;un marché</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">nature</span> <span class="o">==</span> <span class="s2">&quot;marché&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;nature&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span>  <span class="ow">and</span> <span class="s1">&#39;concession&#39;</span> <span class="ow">in</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;nature&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
@@ -693,7 +631,10 @@
 <span class="sd">            La fonction prend en entrée un dictionnaire et renvoie un </span>
 <span class="sd">            booléeen.Les dates postérieures à 2024 doivent être de la</span>
 <span class="sd">            forme Y-M-J pour les colonnes date et date_de_publication.</span>
-<span class="sd">            @record : marché/concession que l&#39;on souhaite traiter</span>
+
+<span class="sd">            Args:</span>
+
+<span class="sd">                record: dictionnaire dans lequel se fait la vérification</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">first</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;2024-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">pattern1</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;20[0-9]</span><span class="si">{2}</span><span class="s1">-[0-1]</span><span class="si">{1}</span><span class="s1">[0-9]</span><span class="si">{1}</span><span class="s1">-[0-9]</span><span class="si">{2}</span><span class="s1">&#39;</span>
@@ -718,36 +659,16 @@
 
 
 
-    <span class="k">def</span> <span class="nf">_retain_with_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dico</span><span class="p">:</span><span class="nb">dict</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Cette fonction permet de vérifier la validité des marchés et des concessions</span>
-<span class="sd">        du dictionnaire fournit en entrée. Elle garde également en mémoire une liste</span>
-<span class="sd">        des marchés/concessions invalides pour un éventuel traitement.</span>
-<span class="sd">        @dico : dictionnaire </span>
-<span class="sd">        @file_name : nom du fichier où sont stockés les fichiers non valides et ignorés</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dico_ignored</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="s1">&#39;marches&#39;</span> <span class="ow">in</span> <span class="n">dico</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s1">&#39;marche&#39;</span> <span class="ow">in</span> <span class="n">dico</span><span class="p">[</span><span class="s1">&#39;marches&#39;</span><span class="p">]:</span>
-                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">dico</span><span class="p">[</span><span class="s1">&#39;marches&#39;</span><span class="p">][</span><span class="s1">&#39;marche&#39;</span><span class="p">]:</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_all_field_and_date_2024</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s1">&#39;marche&#39;</span><span class="p">):</span>
-                        <span class="n">dico</span><span class="p">[</span><span class="s1">&#39;marches&#39;</span><span class="p">][</span><span class="s1">&#39;marche&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">dico_ignored</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-                        
-            <span class="k">if</span><span class="s1">&#39;contrat-concession&#39;</span> <span class="ow">in</span> <span class="n">dico</span><span class="p">[</span><span class="s1">&#39;marches&#39;</span><span class="p">]:</span>
-                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">dico</span><span class="p">[</span><span class="s1">&#39;marches&#39;</span><span class="p">][</span><span class="s1">&#39;contrat-concession&#39;</span><span class="p">]:</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_all_field_and_date_2024</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s1">&#39;contrat-concession&#39;</span><span class="p">):</span>
-                        <span class="n">dico</span><span class="p">[</span><span class="s1">&#39;marches&#39;</span><span class="p">][</span><span class="s1">&#39;contrat-concession&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">dico_ignored</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Balise &#39;marches&#39; inexistante&quot;</span><span class="p">)</span>
-            <span class="n">dico</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dico_ignored</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ignored </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dico_ignored</span><span class="p">)</span><span class="si">}</span><span class="s2"> record(s) in </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">dico</span>
-
-
     <span class="k">def</span> <span class="nf">_add_column_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">default_type_name</span><span class="p">:</span><span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        La fonction ajoute une colonne &quot;_type&quot; dans le dataframe</span>
+<span class="sd">        dont les valeurs seront: &quot;Marché&quot; ou &quot;Concession&quot;. </span>
+
+<span class="sd">        Args: </span>
+
+<span class="sd">            df: dataframe à compléter</span>
+<span class="sd">            default_type_name: il s&#39;agit de l&#39;une des 2 valeurs possibles</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_format</span><span class="o">==</span><span class="s1">&#39;2022&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="s2">&quot;_type&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="p">(</span><span class="n">default_type_name</span> <span class="ow">or</span> <span class="s2">&quot;nature&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">default_type_name</span><span class="p">:</span>
                 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_type_name</span>
@@ -927,14 +848,14 @@
 
         <span class="c1"># Ajout d&#39;un marché à la liste des dataframes</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dico_2022_marche</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;_type_&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;_type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_column_type</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="s2">&quot;Marché&quot;</span><span class="p">)</span>
         <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
     
         <span class="c1"># Ajoutd&#39;une concession à la liste des dataframes</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dico_2022_concession</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;_type_&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;_type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_column_type</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="s2">&quot;Concession&quot;</span><span class="p">)</span>
         <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
            
@@ -949,15 +870,19 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Conversion OK&quot;</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nombre de marchés dans </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s2"> après convert : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-        <span class="c1">#print(&quot;DF&quot;, self.df)</span>
 
 
 <div class="viewcode-block" id="SourceProcess.validateJson">
 <a class="viewcode-back" href="../../general_process.html#general_process.SourceProcess.SourceProcess.validateJson">[docs]</a>
-    <span class="k">def</span> <span class="nf">validateJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">jsonData</span><span class="p">,</span><span class="n">jsonScheme</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">validateJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">jsonData</span><span class="p">:</span><span class="nb">dict</span><span class="p">,</span><span class="n">jsonScheme</span><span class="p">:</span><span class="nb">dict</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fonction vérifiant si le fichier jsn &quot;jsonData&quot; respecte</span>
 <span class="sd">        le schéma spécifié dans le  schéma en paramètre &quot;jsonScheme&quot;. </span>
+
+<span class="sd">        Args: </span>
+
+<span class="sd">            jsonData: dictionnaire qui va être vérifié par le validateur</span>
+<span class="sd">            jsonScheme: schéma à respecter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1">#Draft7Validator.check_schema(jsonScheme)</span>
@@ -967,19 +892,21 @@
             <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur de validation json - </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;tri/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s1">/log_erreurs_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">error_file</span><span class="p">:</span>
               <span class="n">error_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="c1">#print(str(err))</span>
             <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>     </div>
 
-
-        
 
 <div class="viewcode-block" id="SourceProcess.validateXml">
 <a class="viewcode-back" href="../../general_process.html#general_process.SourceProcess.SourceProcess.validateXml">[docs]</a>
     <span class="k">def</span> <span class="nf">validateXml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">xsd_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Fonction vérifiant si le fichier xml &quot;xml_path&quot; respecte </span>
-<span class="sd">        le schéma spécifié dans le paramètre &quot;xsd_path&quot;.</span>
+<span class="sd">        Fonction vérifiant si un fichier xml  respecte </span>
+<span class="sd">        le schéma spécifié.</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            xml_path: chemin du fichier à vérifier</span>
+<span class="sd">            xsd_path: chemin du schéma </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">xml_schema_doc</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">xsd_path</span><span class="p">)</span>
         <span class="n">xml_schema</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">XMLSchema</span><span class="p">(</span><span class="n">xml_schema_doc</span><span class="p">)</span>
@@ -1001,61 +928,42 @@
     <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">jsonData</span><span class="p">,</span><span class="n">xml_path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fonction qui prend en paramètre une donnée json ou xml </span>
-<span class="sd">        et qui vérifie grâce à un schéma que la donnée est valide.</span>
-<span class="sd">        @JsonData : donnée json en entrée (nul si xml)</span>
-<span class="sd">        @xml_path : chemin du fichier xml en entrée (nul si json)</span>
+<span class="sd">        et vérifiant, grâce à un schéma, que la donnée est valide.</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            jsonData : donnée json en entrée (None si on vérifie un fichier xml)</span>
+<span class="sd">            xml_path : chemin du fichier xml en entrée (None si on vérifie un fichier json)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">#on vérifie que la donnée en entrée est valide par rapport au schéma</span>
-        <span class="n">scheme_path</span> <span class="o">=</span> <span class="s1">&#39;schemes/schema_decp_v2.0.2.json&#39;</span>
-        <span class="c1">#print(&quot;ouverture fichier&quot;)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">==</span><span class="s1">&#39;json&#39;</span><span class="p">:</span>
+            <span class="n">scheme_path</span> <span class="o">=</span> <span class="s1">&#39;schemes/schema_decp_v2.0.2.json&#39;</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">scheme_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">jsonfile1</span><span class="p">:</span>
-                <span class="c1">#print(&quot;ouverture fichier 2&quot;)</span>
                 <span class="n">jsonScheme</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">jsonfile1</span><span class="p">)</span>
                 <span class="n">jsonfile1</span><span class="o">.</span><span class="n">close</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">validateJson</span><span class="p">(</span><span class="n">jsonData</span><span class="p">,</span><span class="n">jsonScheme</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>    <span class="c1"># xml</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="n">scheme_path</span> <span class="o">=</span> <span class="s1">&#39;schemes/schema_decp_v2.0.2.xml&#39;</span>   <span class="c1"># xml</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">xml_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xml_file</span><span class="p">:</span>
                     <span class="n">xml_content</span> <span class="o">=</span> <span class="n">xml_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
                 <span class="k">return</span> <span class="n">xmlschema</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">xml_content</span><span class="p">,</span> <span class="n">scheme_path</span><span class="p">)</span><span class="o">==</span><span class="kc">None</span>
             <span class="k">except</span> <span class="n">xmlschema</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">XMLSchemaException</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur de validation xml - </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;tri/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s1">/log_erreurs_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">error_file</span><span class="p">:</span>
+                    <span class="n">error_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">False</span></div>
 
-
-
-        <span class="c1">#all_columns_marche = [&#39;procedure&#39;, &#39;modifications&#39;, &#39;nature&#39;, &#39;codecpv&#39;, &#39;considerationssociales&#39;,</span>
-        <span class="c1">#&#39;considerationsenvironnementales&#39;,&#39;dureemo is&#39;,</span>
-        <span class="c1">#&#39;datepublicationdonnees&#39;, &#39;titulaires&#39;, &#39;id&#39;, &#39;type&#39;, &#39;formeprix&#39;,</span>
-        <span class="c1">#&#39;datenotification&#39;, &#39;objet&#39;, &#39;montant&#39;, &#39;lieuexecution_code&#39;,</span>
-        <span class="c1">#&#39;lieuexecution_typecode&#39;, &#39;lieuexecution_nom&#39;, &#39;acheteur_id&#39;,</span>
-        <span class="c1">#&#39;acheteur_nom&#39;, &#39;datetransmissiondonneesetalab&#39;]</span>
-
-        <span class="c1">#all_columns_concession = [&#39;procedure&#39;, &#39;modifications&#39;, &#39;nature&#39;, &#39;codecpv&#39;, &#39;considerationssociales&#39;,</span>
-        <span class="c1">#&#39;considerationsenvironnementales&#39;,&#39;dureemois&#39;,</span>
-        <span class="c1">#&#39;datepublicationdonnees&#39;, &#39;titulaires&#39;, &#39;id&#39;, &#39;type&#39;, &#39;formeprix&#39;,</span>
-        <span class="c1">#&#39;datenotification&#39;, &#39;objet&#39;, &#39;montant&#39;, &#39;lieuexecution_code&#39;,</span>
-        <span class="c1">#&#39;lieuexecution_typecode&#39;, &#39;lieuexecution_nom&#39;, &#39;acheteur_id&#39;,</span>
-        <span class="c1">#&#39;acheteur_nom&#39;, &#39;datetransmissiondonneesetalab&#39;]</span>
-
-        <span class="c1">#columns = [column.lower() for column in self.df.columns]</span>
-
-        <span class="c1">#for col in all_columns_marche:</span>
-        <span class="c1">#    if col not in columns:</span>
-        <span class="c1">#        conform = False</span>
-        <span class="c1">#        raise Exception(&quot;Format is not valid&quot;)</span>
-        <span class="c1">#for col in all_columns_concession:</span>
-        <span class="c1">#    if col not in columns:</span>
-        <span class="c1">#        conform = False</span>
-        <span class="c1">#        raise Exception(&quot;Format is not valid&quot;)</span>
-        <span class="c1">#return conform</span>
 
 <div class="viewcode-block" id="SourceProcess.convert_boolean">
 <a class="viewcode-back" href="../../general_process.html#general_process.SourceProcess.SourceProcess.convert_boolean">[docs]</a>
     <span class="k">def</span> <span class="nf">convert_boolean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">col_name</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Permet de remplacer les valeurs booléennes ou &quot;Vrai&quot; ou &quot;Faux&quot; par &quot;oui&quot; ou &quot;non&quot;</span>
+<span class="sd">        Permet de remplacer les valeurs booléennes &quot;Vrai&quot; ou &quot;Faux&quot; par &quot;oui&quot; ou &quot;non&quot;</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            col_name: colonne où s&#39;effectue le changement</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">#Conversion si il s&#39;agit de string</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span><span class="o">.</span><span class="n">dtypes</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">:</span>  
@@ -1123,6 +1031,15 @@
 <div class="viewcode-block" id="SourceProcess.mark_mandatory_field">
 <a class="viewcode-back" href="../../general_process.html#general_process.SourceProcess.SourceProcess.mark_mandatory_field">[docs]</a>
     <span class="k">def</span> <span class="nf">mark_mandatory_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span><span class="n">field_name</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Complète les lignes vides de la colonne &quot;field_name&quot; avec</span>
+<span class="sd">        le string &#39;MQ&#39;</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            df: dataframe dans lequel s&#39;effectue les modifications</span>
+<span class="sd">            filed_name: nom d&#39;une colonne qui est obligatoire</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="n">empty_mandatory</span> <span class="o">=</span> <span class="o">~</span><span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">field_name</span><span class="p">])</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">field_name</span><span class="p">])</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">empty_mandatory</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
@@ -1133,6 +1050,15 @@
 <div class="viewcode-block" id="SourceProcess.mark_optional_field">
 <a class="viewcode-back" href="../../general_process.html#general_process.SourceProcess.SourceProcess.mark_optional_field">[docs]</a>
     <span class="k">def</span> <span class="nf">mark_optional_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span><span class="n">field_name</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Complète les lignes vides de la colonne &quot;field_name&quot; avec</span>
+<span class="sd">        le string &#39;CDL&#39;</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            df: dataframe dans lequel s&#39;effectue les modifications</span>
+<span class="sd">            filed_name: nom d&#39;une colonne qui est optionnel</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="n">empty_optional</span>  <span class="o">=</span> <span class="o">~</span><span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">field_name</span><span class="p">])</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">field_name</span><span class="p">])</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">empty_optional</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
@@ -1140,11 +1066,19 @@
         <span class="k">return</span> <span class="n">df</span></div>
 
 
-    <span class="c1">#@compute_execution_time</span>
 <div class="viewcode-block" id="SourceProcess.marche_mark_fields">
 <a class="viewcode-back" href="../../general_process.html#general_process.SourceProcess.SourceProcess.marche_mark_fields">[docs]</a>
     <span class="k">def</span> <span class="nf">marche_mark_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Commente toutes les colonnes du dataframe en </span>
+<span class="sd">        appelant les fonctions mark_mandatory_field</span>
+<span class="sd">        et mark_optional_field. Le dataframe doit </span>
+<span class="sd">        contenir que des marchés.</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">        </span>
+<span class="sd">            df: dataframe dans lequel s&#39;effectue les modifications</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mark_mandatory_field</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mark_mandatory_field</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="s2">&quot;nature&quot;</span><span class="p">)</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mark_mandatory_field</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="s2">&quot;objet&quot;</span><span class="p">)</span>
@@ -1201,10 +1135,19 @@
         <span class="k">return</span> <span class="n">df</span></div>
 
 
-    <span class="c1">#@compute_execution_time</span>
 <div class="viewcode-block" id="SourceProcess.concession_mark_fields">
 <a class="viewcode-back" href="../../general_process.html#general_process.SourceProcess.SourceProcess.concession_mark_fields">[docs]</a>
     <span class="k">def</span> <span class="nf">concession_mark_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Commente toutes les colonnes du dataframe en </span>
+<span class="sd">        appelant es fonctions mark_mandatory_field</span>
+<span class="sd">        et mark_optional_field. Le dataframe doit </span>
+<span class="sd">        contenir que des concessions.</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            df: dataframe dans lequel s&#39;effectue les modifications</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mark_mandatory_field</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mark_mandatory_field</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="s2">&quot;nature&quot;</span><span class="p">)</span>
@@ -1238,6 +1181,10 @@
 <div class="viewcode-block" id="SourceProcess.comment">
 <a class="viewcode-back" href="../../general_process.html#general_process.SourceProcess.SourceProcess.comment">[docs]</a>
     <span class="k">def</span> <span class="nf">comment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cette étape permet de marquer les cases vides du</span>
+<span class="sd">        dataframe avec un indicateur (&quot;MD&quot;, ou &quot;CDL&quot;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># séparation des marchés et des concessions, car traitement différent</span>
         <span class="n">df_marche</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;nature&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;concession&#39;</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>
 
@@ -1254,70 +1201,41 @@
 </div>
 
 </pre></div>
-
-          </div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
           
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">DECP_doc</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption" role="heading"><span class="caption-text">Sommaire:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">general_process</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../index.html">Code du module</a><ul>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<search id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Recherche rapide</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-
-
-
-
-
-
-
-
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Mathilde Badlou, Alexandre Boutin, Sabri Flici
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
         </div>
-      </div>
-      <div class="clearer"></div>
+        
+      </footer>
     </div>
-    <div class="footer">
-      &#169;2024, Mathilde Badlou, Alexandre Boutin, Sabri Flici.
+    <aside class="toc-drawer no-toc">
       
-      |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
       
-    </div>
-
-    
-
-    
-  </body>
+      
+    </aside>
+  </div>
+</div><script src="../../_static/documentation_options.js?v=05dadb3a"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=4e2eecee"></script>
+    <script src="../../_static/translations.js?v=bf059b8c"></script>
+    </body>
 </html>

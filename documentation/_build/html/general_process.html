@@ -275,12 +275,15 @@ et l’exportation des données en json pour publication (export).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.GlobalProcess.GlobalProcess.drop_by_date_2024">
 <span class="sig-name descname"><span class="pre">drop_by_date_2024</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general_process/GlobalProcess.html#GlobalProcess.drop_by_date_2024"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.GlobalProcess.GlobalProcess.drop_by_date_2024" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Supprime les lignes ne respectant pas les critères de date. Si le format suivi est de 2022,
+les champs “dateNotification” et “dateDebutExecution” doivent être supérieurs au 01/01/24.
+Si le format suivi est de 2019, ces champs doivent être inférieurs au 01/01/24.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.GlobalProcess.GlobalProcess.drop_duplicate">
 <span class="sig-name descname"><span class="pre">drop_duplicate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general_process/GlobalProcess.html#GlobalProcess.drop_duplicate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.GlobalProcess.GlobalProcess.drop_duplicate" title="Lien vers cette définition">¶</a></dt>
-<dd><p>L’Étape drop duplicate supprime les duplicats purs après avoir
+<dd><p>L’étape drop_duplicate supprime les duplicats purs après avoir
 supprimé les espaces et convertis l’ensemble du DataFrame en string.</p>
 </dd></dl>
 
@@ -292,7 +295,8 @@ supprimé les espaces et convertis l’ensemble du DataFrame en string.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.GlobalProcess.GlobalProcess.fix_all">
 <span class="sig-name descname"><span class="pre">fix_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general_process/GlobalProcess.html#GlobalProcess.fix_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.GlobalProcess.GlobalProcess.fix_all" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Étape fix all qui permet l’uniformisation du DataFrame.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.GlobalProcess.GlobalProcess.merge_all">
@@ -342,85 +346,70 @@ supprimé les espaces et convertis l’ensemble du DataFrame en string.</p>
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">general_process.SourceProcess.</span></span><span class="sig-name descname"><span class="pre">SourceProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_format</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess" title="Lien vers cette définition">¶</a></dt>
 <dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>La classe SourceProcess est une classe abstraite qui sert de parent à chaque classe enfant de
+sources. Elle sert à définir le cas général des étapes de traitement d’une source : création des
+variables de classe (__init__), nettoyage des dossiers de la source (_clean_metadata_folder),
+récupération des URLs (_url_init), get, convert et fix.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jsonData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml_path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.check" title="Lien vers cette définition">¶</a></dt>
 <dd><p>Fonction qui prend en paramètre une donnée json ou xml
-et qui vérifie grâce à un schéma que la donnée est valide.
-&#64;JsonData : donnée json en entrée (nul si xml)
-&#64;xml_path : chemin du fichier xml en entrée (nul si json)</p>
+et vérifiant, grâce à un schéma, que la donnée est valide.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jsonData</strong> – donnée json en entrée (None si on vérifie un fichier xml)</p></li>
+<li><p><strong>xml_path</strong> – chemin du fichier xml en entrée (None si on vérifie un fichier json)</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.check_date_file">
 <span class="sig-name descname"><span class="pre">check_date_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_ressources</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_ressources</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.check_date_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.check_date_file" title="Lien vers cette définition">¶</a></dt>
 <dd><p>Fonction vérifiant si la date de dernière modification des fichiers ressources
-dans les metadatas est strictement antérieure à la date de dernière modification.
-&#64;url: la liste contenant les liens pour télécharger les fichiers
-&#64;new_ressources: dictionnaire correspondant au champ « resources » dans le fichier metadata de la source
-&#64;old_ressources: dictionnaire correspondant au champ « resources » dans le fichier old_metadata de la source</p>
+dans les metadatas est strictement antérieure à la date de dernière modification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> – la liste contenant les liens pour télécharger les fichiers</p></li>
+<li><p><strong>new_ressources</strong> – dictionnaire correspondant au champ « resources » dans le fichier metadata de la source</p></li>
+<li><p><strong>old_ressources</strong> – dictionnaire correspondant au champ « resources » dans le fichier old_metadata de la source</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.clean">
 <span class="sig-name descname"><span class="pre">clean</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.clean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.clean" title="Lien vers cette définition">¶</a></dt>
-<dd><p>Fonction réalisant un tri sur le format 2022 ou le format 2019 en complétant
-les 3 dictionnaires et permettre la conversion en dataframe pour plus tard.</p>
+<dd><p>Cette fonction extrait les dictionnaires des fichiers
+(suivant le format 2022) pour qu’ils puissent être nettoyé.
+Grâce à la fonction tri_format, un tri est effectué sur ces
+dictionnaires pour séparer les bons marchés, des mauvais.</p>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.columns_concession_2019">
-<span class="sig-name descname"><span class="pre">columns_concession_2019</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'acheteur',</span> <span class="pre">'codeCPV',</span> <span class="pre">'dateNotification',</span> <span class="pre">'datePublicationDonnees',</span> <span class="pre">'dureeMois',</span> <span class="pre">'formePrix',</span> <span class="pre">'id',</span> <span class="pre">'lieuExecution',</span> <span class="pre">'modifications',</span> <span class="pre">'montant',</span> <span class="pre">'nature',</span> <span class="pre">'objet',</span> <span class="pre">'procedure',</span> <span class="pre">'source',</span> <span class="pre">'titulaires',</span> <span class="pre">'typeContrat'}</span></em><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.columns_concession_2019" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.columns_concession_2022">
-<span class="sig-name descname"><span class="pre">columns_concession_2022</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'autoriteConcedante',</span> <span class="pre">'concessionnaires',</span> <span class="pre">'considerationsEnvironnementales',</span> <span class="pre">'considerationsSociales',</span> <span class="pre">'dateDebutExecution',</span> <span class="pre">'datePublicationDonnees',</span> <span class="pre">'dateSignature',</span> <span class="pre">'donneesExecution',</span> <span class="pre">'dureeMois',</span> <span class="pre">'id',</span> <span class="pre">'montantSubventionPublique',</span> <span class="pre">'nature',</span> <span class="pre">'objet',</span> <span class="pre">'procedure',</span> <span class="pre">'valeurGlobale'}</span></em><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.columns_concession_2022" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.columns_concession_opt_2022">
-<span class="sig-name descname"><span class="pre">columns_concession_opt_2022</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'_type',</span> <span class="pre">'modifications'}</span></em><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.columns_concession_opt_2022" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.columns_marche_2019">
-<span class="sig-name descname"><span class="pre">columns_marche_2019</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'acheteur',</span> <span class="pre">'codeCPV',</span> <span class="pre">'dateNotification',</span> <span class="pre">'datePublicationDonnees',</span> <span class="pre">'dureeMois',</span> <span class="pre">'formePrix',</span> <span class="pre">'id',</span> <span class="pre">'lieuExecution',</span> <span class="pre">'montant',</span> <span class="pre">'nature',</span> <span class="pre">'objet',</span> <span class="pre">'procedure',</span> <span class="pre">'source',</span> <span class="pre">'titulaires'}</span></em><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.columns_marche_2019" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.columns_marche_2022">
-<span class="sig-name descname"><span class="pre">columns_marche_2022</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'acheteur',</span> <span class="pre">'attributionAvance',</span> <span class="pre">'ccag',</span> <span class="pre">'codeCPV',</span> <span class="pre">'considerationsEnvironnementales',</span> <span class="pre">'considerationsSociales',</span> <span class="pre">'dateNotification',</span> <span class="pre">'datePublicationDonnees',</span> <span class="pre">'dureeMois',</span> <span class="pre">'formePrix',</span> <span class="pre">'id',</span> <span class="pre">'lieuExecution',</span> <span class="pre">'marcheInnovant',</span> <span class="pre">'modalitesExecution',</span> <span class="pre">'montant',</span> <span class="pre">'nature',</span> <span class="pre">'objet',</span> <span class="pre">'offresRecues',</span> <span class="pre">'procedure',</span> <span class="pre">'sousTraitanceDeclaree',</span> <span class="pre">'techniques',</span> <span class="pre">'titulaires',</span> <span class="pre">'typeGroupementOperateurs',</span> <span class="pre">'typesPrix'}</span></em><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.columns_marche_2022" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.colums_concession_opt_2019">
-<span class="sig-name descname"><span class="pre">colums_concession_opt_2019</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'modifications',</span> <span class="pre">'uuid'}</span></em><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.colums_concession_opt_2019" title="Lien vers cette définition">¶</a></dt>
-<dd><p>La classe SourceProcess est une classe abstraite qui sert de parent à chaque classe enfant de
-sources. Elle sert à définir le cas général des étapes de traitement d’une source : création des
-variables de classe (__init__), nettoyage des dossiers de la source (_clean_metadata_folder),
-récupération des URLs (_url_init), get, convert et fix.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.colums_marche_opt_2019">
-<span class="sig-name descname"><span class="pre">colums_marche_opt_2019</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'modifications'}</span></em><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.colums_marche_opt_2019" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.colums_marche_opt_2022">
-<span class="sig-name descname"><span class="pre">colums_marche_opt_2022</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'_type',</span> <span class="pre">'actesSousTraitance',</span> <span class="pre">'idAccordCadre',</span> <span class="pre">'modifications',</span> <span class="pre">'modificationsActesSousTraitance',</span> <span class="pre">'origineFrance',</span> <span class="pre">'origineUE',</span> <span class="pre">'tauxAvance'}</span></em><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.colums_marche_opt_2022" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.comment">
 <span class="sig-name descname"><span class="pre">comment</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.comment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.comment" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Cette étape permet de marquer les cases vides du
+dataframe avec un indicateur (« MD », ou « CDL »).</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.concession_mark_fields">
 <span class="sig-name descname"><span class="pre">concession_mark_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.concession_mark_fields"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.concession_mark_fields" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Commente toutes les colonnes du dataframe en
+appelant es fonctions mark_mandatory_field
+et mark_optional_field. Le dataframe doit
+contenir que des concessions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> – dataframe dans lequel s’effectue les modifications</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.convert">
@@ -434,7 +423,12 @@ dataframe. L’ensemble des dataframes est stocké dans une liste.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.convert_boolean">
 <span class="sig-name descname"><span class="pre">convert_boolean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.convert_boolean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.convert_boolean" title="Lien vers cette définition">¶</a></dt>
-<dd><p>Permet de remplacer les valeurs booléennes ou « Vrai » ou « Faux » par « oui » ou « non »</p>
+<dd><p>Permet de remplacer les valeurs booléennes « Vrai » ou « Faux » par « oui » ou « non »</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>col_name</strong> – colonne où s’effectue le changement</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -449,8 +443,12 @@ dans {self.source} dans un seul DataFrame</p>
 <span class="sig-name descname"><span class="pre">create_metadata_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.create_metadata_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.create_metadata_file" title="Lien vers cette définition">¶</a></dt>
 <dd><p>Fonction réalisant le téléchargement des métadatas, la copie des
 fichiers métadatas et la création des listes contenant les titres
-et les urls des fichiers.
-n: nombre de clé api (=nombre de tour dans la boucle)</p>
+et les urls des fichiers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>n</strong> – nombre de clé api</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -458,28 +456,43 @@ n: nombre de clé api (=nombre de tour dans la boucle)</p>
 <span class="sig-name descname"><span class="pre">date_after_2024</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.date_after_2024"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.date_after_2024" title="Lien vers cette définition">¶</a></dt>
 <dd><p>La fonction prend en entrée un dictionnaire et renvoie un
 booléeen.Les dates postérieures à 2024 doivent être de la
-forme Y-M-J pour les colonnes date et date_de_publication.
-&#64;record : marché/concession que l’on souhaite traiter</p>
+forme Y-M-J pour les colonnes date et date_de_publication.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>record</strong> – dictionnaire dans lequel se fait la vérification</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.date_before_2024">
-<span class="sig-name descname"><span class="pre">date_before_2024</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.date_before_2024"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.date_before_2024" title="Lien vers cette définition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">date_before_2024</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.date_before_2024"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.date_before_2024" title="Lien vers cette définition">¶</a></dt>
 <dd><p>La fonction vérifie que les dates contenues dans un marché/une
 concession sont postérieures à 2024 et sont de la forme Y-M-J
 pour les colonnes date et date_de_publication.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> – dictionnaire dans lequel se fait la vérification</p></li>
+<li><p><strong>nature</strong> – il s’agit soit d’une concession, soit d’un marché</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.date_norm">
 <span class="sig-name descname"><span class="pre">date_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datestr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.date_norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.date_norm" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Permet de modifier le format d’une date. Plus
+précsément, les “+” sont remplacés par des “-”</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.download_without_metadata">
 <span class="sig-name descname"><span class="pre">download_without_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.download_without_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.download_without_metadata" title="Lien vers cette définition">¶</a></dt>
-<dd><p>Fonction téléchargeant un fichier n’ayant pas de clé api. Par conséquent, le
-téléchargement s’effectue grâce à l’url dans l’attribut url_source</p>
+<dd><p>Fonction téléchargeant un fichier n’ayant pas de clé api. Par
+conséquent, le téléchargement s’effectue grâce à l’url dans
+l’attribut url_source</p>
 </dd></dl>
 
 <dl class="py method">
@@ -499,40 +512,92 @@ la récupération de l’ensemble des fichiers présents sur chaque url.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.marche_mark_fields">
 <span class="sig-name descname"><span class="pre">marche_mark_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.marche_mark_fields"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.marche_mark_fields" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Commente toutes les colonnes du dataframe en
+appelant les fonctions mark_mandatory_field
+et mark_optional_field. Le dataframe doit
+contenir que des marchés.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> – dataframe dans lequel s’effectue les modifications</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.mark_mandatory_field">
 <span class="sig-name descname"><span class="pre">mark_mandatory_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.mark_mandatory_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.mark_mandatory_field" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Complète les lignes vides de la colonne « field_name » avec
+le string “MQ”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – dataframe dans lequel s’effectue les modifications</p></li>
+<li><p><strong>filed_name</strong> – nom d’une colonne qui est obligatoire</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.mark_optional_field">
 <span class="sig-name descname"><span class="pre">mark_optional_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.mark_optional_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.mark_optional_field" title="Lien vers cette définition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Complète les lignes vides de la colonne « field_name » avec
+le string “CDL”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – dataframe dans lequel s’effectue les modifications</p></li>
+<li><p><strong>filed_name</strong> – nom d’une colonne qui est optionnel</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.tri_format">
 <span class="sig-name descname"><span class="pre">tri_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dico</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.tri_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.tri_format" title="Lien vers cette définition">¶</a></dt>
 <dd><p>Cette fonction permet de vérifier la structure du dictionnaire fournit en
-entrée. Si un champ est manquant dans un marché ou une concession, ce dernier
-est stocké dans une liste pour un éventuel traitement.
-&#64;dico : dictionnaire , il s’agit d’un dictionnaire avec 2 clés: “marchés” et “contrat-concession”
-&#64;file_name : nom du fichier où sont stockés les fichiers non valides et ignorés</p>
+entrée. Si le schéma n’est pas respecté, les marchés et concessions correctes
+sont stockés dans des listes et des fichiers pour une future utilisation.
+Il en est de même pour les marchés et les concessions incorrectes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dico</strong> – il s’agit d’un dictionnaire avec 2 clés: “marchés” et “contrat-concession”</p></li>
+<li><p><strong>file_name</strong> – nom du fichier où se trouve le dictionnaire dico</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.validateJson">
-<span class="sig-name descname"><span class="pre">validateJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jsonData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jsonScheme</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.validateJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.validateJson" title="Lien vers cette définition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">validateJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jsonData</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jsonScheme</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.validateJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.validateJson" title="Lien vers cette définition">¶</a></dt>
 <dd><p>Fonction vérifiant si le fichier jsn « jsonData » respecte
 le schéma spécifié dans le  schéma en paramètre « jsonScheme ».</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jsonData</strong> – dictionnaire qui va être vérifié par le validateur</p></li>
+<li><p><strong>jsonScheme</strong> – schéma à respecter</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="general_process.SourceProcess.SourceProcess.validateXml">
 <span class="sig-name descname"><span class="pre">validateXml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xsd_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/general_process/SourceProcess.html#SourceProcess.validateXml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general_process.SourceProcess.SourceProcess.validateXml" title="Lien vers cette définition">¶</a></dt>
-<dd><p>Fonction vérifiant si le fichier xml « xml_path » respecte
-le schéma spécifié dans le paramètre « xsd_path ».</p>
+<dd><p>Fonction vérifiant si un fichier xml  respecte
+le schéma spécifié.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xml_path</strong> – chemin du fichier à vérifier</p></li>
+<li><p><strong>xsd_path</strong> – chemin du schéma</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -618,14 +683,6 @@ le schéma spécifié dans le paramètre « xsd_path ».</p>
 <li><a class="reference internal" href="#general_process.SourceProcess.SourceProcess.check"><code class="docutils literal notranslate"><span class="pre">SourceProcess.check()</span></code></a></li>
 <li><a class="reference internal" href="#general_process.SourceProcess.SourceProcess.check_date_file"><code class="docutils literal notranslate"><span class="pre">SourceProcess.check_date_file()</span></code></a></li>
 <li><a class="reference internal" href="#general_process.SourceProcess.SourceProcess.clean"><code class="docutils literal notranslate"><span class="pre">SourceProcess.clean()</span></code></a></li>
-<li><a class="reference internal" href="#general_process.SourceProcess.SourceProcess.columns_concession_2019"><code class="docutils literal notranslate"><span class="pre">SourceProcess.columns_concession_2019</span></code></a></li>
-<li><a class="reference internal" href="#general_process.SourceProcess.SourceProcess.columns_concession_2022"><code class="docutils literal notranslate"><span class="pre">SourceProcess.columns_concession_2022</span></code></a></li>
-<li><a class="reference internal" href="#general_process.SourceProcess.SourceProcess.columns_concession_opt_2022"><code class="docutils literal notranslate"><span class="pre">SourceProcess.columns_concession_opt_2022</span></code></a></li>
-<li><a class="reference internal" href="#general_process.SourceProcess.SourceProcess.columns_marche_2019"><code class="docutils literal notranslate"><span class="pre">SourceProcess.columns_marche_2019</span></code></a></li>
-<li><a class="reference internal" href="#general_process.SourceProcess.SourceProcess.columns_marche_2022"><code class="docutils literal notranslate"><span class="pre">SourceProcess.columns_marche_2022</span></code></a></li>
-<li><a class="reference internal" href="#general_process.SourceProcess.SourceProcess.colums_concession_opt_2019"><code class="docutils literal notranslate"><span class="pre">SourceProcess.colums_concession_opt_2019</span></code></a></li>
-<li><a class="reference internal" href="#general_process.SourceProcess.SourceProcess.colums_marche_opt_2019"><code class="docutils literal notranslate"><span class="pre">SourceProcess.colums_marche_opt_2019</span></code></a></li>
-<li><a class="reference internal" href="#general_process.SourceProcess.SourceProcess.colums_marche_opt_2022"><code class="docutils literal notranslate"><span class="pre">SourceProcess.colums_marche_opt_2022</span></code></a></li>
 <li><a class="reference internal" href="#general_process.SourceProcess.SourceProcess.comment"><code class="docutils literal notranslate"><span class="pre">SourceProcess.comment()</span></code></a></li>
 <li><a class="reference internal" href="#general_process.SourceProcess.SourceProcess.concession_mark_fields"><code class="docutils literal notranslate"><span class="pre">SourceProcess.concession_mark_fields()</span></code></a></li>
 <li><a class="reference internal" href="#general_process.SourceProcess.SourceProcess.convert"><code class="docutils literal notranslate"><span class="pre">SourceProcess.convert()</span></code></a></li>
