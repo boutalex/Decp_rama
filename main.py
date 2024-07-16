@@ -2,6 +2,7 @@ from general_process.ProcessFactory import ProcessFactory
 from general_process.GlobalProcess import GlobalProcess
 import logging
 import argparse
+import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-P', dest='process', type=str, help='run a specific process')
@@ -34,7 +35,7 @@ def main(data_format:str = 2022):
 
 if __name__ == "__main__":
     """Lorsqu'on appelle la fonction main (courante), on définit le niveau de logging et le format d'affichage."""
-
+    os.makedirs(f"logs", exist_ok=True)
     file_handler = logging.FileHandler(filename="logs/app.log", mode='a', encoding='utf-8')
     file_handler.setLevel(logging.INFO)
 

@@ -54,8 +54,6 @@ class SourceProcess:
         self._url_init() 
 
         # Liste des dictionnaires pour l'étape de nettoyage
-        self.dico_ignored_marche = []
-        self.dico_ignored_concession= []
         self.dico_2022_marche = []
         self.dico_2022_concession = []
 
@@ -256,7 +254,7 @@ class SourceProcess:
     def tri_format(self, dico:dict, file_name:str) -> None:
         """
         Cette fonction permet de vérifier la structure du dictionnaire fournit en
-        entrée. Si le schéma n'est pas respecté, les marchés et concessions correctes
+        entrée. Si le schéma est respecté, les marchés et concessions correctes
         sont stockés dans des listes et des fichiers pour une future utilisation.
         Il en est de même pour les marchés et les concessions incorrectes.
 
@@ -267,6 +265,12 @@ class SourceProcess:
 
         """
         n, m = 0, 0
+        dico_ignored_marche, dico_ignored_concession = [], []
+
+        #Creation des dossiers
+        os.makedirs(f"bad_results", exist_ok=True) 
+        os.makedirs(f"bad_results/{self.source}", exist_ok=True) 
+
         if 'marche' in dico:
             while n < len(dico['marche']) :
                 self.dico_2022_marche.append(dico['marche'][n])
@@ -274,7 +278,7 @@ class SourceProcess:
 
                 if not self.check(dico_test, None):
                     self.dico_2022_marche.remove(dico['marche'][n])
-                    self.dico_ignored_marche.append(dico['marche'][n])
+                    dico_ignored_marche.append(dico['marche'][n])
                 n+=1
 
 
@@ -286,26 +290,18 @@ class SourceProcess:
 
                 if not self.check(dico_test, None):
                     self.dico_2022_concession.remove(dico['contrat-concession'][m])
-                    self.dico_ignored_concession.append(dico['contrat-concession'][m])
+                    dico_ignored_concession.append(dico['contrat-concession'][m])
                 m+=1
            
 
         # Structure du nouveau fichier JSON, création des dictionnaires valides et invalides
-        jsonfile1 = {'marches': {'marche': self.dico_2022_marche, 'contrat-concession': self.dico_2022_concession}}
-        jsonfile2 = {'marches': {'marche':  self.dico_ignored_marche, 'contrat-concession': self.dico_ignored_concession}}
-
-        #Creation des dossiers
-        os.makedirs(f"tri", exist_ok=True) 
-        os.makedirs(f"tri/{self.source}", exist_ok=True) 
+        jsonfile = {'marches': {'marche':  dico_ignored_marche, 'contrat-concession': dico_ignored_concession}}
 
         #Ecriture dans les nouveaux fichiers
-        with open(f'tri/{self.source}/bons_marches_{self.source}.json', "w", encoding='utf8') as new_f1:
-            json.dump(jsonfile1, new_f1, ensure_ascii=False, indent=4)
+        with open(f'bad_results/{self.source}/mauvais_marches_{self.source}.json', "w", encoding='utf8') as new_f2:
+            json.dump(jsonfile, new_f2, ensure_ascii=False, indent=4)
 
-        with open(f'tri/{self.source}/mauvais_marches_{self.source}.json', "w", encoding='utf8') as new_f2:
-            json.dump(jsonfile2, new_f2, ensure_ascii=False, indent=4)
-
-        logging.info(f"Nombre de marchés et concessions invalides dans {file_name}: {len(self.dico_ignored_marche)+len(self.dico_ignored_concession)} ")
+        logging.info(f"Nombre de marchés et concessions invalides dans {file_name}: {len(dico_ignored_marche)+len(dico_ignored_concession)} ")
         logging.info(f"Nombre de marchés et de concessions valides dans {file_name}: {len(self.dico_2022_marche)+len (self.dico_2022_concession)} ")
 
     def date_norm(self,datestr:str ) -> str:
@@ -544,7 +540,7 @@ class SourceProcess:
                                                force_list=('marche','titulaires', 'modifications', 'actesSousTraitance',
                                                'modificationsActesSousTraitance', 'typePrix','considerationEnvironnementale',
                                                'modaliteExecution'))
-                        #Ajout du dictionnaire dans la bonne variable (dico_2022_marche, dico_2022_concession, dico_2019  ou dico_ignored)
+                        #Ajout du dictionnaire dans la bonne variable (dico_2022_marche, dico_2022_concession, dico_ignored_marche, dico_ignored_concession)
                         try:
                             self.tri_format(dico["marches"], f"sources/{self.source}/{old_files[i]}")
                         except Exception as err:
@@ -556,7 +552,7 @@ class SourceProcess:
                     try:
                         with open(f"sources/{self.source}/{old_files[i]}", encoding="utf-8") as json_file:
                             dico = json.load(json_file)
-                            #Ajout du dictionnaire dans la bonne variable (dico_2022_marche, dico_2022_concession, dico_2019  ou dico_ignored)
+                            #Ajout du dictionnaire dans la bonne variable (dico_2022_marche, dico_2022_concession, dico_ignored_marche, dico_ignored_concession)
                         try:
                             self.tri_format(dico["marches"], f"sources/{self.source}/{old_files[i]}")
                         except Exception as err:
@@ -611,7 +607,7 @@ class SourceProcess:
             validate(instance=jsonData, schema=jsonScheme)
         except jsonschema.exceptions.ValidationError as err: 
             logging.error(f"Erreur de validation json - {err}")
-            with open(f'tri/{self.source}/log_erreurs_{self.source}.txt', 'a', encoding='utf8') as error_file:
+            with open(f'bad_results/{self.source}/log_erreurs_{self.source}.txt', 'a', encoding='utf8') as error_file:
               error_file.write(str(err) + '\n')
             return False
         return True     
@@ -636,7 +632,7 @@ class SourceProcess:
             result = xml_schema.validate(xml_doc)
         except jsonschema.exceptions.ValidationError as err:
             logging.error(f"Erreur de validation xml - {err}")
-            with open(f'tri/{self.source}/log_erreurs_{self.source}.txt', 'a', encoding='utf8') as error_file:
+            with open(f'bad_results/{self.source}/log_erreurs_{self.source}.txt', 'a', encoding='utf8') as error_file:
               error_file.write(str(err) + '\n')
             return False
         return result
@@ -667,7 +663,7 @@ class SourceProcess:
                 return xmlschema.validate(xml_content, scheme_path)==None
             except xmlschema.exceptions.XMLSchemaException as err:
                 logging.error(f"Erreur de validation xml - {err}")
-                with open(f'tri/{self.source}/log_erreurs_{self.source}.txt', 'a', encoding='utf8') as error_file:
+                with open(f'bad_results/{self.source}/log_erreurs_{self.source}.txt', 'a', encoding='utf8') as error_file:
                     error_file.write(str(err) + '\n')
                 return False
 

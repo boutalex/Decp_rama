@@ -23,7 +23,7 @@ class GlobalProcess:
         self.dataframes = []
         self.data_format = data_format
     
-    def merge_all(self):
+    def merge_all(self) -> None:
         """Étape merge all qui permet la fusion des DataFrames de chacune des sources en un seul."""
         logging.info("  ÉTAPE MERGE ALL")
         logging.info("Début de l'étape Merge des Dataframes")
@@ -45,7 +45,7 @@ class GlobalProcess:
         if len(self.df) == 0:
             logging.warning("Le DataFrame est vide, pas de fix à faire.")
         
-        # On met les acheteurs et lieux au bon format
+        # On met les acheteurs et lieux au bon format    #on a enlevé la suppression de "acheteur"
         if 'acheteur.id' in self.df.columns:
             self.df['acheteur.id'] = self.df['acheteur.id'].astype(str)
         if self.data_format=='2019' and 'lieuExecution.code' in self.df.columns:
@@ -152,7 +152,7 @@ class GlobalProcess:
             df_modif = pd.DataFrame() 
             df_nomodif = self.df
 
-        #Critères de ddoublonnage
+        #Critères de dédoublonnage
         feature_doublons_marche = ["id","acheteur", "titulaires", "dateNotification", "montant"] 
         feature_doublons_concession = [ "id", "autoriteConcedante", "concessionnaires", "dateDebutExecution", "valeurGlobale"]
         
@@ -164,10 +164,17 @@ class GlobalProcess:
         df_nomodif_concession = df_nomodif_str[~df_nomodif_str['_type'].str.contains("Marché")]
         index_to_keep_nomodif += df_nomodif_concession.drop_duplicates(subset=feature_doublons_concession).index.tolist()
 
-        # duplicates = df_nomodif_str[df_nomodif_str.duplicated(subset=feature_doublons_marche, keep='first')]
-        # print("nb doublons ", len(duplicates.axes[0]))
-        # doublons = duplicates.to_json(orient='records', lines=True, force_ascii=False)
-        # with open('doublons_demantis.json', 'w', encoding='utf-8') as f:
+        duplicates = df_nomodif_str[df_nomodif_str.duplicated(subset=feature_doublons_marche, keep='first')]
+        #doublons = duplicates.to_json(orient='records', lines=True, force_ascii=False)
+        # for i in range (len(duplicates.axes[0])):
+        #     print({str({duplicates.loc[0,'source']})})
+        #     print(f'bad_results/{LLL}/doublons_{duplicates[0,'source']}.json')
+        #     with open(f'bad_results/{duplicates[i,"source"]}/doublons_{duplicates[i,"source"]}.json', 'a', encoding='utf-8') as f:
+        #         print("HELLO") 
+        #         doublon = duplicates.loc[i,:].to_json(orient='records', lines=True, force_ascii=False)
+        #         f.write(doublon)
+
+        # with open(f'bad_results/doublons.json', 'a', encoding='utf-8') as f:
         #     f.write(doublons)
 
         #Séparation des marches et des concessions, tri selon la date et suppression ses doublons
