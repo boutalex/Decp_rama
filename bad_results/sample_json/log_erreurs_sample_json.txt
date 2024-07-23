@@ -137,3 +137,1158 @@ Failed validating 'maxLength' in schema['properties']['marches']['properties']['
 
 On instance['marches']['marche'][46]['idAccordCadre']:
     'multisite AMI - 2024'
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0
+0 is less than the minimum of 1
+
+Failed validating 'minimum' in schema['properties']['marches']['properties']['marche']['items']['properties']['modificationsActesSousTraitance']['items']['properties']['modificationActeSousTraitance']['properties']['dureeMois']:
+    {'description': "La nouvelle durée de l'acte spécial de "
+                    'sous-traitance, en mois.',
+     'minimum': 1,
+     'title': "Durée de l'acte spécial de sous-traitance",
+     'type': 'integer'}
+
+On instance['marches']['marche'][4]['modificationsActesSousTraitance'][0]['modificationActeSousTraitance']['dureeMois']:
+    0

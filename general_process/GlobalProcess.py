@@ -7,6 +7,9 @@ import logging
 import boto3
 import requests
 import math
+import csv
+from datetime import datetime
+import time
 
 
 class GlobalProcess:
@@ -144,13 +147,18 @@ class GlobalProcess:
         # Séparation des lignes selon la colonne "modifications"
         logging.info("Début de l'étape Suppression des doublons")
         self.df.sort_values(by="source", inplace=True) 
-        if "modifications" in self.df.columns: # Règles de dédoublonnages diffèrentes. On part du principe qu'en cas 
+        self.dedoublonnage(self.df)
+        logging.info("Suppression OK")
+        logging.info(f"Nombre de marchés dans Df après suppression des doublons strictes : {len(self.df)}")
+
+    def dedoublonnage(self,df):
+        if "modifications" in df.columns: # Règles de dédoublonnages diffèrentes. On part du principe qu'en cas 
                                                # de modifications, la colonne "modifications" est créée ou modifiée
-            df_modif = self.df[self.df.modifications.apply(len)>0]     #lignes avec modifs     
-            df_nomodif = self.df[self.df.modifications.apply(len)==0]  #lignes sans aucune modif
+            df_modif = df[df.modifications.apply(len)>0]     #lignes avec modifs     
+            df_nomodif = df[df.modifications.apply(len)==0]  #lignes sans aucune modif
         else:
             df_modif = pd.DataFrame() 
-            df_nomodif = self.df
+            df_nomodif = df
 
         #Critères de dédoublonnage
         feature_doublons_marche = ["id","acheteur", "titulaires", "dateNotification", "montant"] 
@@ -165,16 +173,14 @@ class GlobalProcess:
         index_to_keep_nomodif += df_nomodif_concession.drop_duplicates(subset=feature_doublons_concession).index.tolist()
 
         duplicates = df_nomodif_str[df_nomodif_str.duplicated(subset=feature_doublons_marche, keep='first')]
-        #doublons = duplicates.to_json(orient='records', lines=True, force_ascii=False)
-        # for i in range (len(duplicates.axes[0])):
-        #     print({str({duplicates.loc[0,'source']})})
-        #     print(f'bad_results/{LLL}/doublons_{duplicates[0,'source']}.json')
-        #     with open(f'bad_results/{duplicates[i,"source"]}/doublons_{duplicates[i,"source"]}.json', 'a', encoding='utf-8') as f:
-        #         print("HELLO") 
-        #         doublon = duplicates.loc[i,:].to_json(orient='records', lines=True, force_ascii=False)
-        #         f.write(doublon)
-
-        # with open(f'bad_results/doublons.json', 'a', encoding='utf-8') as f:
+        # jsonfile = {'marches': doublons}
+        for i in range (len(duplicates.axes[0])):
+            with open(f'bad_results/{duplicates.iloc[i]["source"]}/doublons_{duplicates.iloc[i]["source"]}.csv', 'a', encoding='utf-8') as f:
+                doublon = duplicates.iloc[i][:].to_json(orient='records', lines=True, force_ascii=False)
+                f.write(doublon)
+           
+        # doublons = duplicates.to_json(orient='records', lines=True, force_ascii=False)
+        # with open('doublons_demantis.json', 'w', encoding='utf-8') as f:
         #     f.write(doublons)
 
         #Séparation des marches et des concessions, tri selon la date et suppression ses doublons
@@ -187,15 +193,12 @@ class GlobalProcess:
             df_modif_concession = df_modif_str[~df_modif_str['_type'].str.contains("Marché")]
             index_to_keep_modif += df_modif_concession.drop_duplicates(subset=feature_doublons_concession).index.tolist()  #on ne garde que que les indexs pour récupérer les lignes qui sont dans df_modif (dont le type est dict)
 
-            self.df = pd.concat([df_nomodif.loc[index_to_keep_nomodif, :], df_modif.loc[index_to_keep_modif, :]])   
+            df = pd.concat([df_nomodif.loc[index_to_keep_nomodif, :], df_modif.loc[index_to_keep_modif, :]])
 
         else:
-            self.df = df_nomodif.loc[index_to_keep_nomodif, :]
-
-        self.df = self.df.reset_index(drop=True)
-        logging.info("Suppression OK")
-        logging.info(f"Nombre de marchés dans Df après suppression des doublons strictes : {len(self.df)}")
-
+            df = df_nomodif.loc[index_to_keep_nomodif, :]
+        df = df.reset_index(drop=True)
+        return df
 
 
     def export(self):
@@ -205,16 +208,6 @@ class GlobalProcess:
             return
         """Étape exportation des résultats au format json et xml dans le dossier /results"""
         logging.info("ÉTAPE EXPORTATION")
-        #logging.info("Début de l'étape Exportation en XML")
-        """
-        dico = {'marches': [{'marche': {k: v for k, v in m.items() if str(v) != 'nan'}}
-                            for m in self.df.to_dict(orient='records')]}
-        with open("results/decp.xml", 'w') as f:
-            f.write(dict2xml(dico))
-        xml_size = os.path.getsize(r'results/decp.xml')
-        logging.info("Exportation XML OK")
-        logging.info(f"Taille de decp.xml : {xml_size}")
-        """
         logging.info("Début de l'étape Exportation en JSON")
         dico = {'marches': [{k: v for k, v in m.items() if str(v) != 'nan'}
                             for m in self.df.to_dict(orient='records')]}
@@ -228,7 +221,6 @@ class GlobalProcess:
                         marche['titulaires'] = marche['titulaires'][0]['titulaire']
                     else:
                         marche['titulaires'] = [marche['titulaires'][0]['titulaire']]
-
             # Retrait car on a géré les multiples modifications. Donc on n'y touche plus
             
             if 'modifications' in marche.keys() and marche['modifications'] is not None and len(
@@ -238,21 +230,139 @@ class GlobalProcess:
                 else:
                     marche['modifications'] = [marche['modifications'][0]['modification']]
             
-            # A servit à un moment pour régler un soucis avec concessionaire mais la clef à disparue depuis
-            # if 'concessionnaires' in marche.keys() and marche[
-            #         'concessionnaires'] is not None and len(marche['concessionnaires']) > 0:
-            #     if type(marche['concessionnaires'][0]['concessionnaire']) == list:
-            #         marche['concessionnaires'] = marche['concessionnaires'][0]['concessionnaire']
-            #     else:
-            #         marche['concessionnaires'] = [marche['concessionnaires'][0]['concessionnaire']]
-            
         path_result = f"results/decp_{self.data_format}.json"
+        path_result_month = f"results/decp_{datetime.now().year}_{datetime.now().month}.json"
         os.makedirs("results", exist_ok=True)
-        with open(path_result, 'w', encoding="utf-8") as f:
-            json.dump(dico, f, indent=2, ensure_ascii=False)
-        json_size = os.path.getsize(path_result)
+
+        #Cas du premier jour du mois
+        if((datetime.now().day)==1):
+            #On récupère la date du mois précédent pour pouvoir upload le fichier contenant les marchés du mois précédent.
+            path_result_last_month = f"results/decp_{datetime.now().year}_{datetime.now().month - 1}.json"
+            try:
+                with open(path_result, encoding="utf-8") as json_file2:
+                    dico_ancien = json.load(json_file2)
+            #Cas où le fichier est vide
+            except ValueError:
+                dico_ancien={}
+            except Exception as err:
+                logging.error(f"Exception lors du chargement du fichier json decp_{self.data_format} - {err}")
+            
+            try:
+                with open(path_result_last_month, encoding="utf-8") as json_file3:
+                    dico_nouveau = json.load(json_file3)
+            except ValueError:
+                dico_nouveau={}
+            except Exception as err:
+                logging.error(f"Exception lors du chargement du fichier json {path_result_last_month[8:19]} - {err}")
+
+            #On affecte à la variable dico_global les dictionnaires non vides
+            if(dico_ancien=={}) and (dico_nouveau != {}):
+                dico_global = dico_nouveau['marches']
+            elif(dico_nouveau=={}) and (dico_ancien!={}):
+                dico_global = dico_ancien['marches']
+            elif(dico_nouveau=={}) and (dico_ancien=={}):
+                logging.info(f"Les fichiers decp_2022 et decp_{datetime.now().year}_{datetime.now().month-1} sont vides")
+                dico_global={}
+            else:
+                #dico_global récupère l'ensemble des marchés et concessions des deux fichiers
+                dico_global = dico_ancien['marches'] + dico_nouveau['marches']
+
+            #On transforme les dictionnaires en dataframes pour les dédoublonner
+            if dico_global!={}:
+                df = pd.DataFrame.from_dict(dico_global)
+                df = self.dedoublonnage(df)
+
+                #On transforme les NaN en éléments vides pour éviter de futurs erreurs 
+                for i in df.columns:
+                    if df[i].dtypes == 'float64': 
+                        df[i].fillna(0.0,inplace=True) 
+                    elif df[i].dtypes == 'object':
+                        df[i].fillna("",inplace=True) 
+                dico_final = {'marches': df.to_dict(orient='records')}
+
+                #On remplit le fichier contenant tout les marchés
+                with open(path_result, 'w', encoding="utf-8") as f:
+                    json.dump(dico_final, f, indent=2, ensure_ascii=False)
+                json_size = os.path.getsize(path_result_last_month)
+                logging.info(f"Taille de {path_result_month} : {json_size}")
+
+            #Création du fichier du nouveau mois 
+            try:
+                with open(path_result_month, 'w', encoding="utf-8") as json_file4:
+                    json.dump(dico, json_file4, indent=2, ensure_ascii=False)
+            except Exception as err:
+                logging.error(f"Exception lors du chargement du fichier json decp_{path_result_month[8:19]} - {err}")
+            json_size = os.path.getsize(path_result_month)
+            logging.info(f"Taille de {path_result_month} : {json_size}")
+
+
+            
+            
+        else:
+            #On vérifie que le fichier su mois a bien été crée, sinon on le crée
+            if os.path.exists(path_result_month):
+                try:
+                    with open(path_result_month, encoding="utf-8") as f:
+                        dico_mensuel = json.load(f)
+                except ValueError:
+                    dico_mensuel={}
+                except Exception as err:
+                    logging.error(f"Exception lors du chargement du fichier json decp_{path_result_month[8:19]} - {err}")
+
+                if dico_mensuel=={}:
+                    # #On transforme les dictionnaires en dataframes pour les dédoublonner
+                    df = pd.DataFrame.from_dict(dico['marches'])
+                    df = self.dedoublonnage(df)
+
+                    #On transforme les NaN en éléments vides pour éviter de futurs erreurs 
+                    for i in df.columns:
+                        if df[i].dtypes == 'float64': 
+                            df.fillna({i:0.0},inplace=True) 
+                        elif df[i].dtypes == 'object':
+                            df.fillna({i:""},inplace=True) 
+                    dico_final = {'marches': df.to_dict(orient='records')}
+                    try:
+                        with open(path_result_month, 'w', encoding="utf-8") as json_file2:
+                                json.dump(dico_final, json_file2, indent=2, ensure_ascii=False)
+                    except Exception as err:
+                        logging.error(f"Exception lors du chargement du fichier json decp_{path_result_month[8:19]} - {err}")
+                else:
+                    dico_global = dico['marches'] + dico_mensuel['marches']
+                    #On transforme les dictionnaires en dataframes pour les dédoublonner
+                    if dico_global!={}:
+                        df = pd.DataFrame.from_dict(dico_global)
+                        df = self.dedoublonnage(df)
+                        #On transforme les NaN en éléments vides pour éviter de futurs erreurs 
+                        for i in df.columns:
+                            if df[i].dtypes == 'float64': 
+                                df.fillna({i:0.0},inplace=True) 
+                            elif df[i].dtypes == 'int32':
+                                df.fillna({i:0},inplace=True) 
+                            elif df[i].dtypes == 'object':
+                                df.fillna({i:""},inplace=True) 
+                        dico_final = {'marches': df.to_dict(orient='records')}
+
+                    try:
+                        with open(path_result_month, 'w', encoding="utf-8") as json_file2:
+                                json.dump(dico_final, json_file2, indent=2, ensure_ascii=False)
+                    except Exception as err:
+                        logging.error(f"Exception lors du chargement du fichier json decp_{path_result_month[8:19]} - {err}")
+                
+                    
+            else:
+                try:
+                    with open(path_result_month, 'w', encoding="utf-8") as json_file1:
+                        json.dump(dico, json_file1, indent=2, ensure_ascii=False)
+                except Exception as err:
+                    logging.error(f"Exception lors du chargement du fichier json decp_{path_result_month[8:19]} - {err}")
+            json_size = os.path.getsize(path_result_month)
+            logging.info(f"Taille de {path_result_month} : {json_size}")
+
+        
         logging.info("Exportation JSON OK")
-        logging.info(f"Taille de {path_result} : {json_size}")
+                
+
+
 
     def upload_s3(self):
         """

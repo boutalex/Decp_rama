@@ -17,6 +17,7 @@ import re
 import logging
 import shutil
 from urllib.parse import urlparse
+import csv
 pd.options.mode.chained_assignment = None
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
@@ -728,6 +729,19 @@ class SourceProcess:
        
         # Suppression des doublons
         df_str = self.df.astype(str)
+        # duplicates = df_str[df_str.duplicated()] 
+        # doublons = duplicates.to_json(orient='records', lines=True, force_ascii=False)
+        # jsonfile = {'marches': doublons}
+
+        # #Ecriture dans les nouveaux fichiers
+        # with open(f'bad_results/{self.source}/doublons_{self.source}.json', "a", encoding='utf8') as new_f:
+        #     json.dump(jsonfile, new_f, ensure_ascii=False, indent=4)
+
+        # # print("duplicates",duplicates)
+        # # duplicates.to_csv(f'bad_results/{self.source}/doublons_{self.source}.csv', sep = ';', encoding ='utf-8', mode= 'a', index = False)
+        # # with open(f'bad_results/{self.source}/doublons_{self.source}.csv', 'a', encoding='utf-8') as f:
+        # #     writer = csv.writer(f, delimiter = ';')
+        # #     writer.writerow(duplicates.iloc[:][:]) 
         index_to_keep = df_str.drop_duplicates().index.tolist()
         self.df = self.df.iloc[index_to_keep]
         self.df = self.df.reset_index(drop=True)
