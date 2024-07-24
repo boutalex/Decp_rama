@@ -151,7 +151,7 @@ class GlobalProcess:
         logging.info("Suppression OK")
         logging.info(f"Nombre de marchés dans Df après suppression des doublons strictes : {len(self.df)}")
 
-    def dedoublonnage(self,df):
+    def dedoublonnage(self,df: pd.DataFrame) -> pd.DataFrame:
         if "modifications" in df.columns: # Règles de dédoublonnages diffèrentes. On part du principe qu'en cas 
                                                # de modifications, la colonne "modifications" est créée ou modifiée
             df_modif = df[df.modifications.apply(len)>0]     #lignes avec modifs     
@@ -213,23 +213,9 @@ class GlobalProcess:
                             for m in self.df.to_dict(orient='records')]}
         with open('dico.pkl', 'wb') as f:
             pickle.dump(dico, f)
-        for marche in dico['marches']:
-            if 'titulaires' in marche.keys() and marche['titulaires'] is not None and len(
-                    marche['titulaires']) > 0:
-                if 'titulaire' in marche['titulaires'][0].keys():
-                    if type(marche['titulaires'][0]['titulaire']) == list:
-                        marche['titulaires'] = marche['titulaires'][0]['titulaire']
-                    else:
-                        marche['titulaires'] = [marche['titulaires'][0]['titulaire']]
-            # Retrait car on a géré les multiples modifications. Donc on n'y touche plus
-            
-            if 'modifications' in marche.keys() and marche['modifications'] is not None and len(
-                    marche['modifications']) > 0 and type(marche['modifications'][0])==dict:
-                if type(marche['modifications'][0]['modification']) == list:
-                    marche['modifications'] = marche['modifications'][0]['modification']
-                else:
-                    marche['modifications'] = [marche['modifications'][0]['modification']]
-            
+        # Modification des champs titulaires et modifications
+        dico = self.dico_modifications(dico)
+        #Création des chemins des fichiers mensuel et global
         path_result = f"results/decp_{self.data_format}.json"
         path_result_month = f"results/decp_{datetime.now().year}_{datetime.now().month}.json"
         os.makedirs("results", exist_ok=True)
@@ -238,131 +224,150 @@ class GlobalProcess:
         if((datetime.now().day)==1):
             #On récupère la date du mois précédent pour pouvoir upload le fichier contenant les marchés du mois précédent.
             path_result_last_month = f"results/decp_{datetime.now().year}_{datetime.now().month - 1}.json"
-            try:
-                with open(path_result, encoding="utf-8") as json_file2:
-                    dico_ancien = json.load(json_file2)
-            #Cas où le fichier est vide
-            except ValueError:
-                dico_ancien={}
-            except Exception as err:
-                logging.error(f"Exception lors du chargement du fichier json decp_{self.data_format} - {err}")
-            
-            try:
-                with open(path_result_last_month, encoding="utf-8") as json_file3:
-                    dico_nouveau = json.load(json_file3)
-            except ValueError:
-                dico_nouveau={}
-            except Exception as err:
-                logging.error(f"Exception lors du chargement du fichier json {path_result_last_month[8:19]} - {err}")
-
-            #On affecte à la variable dico_global les dictionnaires non vides
-            if(dico_ancien=={}) and (dico_nouveau != {}):
-                dico_global = dico_nouveau['marches']
-            elif(dico_nouveau=={}) and (dico_ancien!={}):
-                dico_global = dico_ancien['marches']
-            elif(dico_nouveau=={}) and (dico_ancien=={}):
-                logging.info(f"Les fichiers decp_2022 et decp_{datetime.now().year}_{datetime.now().month-1} sont vides")
-                dico_global={}
-            else:
-                #dico_global récupère l'ensemble des marchés et concessions des deux fichiers
-                dico_global = dico_ancien['marches'] + dico_nouveau['marches']
-
+            dico_ancien = self.file_load(path_result)
+            dico_nouveau = self.file_load(path_result_last_month)
+            dico_global = self.dico_merge(dico_ancien,dico_nouveau)
             #On transforme les dictionnaires en dataframes pour les dédoublonner
             if dico_global!={}:
-                df = pd.DataFrame.from_dict(dico_global)
-                df = self.dedoublonnage(df)
-
-                #On transforme les NaN en éléments vides pour éviter de futurs erreurs 
-                for i in df.columns:
-                    if df[i].dtypes == 'float64': 
-                        df[i].fillna(0.0,inplace=True) 
-                    elif df[i].dtypes == 'object':
-                        df[i].fillna("",inplace=True) 
-                dico_final = {'marches': df.to_dict(orient='records')}
-
-                #On remplit le fichier contenant tout les marchés
-                with open(path_result, 'w', encoding="utf-8") as f:
-                    json.dump(dico_final, f, indent=2, ensure_ascii=False)
-                json_size = os.path.getsize(path_result_last_month)
-                logging.info(f"Taille de {path_result_month} : {json_size}")
-
-            #Création du fichier du nouveau mois 
-            try:
-                with open(path_result_month, 'w', encoding="utf-8") as json_file4:
-                    json.dump(dico, json_file4, indent=2, ensure_ascii=False)
-            except Exception as err:
-                logging.error(f"Exception lors du chargement du fichier json decp_{path_result_month[8:19]} - {err}")
-            json_size = os.path.getsize(path_result_month)
-            logging.info(f"Taille de {path_result_month} : {json_size}")
-
-
-            
-            
+                df_global = pd.DataFrame.from_dict(dico_global)
+                df_global = self.dedoublonnage(df_global)
+                dico_final = self.nan_correction(df_global)
+                self.file_dump(path_result,dico_final)
+            self.file_dump(path_result_month,dico)
         else:
             #On vérifie que le fichier su mois a bien été crée, sinon on le crée
             if os.path.exists(path_result_month):
-                try:
-                    with open(path_result_month, encoding="utf-8") as f:
-                        dico_mensuel = json.load(f)
-                except ValueError:
-                    dico_mensuel={}
-                except Exception as err:
-                    logging.error(f"Exception lors du chargement du fichier json decp_{path_result_month[8:19]} - {err}")
-
+                dico_mensuel = self.file_load(path_result_month)
                 if dico_mensuel=={}:
-                    # #On transforme les dictionnaires en dataframes pour les dédoublonner
-                    df = pd.DataFrame.from_dict(dico['marches'])
-                    df = self.dedoublonnage(df)
-
-                    #On transforme les NaN en éléments vides pour éviter de futurs erreurs 
-                    for i in df.columns:
-                        if df[i].dtypes == 'float64': 
-                            df.fillna({i:0.0},inplace=True) 
-                        elif df[i].dtypes == 'object':
-                            df.fillna({i:""},inplace=True) 
-                    dico_final = {'marches': df.to_dict(orient='records')}
-                    try:
-                        with open(path_result_month, 'w', encoding="utf-8") as json_file2:
-                                json.dump(dico_final, json_file2, indent=2, ensure_ascii=False)
-                    except Exception as err:
-                        logging.error(f"Exception lors du chargement du fichier json decp_{path_result_month[8:19]} - {err}")
+                    #On transforme les dictionnaires en dataframes pour les dédoublonner
+                    df_global = pd.DataFrame.from_dict(dico['marches'])
+                    self.file_dump(path_result_month,dico_final)
                 else:
                     dico_global = dico['marches'] + dico_mensuel['marches']
                     #On transforme les dictionnaires en dataframes pour les dédoublonner
-                    if dico_global!={}:
-                        df = pd.DataFrame.from_dict(dico_global)
-                        df = self.dedoublonnage(df)
-                        #On transforme les NaN en éléments vides pour éviter de futurs erreurs 
-                        for i in df.columns:
-                            if df[i].dtypes == 'float64': 
-                                df.fillna({i:0.0},inplace=True) 
-                            elif df[i].dtypes == 'int32':
-                                df.fillna({i:0},inplace=True) 
-                            elif df[i].dtypes == 'object':
-                                df.fillna({i:""},inplace=True) 
-                        dico_final = {'marches': df.to_dict(orient='records')}
-
-                    try:
-                        with open(path_result_month, 'w', encoding="utf-8") as json_file2:
-                                json.dump(dico_final, json_file2, indent=2, ensure_ascii=False)
-                    except Exception as err:
-                        logging.error(f"Exception lors du chargement du fichier json decp_{path_result_month[8:19]} - {err}")
-                
-                    
+                    df_global = pd.DataFrame.from_dict(dico_global)
+                    df_global = self.dedoublonnage(df_global)
+                    dico_final = self.nan_correction(df_global)
+                    self.file_dump(path_result_month,dico_final)                      
             else:
-                try:
-                    with open(path_result_month, 'w', encoding="utf-8") as json_file1:
-                        json.dump(dico, json_file1, indent=2, ensure_ascii=False)
-                except Exception as err:
-                    logging.error(f"Exception lors du chargement du fichier json decp_{path_result_month[8:19]} - {err}")
-            json_size = os.path.getsize(path_result_month)
-            logging.info(f"Taille de {path_result_month} : {json_size}")
-
-        
+                self.file_dump(path_result_month,dico)
         logging.info("Exportation JSON OK")
+
+    def dico_modifications(self,dico:dict) -> dict: 
+        """
+        La fonction dico_modifications permet de s'assurer que les champs titulaires et modifications
+        soeint bien remplies afin que nous puissons manipuler le dictionnaire par la suite
+
+        Args:
+
+            dico: dictionnaire où on effectue les changements
+
+        """
+        for marche in dico['marches']:
+            if 'titulaires' in marche.keys() and marche['titulaires'] is not None and len(
+                    marche['titulaires']) > 0:
+                if 'titulaire' in marche['titulaires'][0].keys():
+                    #On affecte au champ titulaires, le champ titulaire
+                    if type(marche['titulaires'][0]['titulaire']) == list:
+                        marche['titulaires'] = marche['titulaires'][0]['titulaire']
+                    else:
+                        marche['titulaires'] = [marche['titulaires'][0]['titulaire']]
+            
+            if 'modifications' in marche.keys() and marche['modifications'] is not None and len(
+                    marche['modifications']) > 0 and type(marche['modifications'][0])==dict:
+                #On affecte au champ modifications, le champ modification
+                if type(marche['modifications'][0]['modification']) == list:
+                    marche['modifications'] = marche['modifications'][0]['modification']
+                else:
+                    marche['modifications'] = [marche['modifications'][0]['modification']]
+        return dico
+
+    def file_load(self,path:str) ->dict:
+        """
+        La fonction file_load essaie de lire un fichier JSON et de le convertir en dictionnaire.
+        Si le fichier est vide ou invalide, on retourne alors un dictionnaire vide. 
+        Pour toute autre erreur, elle enregistre un message d'erreur et renvoie également dico.
+         
+        Args:
+
+            path: chemin du fichier d'où l'on récupère les données
+
+        """
+        #On essaye de récupérer le fichier grâce au chemein contenu dans la variable path
+        try:
+            with open(path, encoding="utf-8") as f:
+                dico = json.load(f)
+        #Cas où le fichier est vide
+        except ValueError:
+            dico={}
+        #Autres cas où le fichier est invalide
+        except Exception as err:
+            logging.error(f"Exception lors du chargement du fichier json decp_{self.data_format} - {err}")
+            dico={}
+        return dico
+    
+    def file_dump(self,path: str,dico: dict) -> None:
+        """
+        La fonction file_dump permet d'écrire un dictionnaire dans un fichier JSON.
+        Elle permet de plus d'afficher la taille du fichier traité.
+
+        Args:
+
+            path: chemin du fichier d'où l'on récupère les données
+            dico: dictionnaire contenant les données qui vont être écrite dans le fichier  
+        """
+        try:
+            with open(path, 'w', encoding="utf-8") as f:
+                json.dump(dico, f, indent=2, ensure_ascii=False)
+        except Exception as err:
+            logging.error(f"Exception lors du chargement du fichier json {path} - {err}")
+        json_size = os.path.getsize(path)
+        logging.info(f"Taille de {path} : {json_size}")
+
+    def dico_merge(self,dico_ancien: dict,dico_nouveau: dict) -> dict:
+        """"
+        La fonction dico_merge permet de fusionner deux dictionnaires passés en paramètres
+        Elle gère de plus les cas où un des deux dictionnaires ou les deux dictionnaires sont vides.
+
+        Args:
+
+            dico_ancien: dictionnaire contenant les données du gros programme decp_2022
+            dico_nouveau: dictionnaire contenant les données du fichier decp du mois précédent
+        """
+        #On affecte à la variable dico_global les dictionnaires non vides
+        if(dico_ancien=={}) and (dico_nouveau != {}):
+            dico_global = dico_nouveau['marches']
+        elif(dico_nouveau=={}) and (dico_ancien!={}):
+            dico_global = dico_ancien['marches']
+        elif(dico_nouveau=={}) and (dico_ancien=={}):
+            logging.info(f"Les fichiers decp_2022 et decp_{datetime.now().year}_{datetime.now().month-1} sont vides")
+            dico_global={}
+        else:
+            #dico_global récupère l'ensemble des marchés et concessions des deux fichiers
+            dico_global = dico_ancien['marches'] + dico_nouveau['marches']
+        return dico_global
+    
+    def nan_correction(self,df:pd.DataFrame) -> dict:
+        """
+        La fonction nan_correction remplit les valeurs manquantes du dataframe passé en paramètre 
+        en fonction du type de données de chaque colonne.
+        Elle convertit enfin le dataFrame en un dictionnaire de listes de dictionnaires avant de retourner le dictionnaire.
+
+        Args:
+
+            df: dataframe que l'on va corriger puis transformer en dictionnaire
+        """
+        #On transforme les NaN en éléments vides pour éviter de futurs erreurs 
+        for i in df.columns:
+            if df[i].dtypes == 'float64': 
+                df.fillna({i:0.0},inplace=True) 
+            elif df[i].dtypes == 'int32':
+                df.fillna({i:0},inplace=True) 
+            elif df[i].dtypes == 'object':
+                df.fillna({i:""},inplace=True) 
+        dico_final = {'marches': df.to_dict(orient='records')}
+        return dico_final
                 
-
-
 
     def upload_s3(self):
         """
