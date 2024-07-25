@@ -218,6 +218,7 @@ class GlobalProcess:
         #Création des chemins des fichiers mensuel et global
         path_result = f"results/decp_{self.data_format}.json"
         path_result_month = f"results/decp_{datetime.now().year}_{datetime.now().month}.json"
+        path_result_daily=f"results/decp_daily.json"
         os.makedirs("results", exist_ok=True)
 
         #Cas du premier jour du mois
@@ -239,9 +240,7 @@ class GlobalProcess:
             if os.path.exists(path_result_month):
                 dico_mensuel = self.file_load(path_result_month)
                 if dico_mensuel=={}:
-                    #On transforme les dictionnaires en dataframes pour les dédoublonner
-                    df_global = pd.DataFrame.from_dict(dico['marches'])
-                    self.file_dump(path_result_month,dico_final)
+                    self.file_dump(path_result_month,dico)
                 else:
                     dico_global = dico['marches'] + dico_mensuel['marches']
                     #On transforme les dictionnaires en dataframes pour les dédoublonner
@@ -251,12 +250,13 @@ class GlobalProcess:
                     self.file_dump(path_result_month,dico_final)                      
             else:
                 self.file_dump(path_result_month,dico)
+        self.file_dump(path_result_daily,dico)
         logging.info("Exportation JSON OK")
 
     def dico_modifications(self,dico:dict) -> dict: 
         """
         La fonction dico_modifications permet de s'assurer que les champs titulaires et modifications
-        soeint bien remplies afin que nous puissons manipuler le dictionnaire par la suite
+        soient bien remplies afin que nous puissons manipuler le dictionnaire par la suite
 
         Args:
 
