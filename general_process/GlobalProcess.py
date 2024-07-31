@@ -11,7 +11,10 @@ import csv
 from datetime import datetime
 import time
 
-
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+pd.set_option('display.width', None)
+pd.set_option('display.max_colwidth', None)
 class GlobalProcess:
     """La classe GlobalProcess est une classe qui définit les étapes de traitement une fois toutes
     les étapes pour toutes les sources effectuées : création des variables de la classe (__init__),
@@ -186,12 +189,14 @@ class GlobalProcess:
         #Séparation des marches et des concessions, tri selon la date et suppression ses doublons
         if not df_modif.empty:
             df_modif_str  = df_modif.astype(str)     #en str pour réaliser le dédoublonnage
-            df_modif_str.sort_values(by=["datePublicationDonnees"], inplace=True)   
+            df_modif_str.sort_values(by=["datePublicationDonnees"], inplace=True)   #Tri
+            #print(df_modif['modifications'])
+
             df_modif_marche = df_modif_str[df_modif_str['_type'].str.contains("Marché")]
             index_to_keep_modif = df_modif_marche.drop_duplicates(subset=feature_doublons_marche,keep='last').index.tolist()  #'last', permet de garder la ligne avec la date est la plus récente
 
             df_modif_concession = df_modif_str[~df_modif_str['_type'].str.contains("Marché")]
-            index_to_keep_modif += df_modif_concession.drop_duplicates(subset=feature_doublons_concession).index.tolist()  #on ne garde que que les indexs pour récupérer les lignes qui sont dans df_modif (dont le type est dict)
+            index_to_keep_modif += df_modif_concession.drop_duplicates(subset=feature_doublons_concession,keep='last').index.tolist()  #on ne garde que que les indexs pour récupérer les lignes qui sont dans df_modif (dont le type est dict)
 
             df = pd.concat([df_nomodif.loc[index_to_keep_nomodif, :], df_modif.loc[index_to_keep_modif, :]])
 
@@ -265,21 +270,55 @@ class GlobalProcess:
         """
         for marche in dico['marches']:
             if 'titulaires' in marche.keys() and marche['titulaires'] is not None and len(
-                    marche['titulaires']) > 0:
-                if 'titulaire' in marche['titulaires'][0].keys():
-                    #On affecte au champ titulaires, le champ titulaire
-                    if type(marche['titulaires'][0]['titulaire']) == list:
-                        marche['titulaires'] = marche['titulaires'][0]['titulaire']
-                    else:
-                        marche['titulaires'] = [marche['titulaires'][0]['titulaire']]
-            
+                    marche['titulaires']) > 0 :
+                modifs = []
+                for i in range(len((marche['titulaires']))):
+                    if type( marche['titulaires'][i])== dict and 'titulaire' in marche['titulaires'][i].keys():
+                        #On affecte au champ titulaires, le champ titulaire
+                        if type(marche['titulaires'][i]['titulaire']) == list:
+                            modifs += marche['titulaires'][i]['titulaire']
+                        else:
+                            modifs += [marche['titulaires'][i]['titulaire']]
+                marche['titulaires'] = modifs
+
+
             if 'modifications' in marche.keys() and marche['modifications'] is not None and len(
-                    marche['modifications']) > 0 and type(marche['modifications'][0])==dict:
-                #On affecte au champ modifications, le champ modification
-                if type(marche['modifications'][0]['modification']) == list:
-                    marche['modifications'] = marche['modifications'][0]['modification']
-                else:
-                    marche['modifications'] = [marche['modifications'][0]['modification']]
+                    marche['modifications']) > 0 :
+                modifs = []
+                for i in range(len((marche['modifications']))):
+                    if type( marche['modifications'][i])== dict and 'modification' in marche['modifications'][i].keys():
+                        #On affecte au champ modifications, le champ modification
+                        if type(marche['modifications'][i]['modification']) == list:
+                            modifs += marche['modifications'][i]['modification']
+                        else:
+                            modifs += [marche['modifications'][i]['modification']]
+                marche['modifications'] = modifs
+
+            
+            if 'modificationsActesSousTraitance' in marche.keys() and marche['modificationsActesSousTraitance'] is not None and len(
+                    marche['modificationsActesSousTraitance']) > 0 :
+                print("AVANT", marche['modificationsActesSousTraitance'])
+                modifs = []
+                for i in range(len((marche['modificationsActesSousTraitance']))):
+                    if type( marche['modificationsActesSousTraitance'][i])== dict and 'modificationActeSousTraitance' in marche['modificationsActesSousTraitance'][i].keys():
+                        #On affecte au champ modificationsActesSousTraitance' le champ acteSousTraitance
+                        if type(marche['modificationsActesSousTraitance'][i]['modificationActeSousTraitance']) == list:
+                            modifs += marche['modificationsActesSousTraitance'][i]['modificationActeSousTraitance']
+                        else:
+                            modifs += [marche['modificationsActesSousTraitance'][i]['modificationActeSousTraitance']]
+                marche['modificationsActesSousTraitance'] = modifs
+
+            if 'actesSousTraitance' in marche.keys() and marche['actesSousTraitance'] is not None and len(
+                    marche['actesSousTraitance']) > 0 :
+                modifs = []
+                for i in range(len((marche['actesSousTraitance']))):
+                    if type( marche['actesSousTraitance'][i])== dict and 'acteSousTraitance' in marche['actesSousTraitance'][i].keys():
+                        #On affecte au champ actesSousTraitance' le champ acteSousTraitance
+                        if type(marche['actesSousTraitance'][i]['acteSousTraitance']) == list:
+                            modifs += marche['actesSousTraitance'][i]['acteSousTraitance']
+                        else:
+                            modifs += [marche['actesSousTraitance'][i]['acteSousTraitance']]
+                marche['actesSousTraitance'] = modifs
         return dico
 
     def file_load(self,path:str) ->dict:
