@@ -280,7 +280,31 @@ class GlobalProcess:
                         else:
                             modifs += [marche['titulaires'][i]['titulaire']]
                 marche['titulaires'] = modifs
-
+            
+            if 'concessionnaires' in marche.keys() and marche['concessionnaires'] is not None and len(
+                    marche['concessionnaires']) > 0 :
+                modifs = []
+                for i in range(len((marche['concessionnaires']))):
+                    if type( marche['concessionnaires'][i])== dict and 'concessionnaire' in marche['concessionnaires'][i].keys():
+                        #On affecte au champ concessionnaires, le champ concessionaire
+                        if type(marche['concessionnaires'][i]['concessionnaire']) == list:
+                            modifs += marche['concessionnaires'][i]['concessionnaire']
+                        else:
+                            modifs += [marche['concessionnaires'][i]['concessionnaire']]
+                marche['concessionnaires'] = modifs
+            
+            if 'donneesExecution' in marche.keys() and marche['donneesExecution'] is not None and len(
+                    marche['donneesExecution']) > 0 :
+                modifs = []
+                for i in range(len((marche['donneesExecution']))):
+                    if type(marche['donneesExecution'][i])==dict and 'donneesAnnuelles' in marche['donneesExecution'][i].keys() :
+                        #On affecte au champ donneesExecution, le champ donneesAnnuelles
+                        if type(marche['donneesExecution'][i]['donneesAnnuelles']) == list:
+                            modifs += marche['donneesExecution'][i]['donneesAnnuelles']
+                        else:
+                            modifs += [marche['donneesExecution'][i]['donneesAnnuelles']]
+                marche['donneesExecution'] = modifs
+                
 
             if 'modifications' in marche.keys() and marche['modifications'] is not None and len(
                     marche['modifications']) > 0 :
@@ -297,7 +321,6 @@ class GlobalProcess:
             
             if 'modificationsActesSousTraitance' in marche.keys() and marche['modificationsActesSousTraitance'] is not None and len(
                     marche['modificationsActesSousTraitance']) > 0 :
-                print("AVANT", marche['modificationsActesSousTraitance'])
                 modifs = []
                 for i in range(len((marche['modificationsActesSousTraitance']))):
                     if type( marche['modificationsActesSousTraitance'][i])== dict and 'modificationActeSousTraitance' in marche['modificationsActesSousTraitance'][i].keys():
@@ -319,6 +342,7 @@ class GlobalProcess:
                         else:
                             modifs += [marche['actesSousTraitance'][i]['acteSousTraitance']]
                 marche['actesSousTraitance'] = modifs
+
         return dico
 
     def file_load(self,path:str) ->dict:
