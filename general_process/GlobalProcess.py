@@ -87,9 +87,12 @@ class GlobalProcess:
                                      min(int(float(x.split("-")[2])),31)).isoformat()
                                     if str(x) != 'nan' and len(x.split("-")) >= 3 else x)
         logging.info(f"Nombre de marchés dans le DataFrame fusionné après merge : {len(self.df)}")
+        if 'dureeMois' in self.df.columns:
         # DureeMois doit être un float
-        self.df['dureeMois'] = self.df['dureeMois'].apply(lambda x: 0 if x == '' or
-                                                          str(x) in ['nan', 'None'] else x)
+            self.df['dureeMois'] = self.df['dureeMois'].apply(lambda x: 0 if x == '' or
+                                                            str(x) in ['nan', 'None'] else x)
+        else:
+            self.df['dureeMois'] = pd.NA
         # Montant doit être un float
         if 'montant' in self.df.columns: 
             self.df['montant'] = self.df['montant'].apply(lambda x: 0 if x == '' or
@@ -149,7 +152,11 @@ class GlobalProcess:
 
         # Séparation des lignes selon la colonne "modifications"
         logging.info("Début de l'étape Suppression des doublons")
-        self.df.sort_values(by="source", inplace=True) 
+
+        if 'source' in self.df.columns:
+            self.df.sort_values(by="source", inplace=True) 
+        else : 
+            self.df['source'] = pd.NA
         self.dedoublonnage(self.df)
         logging.info("Suppression OK")
         logging.info(f"Nombre de marchés dans Df après suppression des doublons strictes : {len(self.df)}")
@@ -221,15 +228,16 @@ class GlobalProcess:
         # Modification des champs titulaires et modifications
         dico = self.dico_modifications(dico)
         #Création des chemins des fichiers mensuel et global
-        path_result = f"results/decp_{self.data_format}.json"
-        path_result_month = f"results/decp_{datetime.now().year}_{datetime.now().month}.json"
-        path_result_daily=f"results/decp_daily.json"
+        path_result = f"results/decp-{self.data_format}.json"
+        path_result_month = f"results/decp-{datetime.now().year}-{datetime.now().month}.json"
+        path_result_daily = f"results/decp-daily.json"
+        path_result_backup = f"results/ref-decp-{self.data_format}.json"
         os.makedirs("results", exist_ok=True)
 
         #Cas du premier jour du mois
         if((datetime.now().day)==1):
             #On récupère la date du mois précédent pour pouvoir upload le fichier contenant les marchés du mois précédent.
-            path_result_last_month = f"results/decp_{datetime.now().year}_{datetime.now().month - 1}.json"
+            path_result_last_month = f"results/decp-{datetime.now().year}-{datetime.now().month - 1}.json"
             dico_ancien = self.file_load(path_result)
             dico_nouveau = self.file_load(path_result_last_month)
             dico_global = self.dico_merge(dico_ancien,dico_nouveau)
@@ -238,7 +246,18 @@ class GlobalProcess:
                 df_global = pd.DataFrame.from_dict(dico_global)
                 df_global = self.dedoublonnage(df_global)
                 dico_final = self.nan_correction(df_global)
-                self.file_dump(path_result,dico_final)
+                try:
+                    self.file_dump(path_result,dico_final) 
+                except:
+                    logging.error("Erreur d'écriture dans le fichier {path_result}")
+                    #Il faudra publier le fichier backup
+                self.file_dump(path_result_backup,dico_final)
+            elif dico_nouveau !={} :
+                try:
+                    self.file_dump(path_result,dico_nouveau)
+                except:
+                    logging.error("Erreur d'écriture dans le fichier {path_result}")
+                self.file_dump(path_result_backup,dico_nouveau)
             self.file_dump(path_result_month,dico)
         else:
             #On vérifie que le fichier su mois a bien été crée, sinon on le crée
@@ -356,16 +375,20 @@ class GlobalProcess:
             path: chemin du fichier d'où l'on récupère les données
 
         """
-        #On essaye de récupérer le fichier grâce au chemein contenu dans la variable path
-        try:
-            with open(path, encoding="utf-8") as f:
-                dico = json.load(f)
-        #Cas où le fichier est vide
-        except ValueError:
-            dico={}
-        #Autres cas où le fichier est invalide
-        except Exception as err:
-            logging.error(f"Exception lors du chargement du fichier json decp_{self.data_format} - {err}")
+        if(os.path.exists(path)):
+            #On essaye de récupérer le fichier grâce au chemein contenu dans la variable path
+            try:
+                with open(path, encoding="utf-8") as f:
+                    dico = json.load(f)
+            #Cas où le fichier est vide
+            except ValueError:
+                dico={}
+            #Autres cas où le fichier est invalide
+            except Exception as err:
+                logging.error(f"Exception lors du chargement du fichier json {path} - {err}")
+                dico={}
+        else:
+            print("le fichier {path} est vide")
             dico={}
         return dico
     
@@ -456,23 +479,68 @@ class GlobalProcess:
         """
         Cette fonction exporte decp_2019.json or decp_2022.json sur data.gouv.fr
         """
+        config_file = "config.json"
         # read info from config.son
-        with open("config.json", "r") as f:
-            config = json.load(f)
-            api = config["url_api"]
-            dataset_id = config["dataset_id"]
-            resource_id_json = config["resource_id_json"]
-
-        url = f"{api}/datasets/{dataset_id}/resources/{resource_id_json}/upload/"
+        with open(config_file, "r") as f:
+                config = json.load(f)
+                api = config["url_api"]
+                dataset_id = config["dataset_id"]
 
         headers = {
-            "X-API-KEY": os.environ.get("DATA_GOUV_API_KEY")
+            "X-API-KEY": "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyIjoiNWYwZjA0NzZkNzk3NDZjYmU5OGNjYmMwIiwidGltZSI6MTY0ODIxNzg4Ny4wOTg0ODE3fQ.d9b1s_170PeSNAOLyqFFOGoW8irEg1nxNxn-fdGCGAckFbVcIxpaxkEm8H-BlI6nLLvWmvS_lL3nKWaHb7Cd9g"
         }
+                
+        #Nous sommes le premier du mois, on doit donc mettre à jour le fichier decp_2022 sur datagouv et créer la ressource pour le fichier mensuel et l'upload
+        if ((datetime.now().day)==1):
+            resource_id_global = config["resource_id_global"]
+            url = f"{api}/datasets/{dataset_id}/resources/{resource_id_global}/upload/"
+            url_month = f"{api}/datasets/{dataset_id}/upload/"
+            url_get_id = f"{api}/datasets/{dataset_id}/"
 
-        files = {
-            "file": (f"decp_{self.data_format}.json", open(f"results/decp_{self.data_format}.json", "rb"))
-        }
+            files = {
+                "file": (f"decp-2022.json", open(f"results/decp-{self.data_format}.json", "rb"))
+            }
 
-        response = requests.post(url, headers=headers, files=files)
+            files_month = {
+                "file": (f"decp-{datetime.now().year}-{datetime.now().month}.json", open(f"results/decp-{datetime.now().year}-{datetime.now().month}.json", "rb"))
+            }
 
-        print(response.status_code)
+            response = requests.post(url, headers=headers, files=files)
+            if response.status_code==200:
+                logging.info("Upload du fichier decp-2022 réussi")
+            else:
+                print("Erreur ",response.status_code)
+            
+            
+            #Nous sommes le premier du mois, on créer le fichier mensuel sur datagouv
+            response_month = requests.post(url_month, headers=headers, files=files_month)
+            if response_month.status_code==201:
+                logging.info(f"Création du fichier decp-{datetime.now().year}-{datetime.now().month}.json réussie")
+            else:
+                print("Erreur ",response_month.status_code)
+
+            #On récupère l'id de la ressource que nous venons de créer et on l'enregistre dans le fichier config pour pouvoir le réutiliser plus tard 
+            response_get_id = requests.get(url_get_id, headers=headers)
+            data = response_get_id.json()
+            for entry in data['resources']:
+                if entry.get('title')== f'decp-{datetime.now().year}-{datetime.now().month}.json':
+                    resource_id = entry.get('id')
+            with open(config_file, "r") as file:
+                data = json.load(file)
+            data['resource_id_month'] = resource_id
+            with open(config_file, "w") as file:
+                json.dump(data, file, indent=4)
+        
+        #Cas pour tout les autres jours du mois
+        else:
+            ressource_id_month = config["resource_id_month"]
+            url = f"{api}/datasets/{dataset_id}/resources/{ressource_id_month}/upload/"
+            files = {
+                "file": (f"decp-{datetime.now().year}-{datetime.now().month}.json", open(f"results/decp-{datetime.now().year}-{datetime.now().month}.json", "rb"))
+            }
+            #On met à jour le fichier mensuel sur datagouv
+            response = requests.post(url, headers=headers, files=files)
+            if response.status_code==200:
+                logging.info(f"Upload du fichier decp-{datetime.now().year}-{datetime.now().month}.json réussi")
+            else:
+                print("Erreur ",response.status_code)

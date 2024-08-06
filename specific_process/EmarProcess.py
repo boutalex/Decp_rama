@@ -26,17 +26,20 @@ class EmarProcess(SourceProcess):
                                     else ([{'titulaire': [y for y in x]}] if len(x) > 1 else [{'titulaire': x[0]}])
                                     for x in self.df['titulaires']]
 
-        for x in self.df['modifications']:
-            if len(x) > 0:
-                y = x[0]['modification']
-                if type(y) is list:
-                    for i in range(len(y)):
-                        if 'titulaires' in x[0]['modification'][i]:
-                            z = x[0]['modification'][i]['titulaires']
-                            x[0]['modification'][i]['titulaires'] = \
-                                ([y for y in z]) if len(z) > 1 else [z[0]]
-                else:
-                    if 'titulaires' in x[0]['modification']:
-                        z = x[0]['modification']['titulaires']
-                        x[0]['modification']['titulaires'] = \
-                            ([y for y in z]) if len(z) > 1 else [z[0]]
+        if 'modifications' in self.df.columns:
+            if len(self.df['modifications']) > 0:
+                for x in self.df['modifications']:
+                    if 'modification' in self.df['modifications']:
+                        y = x[0]['modification']
+                        if type(y) is list:
+                            for i in range(len(y)):
+                                if 'titulaires' in x[0]['modification'][i]:
+                                    z = x[0]['modification'][i]['titulaires']
+                                    x[0]['modification'][i]['titulaires'] = \
+                                        ([y for y in z]) if len(z) > 1 else [z[0]]
+                        else:
+                            if 'titulaires' in x[0]['modification']:
+                                z = x[0]['modification']['titulaires']
+                                x[0]['modification']['titulaires'] = \
+                                    ([y for y in z]) if len(z) > 1 else [z[0]]
+        

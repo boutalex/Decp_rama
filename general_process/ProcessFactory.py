@@ -18,10 +18,11 @@ class ProcessFactory:
         #self.processes = [MegaProcess]
         #self.processes = [AifeProcess]
         #self.processes = [PesProcess]
+        # self.processes = [EmarProcess]
         self.processes = [SampleJsonProcess]
         #self.processes = [SampleXmlProcess]
         # if data_format=='2022':
-        #    self.processes = [SampleXmlProcess] # For test ECO
+        # self.processes = [SampleXmlProcess] # For test ECO
         self.dataframes = []
         self.data_format = data_format
         # si on lance main avec un process spécifié :
@@ -35,28 +36,28 @@ class ProcessFactory:
         """Création d'une boucle (1 source=1 itération) qui appelle chacun des processus de chaque source."""
         for process in self.processes:
             loaded = 0
-            try:
+            # try:
             #if True: #for debugonly
-                logging.info(f"------------------------------{process.__name__}------------------------------")
-                p = process(self.data_format)
-                p.get()
-                loaded = 1
-                p.clean()
-                loaded = 2
-                p.convert()
-                loaded = 3
-                p.fix()
-                loaded = 4
-                #if self.data_format=='2022':
-                #    p.comment()
-                logging.info ("Ajout des données")
-                self.dataframes.append(p.df)
-                logging.info(f"----------------Fin du traitement {process.__name__}------------------------------")
-            except Exception as err:
-                if loaded>0:
-                    logging.error(f"Erreur de traitement {loaded}  - {err}")
-                else:
-                    logging.error(f"Source introuvable - {err}")
+            logging.info(f"------------------------------{process.__name__}------------------------------")
+            p = process(self.data_format)
+            p.get()
+            loaded = 1
+            p.clean()
+            loaded = 2
+            p.convert()
+            loaded = 3
+            p.fix()
+            loaded = 4
+            #if self.data_format=='2022':
+            #    p.comment()
+            logging.info ("Ajout des données")
+            self.dataframes.append(p.df)
+            logging.info(f"----------------Fin du traitement {process.__name__}------------------------------")
+            # except Exception as err:
+                # if loaded>0:
+                #     logging.error(f"Erreur de traitement {loaded}  - {err}")
+                # else:
+                #     logging.error(f"Source introuvable - {err}")
 
     def run_process(self):
         """Lance un seul processus"""

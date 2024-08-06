@@ -1,5 +1,6 @@
 {
-  "url_api": "https://www.data.gouv.fr/api/1",
-  "dataset_id": "5cd57bf68b4c4179299eb0e9",
-  "resource_id_json": "16962018-5c31-4296-9454-5998585496d2"
+    "url_api": "https://www.data.gouv.fr/api/1",
+    "dataset_id": "5cd57bf68b4c4179299eb0e9",
+    "resource_id_global": "59ba0edb-cf94-4bf1-a546-61f561553917",
+    "resource_id_month": "9f5f2a26-383d-4b6a-ad1d-7081cd8d136b"
 }

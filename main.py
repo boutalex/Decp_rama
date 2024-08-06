@@ -29,9 +29,9 @@ def main(data_format:str = 2022):
     gp.drop_duplicate()
     gp.export()
     print("Exportation faite")
-    #if not args.local:
+    # if not args.local:
         # gp.upload_s3()
-        # gp.upload_datagouv()
+    gp.upload_datagouv()
 
 if __name__ == "__main__":
     """Lorsqu'on appelle la fonction main (courante), on définit le niveau de logging et le format d'affichage."""
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     for data_format in all_data_format:
         print(f"---------------------------------------------------------------")
         print(f"Traitement pour le format {data_format}")
-        try:
-            main(data_format)
-        except Exception as err:
-            print(f"Une erreur est survenue lors du traitement pour le format {data_format} - {err}")
+        # try:
+        main(data_format)
+        # except Exception as err:
+        #     print(f"Une erreur est survenue lors du traitement pour le format {data_format} - {err}")
