@@ -123,7 +123,7 @@ class SourceProcess:
                 title = title + [d["title"] for d in ressources]
             else: 
                 url, title = self.check_date_file(url,title, ressources, old_ressources)
-                print("Les urls dont le contenu a été modifié sont: ", url)
+                # print("Les urls dont le contenu a été modifié sont: ", url)
 
             #Cas où les fichiers old_metadata existent: on écrit dedans à nouveau
             if os.path.exists(f"old_metadata/{self.source}/old_metadata_{self.key}_{i}.json"):
@@ -151,15 +151,35 @@ class SourceProcess:
             old_ressources: dictionnaire correspondant au champ "resources" dans le fichier old_metadata de la source
 
         """
-        for i in range(len(new_ressources)):
-            #condition1 : test si les nouvelles métadonnées sont plus récentes que les anciennes 
-            condition1=new_ressources[i]["last_modified"]>old_ressources[i]["last_modified"]
+        diff = len(new_ressources) - len(old_ressources)
+        #On traite d'abord les nouveaux fichiers qui n'ont pas été traité lors d'une précédente exécution
+        for i in range(diff):
+            print("fichier testé",new_ressources[i]['title'])
+            if new_ressources[i]["url"].endswith("xml") or new_ressources[i]["url"].endswith("json"):
+                url = url + [new_ressources[i]["url"]] 
+                title = title + [new_ressources[i]["title"]]
+        #On traite ensuite tout les marchés qui ont déjà été traités lors d'une précédente exécution
+        for i in range(diff,len(old_ressources)):
+            #condition1 : test si les nouvelles métadonnées sont plus récentes que les anciennes
+
+            condition1=new_ressources[i]["last_modified"]>old_ressources[i-diff]["last_modified"]
             #condition2 : vérification de l'extension
             condition2=(new_ressources[i]["url"].endswith("xml") or new_ressources[i]["url"].endswith("json"))
             if condition1 and condition2 :
                 url = url + [new_ressources[i]["url"]] 
-                title = title + [new_ressources[i]["title"]] 
-        return url, title            
+                title = title + [new_ressources[i]["title"]]
+        print("url",url)
+        return url, title         
+    
+        # for i in range(len(new_ressources)):
+        #     #condition1 : test si les nouvelles métadonnées sont plus récentes que les anciennes
+        #     condition1=new_ressources[i]["last_modified"]>old_ressources[i]["last_modified"]
+        #     #condition2 : vérification de l'extension
+        #     condition2=(new_ressources[i]["url"].endswith("xml") or new_ressources[i]["url"].endswith("json"))
+        #     if condition1 and condition2 :
+        #         url = url + [new_ressources[i]["url"]] 
+        #         title = title + [new_ressources[i]["title"]] 
+        # return url, title            
 
 
     def get(self) -> None:
@@ -170,7 +190,7 @@ class SourceProcess:
         logging.info("  ÉTAPE GET")
         logging.info(f"Début du téléchargement : {len(self.url)} fichier(s)")
         os.makedirs(f"sources/{self.source}", exist_ok=True)
-        print("SELF.URL:" , self.url)
+        # print("SELF.URL:" , self.url)
         if self.cle_api==[]:
             print("Pas  de clé api")
             self.download_without_metadata()
@@ -271,7 +291,7 @@ class SourceProcess:
 
         #Creation des dossiers
         os.makedirs(f"bad_results", exist_ok=True) 
-        os.makedirs(f"bad_results/{self.source}", exist_ok=True) 
+        os.makedirs(f"bad_results/{self.source}", exist_ok=True)
 
         if 'marche' in dico:
             while n < len(dico['marche']) :
@@ -530,38 +550,38 @@ class SourceProcess:
         logging.info(f"Début de convert: mise au format DataFrame de {self.source}")
 
         #Mise à jour des dictionnaires
-        old_files = list(set(os.listdir(f"sources/{self.source}")) - set(self.title))   #liste des titres des fichiers déja présents en local
+        # old_files = list(set(os.listdir(f"sources/{self.source}")) - set(self.title))   #liste des titres des fichiers déja présents en local
     
-        for i in range(len(old_files)):
-            logging.info("Extraction des données des anciens fichiers")
+        # for i in range(len(old_files)):
+        #     logging.info("Extraction des données des anciens fichiers")
 
-            if self.format == 'xml':
-                try:
-                    with open(f"sources/{self.source}/{old_files[i]}", encoding='utf-8') as xml_file:
-                        dico = xmltodict.parse(xml_file.read(), dict_constructor=dict,  \
-                                               force_list=('marche','titulaires', 'modifications', 'actesSousTraitance',
-                                               'modificationsActesSousTraitance', 'typePrix','considerationEnvironnementale',
-                                               'modaliteExecution'))
-                        #Ajout du dictionnaire dans la bonne variable (dico_2022_marche, dico_2022_concession, dico_ignored_marche, dico_ignored_concession)
-                        try:
-                            self.tri_format(dico["marches"], f"sources/{self.source}/{old_files[i]}")
-                        except Exception as err:
-                            logging.error("Balise 'marches' inexistante")
-                except Exception as err:
-                    logging.error(f"Exception lors du chargement du fichier xml {old_files[i]} - {err}")
+        #     if self.format == 'xml':
+        #         try:
+        #             with open(f"sources/{self.source}/{old_files[i]}", encoding='utf-8') as xml_file:
+        #                 dico = xmltodict.parse(xml_file.read(), dict_constructor=dict,  \
+        #                                        force_list=('marche','titulaires', 'modifications', 'actesSousTraitance',
+        #                                        'modificationsActesSousTraitance', 'typePrix','considerationEnvironnementale',
+        #                                        'modaliteExecution'))
+        #                 #Ajout du dictionnaire dans la bonne variable (dico_2022_marche, dico_2022_concession, dico_ignored_marche, dico_ignored_concession)
+        #                 # try:
+        #                 #     self.tri_format(dico["marches"], f"sources/{self.source}/{old_files[i]}")
+        #                 # except Exception as err:
+        #                 #     logging.error("Balise 'marches' inexistante")
+        #         except Exception as err:
+        #             logging.error(f"Exception lors du chargement du fichier xml {old_files[i]} - {err}")
 
-            elif self.format == 'json':
-                    try:
-                        with open(f"sources/{self.source}/{old_files[i]}", encoding="utf-8") as json_file:
-                            dico = json.load(json_file)
-                            #Ajout du dictionnaire dans la bonne variable (dico_2022_marche, dico_2022_concession, dico_ignored_marche, dico_ignored_concession)
-                        try:
-                            self.tri_format(dico["marches"], f"sources/{self.source}/{old_files[i]}")
-                        except Exception as err:
-                            logging.error("Balise 'marches' inexistante")
+        #     elif self.format == 'json':
+        #             try:
+        #                 with open(f"sources/{self.source}/{old_files[i]}", encoding="utf-8") as json_file:
+        #                     dico = json.load(json_file)
+        #                     #Ajout du dictionnaire dans la bonne variable (dico_2022_marche, dico_2022_concession, dico_ignored_marche, dico_ignored_concession)
+        #                 # try:
+        #                 #     self.tri_format(dico["marches"], f"sources/{self.source}/{old_files[i]}")
+        #                 # except Exception as err:
+        #                 #     logging.error("Balise 'marches' inexistante")
 
-                    except Exception as err:
-                        logging.error(f"Exception lors du chargement du fichier json {old_files[i]} - {err}")
+        #             except Exception as err:
+        #                 logging.error(f"Exception lors du chargement du fichier json {old_files[i]} - {err}")
 
         logging.info(f"Début de convert: mise au format DataFrame de {self.source}")
         #Liste qui conservera les dataframes. 
